@@ -45,7 +45,7 @@
 #include "rsi_debug.h"
 #include "sl_driver_gpio.h"
 
-#define PIN_INTR_NO               PIN_INTR_0
+#define PIN_INTR_NO               INTR_NUMBER_CFG
 #define AVL_INTR_NO               0 // available interrupt number
 #define app_printf(...)           DEBUGOUT(__VA_ARGS__)
 #define I2C_INSTANCE_USED         SL_I2C2
@@ -108,7 +108,11 @@ void app_init(void)
                        ? MAX30101_INT_PORT
                        : (MAX30101_INT_PIN / 16);
   gpio_port_pin.pin = MAX30101_INT_PIN % 16;
-  int_no = PIN_INTR_NO;
+  if (MAX30101_INT_PORT == UULP_VBAT) {
+    int_no = MAX30101_INT_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt(&gpio_port_pin,
                                      int_no,
                                      SL_GPIO_INTERRUPT_FALLING_EDGE,

@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,10 +23,10 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: i2c_instance
     instance: [i2c2]
@@ -36,11 +35,25 @@ component:
   - id: rng
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_ULP_I2C_SCL_PORT
+    value: "HP"
+    condition: [brd2708a]
+  - name: SL_ULP_I2C_SCL_PIN
+    value: "7"
+    condition: [brd2708a]
+  - name: SL_ULP_I2C_SDA_PORT
+    value: "HP"
+    condition: [brd2708a]
+  - name: SL_ULP_I2C_SDA_PIN
+    value: "6"
+    condition: [brd2708a]
+
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 toolchain_settings:
   - option: gcc_linker_option

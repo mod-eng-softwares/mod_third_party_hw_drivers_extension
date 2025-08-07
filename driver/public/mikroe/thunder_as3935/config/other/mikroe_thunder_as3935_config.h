@@ -64,7 +64,6 @@ extern "C" {
 
 // <gpio optional=true> AS3935_CS
 // $[GPIO_AS3935_CS]
-#warning "AS3935_CS is not configured"
 // #define AS3935_CS_PORT                         0
 // #define AS3935_CS_PIN                          0
 // [GPIO_AS3935_CS]$

@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2023 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -56,7 +56,7 @@ static sl_i2c_instance_t i2c_instance = I2C_INSTANCE_USED;
 #endif
 #ifdef SL_CATALOG_PM_SPS30_UART_PRESENT
 #include "sl_si91x_usart.h"
-#define USART_INSTANCE_USED            UART_1
+#define USART_INSTANCE_USED            USART_0
 static usart_peripheral_t uart_instance = USART_INSTANCE_USED;
 #endif
 

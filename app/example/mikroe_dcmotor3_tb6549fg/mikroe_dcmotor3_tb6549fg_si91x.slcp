@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,23 +23,49 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: sleeptimer
   - id: pwm_instance
     instance: [channel_0]
+    condition: [brd2605a]
+    from: wiseconnect3_sdk
+  - id: pwm_instance
+    instance: [channel_0]
+    condition: [brd4338a]
+    from: wiseconnect3_sdk
+  - id: pwm_instance
+    instance: [channel_3]
+    condition: [brd2708a]
     from: wiseconnect3_sdk
   - id: mikroe_dcmotor3
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_PWM_OUT_CHANNEL3_3L_PORT
+    value: HP
+    condition: [brd2708a]
+  - name: SL_PWM_OUT_CHANNEL3_3L_PIN
+    value: 12
+    condition: [brd2708a]
+  - name: SL_PWM_OUT_CHANNEL3_3L_LOC
+    value: 14
+    condition: [brd2708a]
+  - name: SL_PWM_CHANNEL_3_POLARITY_LOW
+    value: SL_POLARITYL_LOW
+    condition: [brd2708a]
+  - name: SL_PWM_COMMON_TIMER_SELECTION
+    value: SL_BASE_TIMER_EACH_CHANNEL_VAL
+    condition: [brd2708a]
+
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/mikroe_dcmotor3_tb6549fg/README.md
@@ -51,6 +76,8 @@ other_file:
   - path: ../../documentation/example/mikroe_dcmotor3_tb6549fg/image/hardware_connection.png
     directory: "image"
   - path: ../../documentation/example/mikroe_dcmotor3_tb6549fg/image/log.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_dcmotor3_tb6549fg/image/pwm_config.png
     directory: "image"
 
 ui_hints:

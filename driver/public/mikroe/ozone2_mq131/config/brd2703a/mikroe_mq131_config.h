@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -78,12 +78,6 @@ extern "C" {
 #define MIKROE_OZONE2_AN_PORT                      SL_GPIO_PORT_B
 #define MIKROE_OZONE2_AN_PIN                       0
 // [GPIO_MIKROE_OZONE2_AN]$
-
-// <gpio optional=true> MIKROE_OZONE2_CS
-// $[GPIO_MIKROE_OZONE2_CS]
-#define MIKROE_OZONE2_CS_PORT                      SL_GPIO_PORT_C
-#define MIKROE_OZONE2_CS_PIN                       0
-// [GPIO_MIKROE_OZONE2_CS]$
 
 // <<< sl:end pin_tool >>>
 

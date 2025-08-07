@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,10 +23,10 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: sleeptimer
   - id: mikroe_relay2
@@ -35,9 +34,9 @@ component:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/mikroe_relay2_lca717/README.md
@@ -46,10 +45,6 @@ other_file:
   - path: ../../documentation/example/mikroe_relay2_lca717/image/hardware_connection.png
     directory: "image"
   - path: ../../documentation/example/mikroe_relay2_lca717/image/create_example.png
-    directory: "image"
-  - path: ../../documentation/example/mikroe_relay2_lca717/image/configuration.png
-    directory: "image"
-  - path: ../../documentation/example/mikroe_relay2_lca717/image/configuration_si91x.png
     directory: "image"
 
 ui_hints:

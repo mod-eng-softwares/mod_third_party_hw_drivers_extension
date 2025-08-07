@@ -132,9 +132,29 @@ static void sparkfun_type5_on_noise_handler(uint8_t int_no, void *ctx)
 static void IntEnable(void)
 {
 #if (defined(SLI_SI917))
-  sl_gpio_enable_interrupts((SIG_PIN_INTR_NO << 16)
-                            | (NS_PIN_INTR_NO << 16)
-                            | SL_GPIO_INTERRUPT_FALL_EDGE);
+  if (SPARKFUN_TYPE5_SIG_PORT == UULP_VBAT) {
+    sl_si91x_gpio_configure_uulp_interrupt(SL_GPIO_INTERRUPT_FALL_EDGE,
+                                           (uint8_t)SPARKFUN_TYPE5_SIG_PIN);
+  } else if (SPARKFUN_TYPE5_SIG_PORT == ULP) {
+    sl_si91x_gpio_configure_ulp_pin_interrupt(SIG_PIN_INTR_NO,
+                                              SL_GPIO_INTERRUPT_FALL_EDGE,
+                                              (uint8_t)SPARKFUN_TYPE5_SIG_PIN);
+  } else {
+    sl_gpio_enable_interrupts((SIG_PIN_INTR_NO << 16)
+                              | SL_GPIO_INTERRUPT_FALL_EDGE);
+  }
+
+  if (SPARKFUN_TYPE5_NS_PORT == UULP_VBAT) {
+    sl_si91x_gpio_configure_uulp_interrupt(SL_GPIO_INTERRUPT_FALL_EDGE,
+                                           (uint8_t)SPARKFUN_TYPE5_NS_PIN);
+  } else if (SPARKFUN_TYPE5_NS_PORT == ULP) {
+    sl_si91x_gpio_configure_ulp_pin_interrupt(NS_PIN_INTR_NO,
+                                              SL_GPIO_INTERRUPT_FALL_EDGE,
+                                              (uint8_t)SPARKFUN_TYPE5_NS_PIN);
+  } else {
+    sl_gpio_enable_interrupts((NS_PIN_INTR_NO << 16)
+                              | SL_GPIO_INTERRUPT_FALL_EDGE);
+  }
 #else // SLI_SI917
   sl_gpio_enable_interrupts((1 << SPARKFUN_TYPE5_SIG_PIN)
                             | (1 << SPARKFUN_TYPE5_NS_PIN));
@@ -144,9 +164,29 @@ static void IntEnable(void)
 static void IntDisable(void)
 {
 #if (defined(SLI_SI917))
-  sl_gpio_disable_interrupts((SIG_PIN_INTR_NO << 16)
-                             | (NS_PIN_INTR_NO << 16)
-                             | SL_GPIO_INTERRUPT_FALL_EDGE);
+  if (SPARKFUN_TYPE5_SIG_PORT == UULP_VBAT) {
+    sl_si91x_gpio_configure_uulp_interrupt(SL_GPIO_INTERRUPT_NONE,
+                                           (uint8_t)SPARKFUN_TYPE5_SIG_PIN);
+  } else if (SPARKFUN_TYPE5_SIG_PORT == ULP) {
+    sl_si91x_gpio_configure_ulp_pin_interrupt(SIG_PIN_INTR_NO,
+                                              SL_GPIO_INTERRUPT_NONE,
+                                              (uint8_t)SPARKFUN_TYPE5_SIG_PIN);
+  } else {
+    sl_gpio_disable_interrupts((SIG_PIN_INTR_NO << 16)
+                               | SL_GPIO_INTERRUPT_FALL_EDGE);
+  }
+
+  if (SPARKFUN_TYPE5_NS_PORT == UULP_VBAT) {
+    sl_si91x_gpio_configure_uulp_interrupt(SL_GPIO_INTERRUPT_NONE,
+                                           (uint8_t)SPARKFUN_TYPE5_NS_PIN);
+  } else if (SPARKFUN_TYPE5_NS_PORT == ULP) {
+    sl_si91x_gpio_configure_ulp_pin_interrupt(NS_PIN_INTR_NO,
+                                              SL_GPIO_INTERRUPT_NONE,
+                                              (uint8_t)SPARKFUN_TYPE5_NS_PIN);
+  } else {
+    sl_gpio_enable_interrupts((NS_PIN_INTR_NO << 16)
+                              | SL_GPIO_INTERRUPT_FALL_EDGE);
+  }
 #else // SLI_SI917
   sl_gpio_disable_interrupts((1 << SPARKFUN_TYPE5_SIG_PIN)
                              | (1 << SPARKFUN_TYPE5_NS_PIN));
@@ -179,14 +219,22 @@ void sparkfun_type5_init(void)
   digital_in_init(&ns, ns_pin);
 
 #if (defined(SLI_SI917))
-  int_no = SIG_PIN_INTR_NO;
+  if (SPARKFUN_TYPE5_SIG_PORT == UULP_VBAT) {
+    int_no = SPARKFUN_TYPE5_SIG_PIN;
+  } else {
+    int_no = SIG_PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt((sl_gpio_t *)&sig.pin,
                                      int_no,
                                      SL_GPIO_INTERRUPT_FALLING_EDGE,
                                      sparkfun_type5_on_radiation_handler,
                                      AVL_INTR_NO);
 
-  int_no = NS_PIN_INTR_NO;
+  if (SPARKFUN_TYPE5_NS_PORT == UULP_VBAT) {
+    int_no = SPARKFUN_TYPE5_NS_PIN;
+  } else {
+    int_no = NS_PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt((sl_gpio_t *)&ns.pin,
                                      int_no,
                                      SL_GPIO_INTERRUPT_FALLING_EDGE,

@@ -42,9 +42,12 @@ config_file:
   - path: public/silabs/qwiic_keypad/config/brd4338a/sparkfun_keypad_config.h
     file_id: sparkfun_keypad_config
     condition: [brd4338a]
+  - path: public/silabs/qwiic_keypad/config/brd2708a/sparkfun_keypad_config.h
+    file_id: sparkfun_keypad_config
+    condition: [brd2708a]
   - path: public/silabs/qwiic_keypad/config/other/sparkfun_keypad_config.h
     file_id: sparkfun_keypad_config
-    unless: [brd2601b, brd2703a, brd2704a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a]
+    unless: [brd2601b, brd2703a, brd2704a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a, brd2708a]
 include:
   - path: public/silabs/qwiic_keypad/inc
     file_list:

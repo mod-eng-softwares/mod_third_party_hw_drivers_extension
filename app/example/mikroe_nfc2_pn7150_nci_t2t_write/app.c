@@ -51,6 +51,7 @@
 #include "sl_driver_gpio.h"
 #include "sl_i2c_instances.h"
 #include "rsi_debug.h"
+#include "sl_si91x_driver_gpio.h"
 
 #define app_printf(...)           DEBUGOUT(__VA_ARGS__)
 #define I2C_INSTANCE_USED         SL_I2C2
@@ -160,7 +161,11 @@ void app_init(void)
                        ? MIKROE_PN7150_INT_PORT
                        : (MIKROE_PN7150_INT_PIN / 16);
   gpio_port_pin.pin = MIKROE_PN7150_INT_PIN % 16;
-  int_no = PIN_INTR_NO;
+  if (MIKROE_PN7150_INT_PORT == UULP_VBAT) {
+    int_no = MIKROE_PN7150_INT_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt(&gpio_port_pin,
                                      int_no,
                                      SL_GPIO_INTERRUPT_RISING_EDGE,

@@ -6,34 +6,63 @@ This project shows the implementation of a two single-pole solid state relays (S
 
 Relay 2 click is a dual relay click board™, equipped with two single-pole solid state relays (SSR), built with the patented OptoMOS® technology. These SSR devices allow reasonably high current, up to 2A and voltage up to 30V (peak-to-peak). It can be used as an MCU controlled switch for the instrumentation and sensor circuitry power control, various I/O subsystems, control of various embedded electronic applications, and similar cases where reliable and clean power supply control is required.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit) BGM220 Bluetooth Module Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [Relay 2 Click board](https://www.mikroe.com/relay-2-click)
 
 ## Hardware Connection ##
 
-- If the BGM220P Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the Relay 2 Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the Relay 2 Click board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The Relay 2 Click board supports MikroBus, so it can connect easily to the Explorer Kit via MikroBus header. Assure that the 45-degree corner of Click board matches the 45-degree white line of the Explorer Kit.
+![board](image/hardware_connection.png)
 
-  ![board](image/hardware_connection.png)
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-- If the Wi-Fi Development Kit is used:
+The tables below provide an overview of the pin connections.
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | MikroE Relay 2 Click board |
-  | -------------| ------------- | ------------------ | ---------------------------- |
-  | Relay 1      | GPIO_46 [P24]       | GPIO_10      | RL1                          |
-  | Relay 2      | GPIO_47 [P26]       | GPIO_11      | RL2                          |
+**Silicon Labs BLE Development Kit:**
+
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | Relay 2 Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| Relay 1 | PB4 | PB4 | PA0 | PB4 | ↔ | RL1 |
+| Relay 2 | PB0 | PB0 | PB0 | PB0 | ↔ | RL2 |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | Relay 2 Click |
+| --- | --- | --- | --- | --- | --- |
+| Relay 1 | GPIO_46 [P24] | GPIO_10 [P23] | GPIO_12 [PWM] | ↔ | RL1 |
+| Relay 2 | GPIO_47 [P26] | GPIO_11 [P22] | GPIO_29 [AN]  | ↔ | RL2 |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -56,27 +85,15 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_relay2_lca717/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Third Party Hardware Drivers] → [Miscellaneous] → [LCA717 - Relay 2 Click (Mikroe)] → use default configuration.
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the BGM220P Explorer Kit is used:**
-
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Third Party Hardware Drivers] → [Miscellaneous] → [LCA717 - Relay 2 Click (Mikroe)] → use default configuration.
-
-           ![config](image/configuration.png)
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [Third Party Hardware Drivers] → [Miscellaneous] → [LCA717 - Relay 2 Click (Mikroe)] → use default configuration.
-
-           ![config](image/configuration_si91x.png)
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [Third Party Hardware Drivers] → [Miscellaneous] → [LCA717 - Relay 2 Click (Mikroe)] → use default configuration.
 
 4. Build and flash this example to the board.
 

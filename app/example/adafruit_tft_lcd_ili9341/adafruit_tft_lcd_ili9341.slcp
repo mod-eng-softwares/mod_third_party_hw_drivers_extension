@@ -18,7 +18,6 @@ source:
   - path: gecko/app.c
   - path: app_main_screen.c
   - path: app_calib_screen.c
-  - path: main.c
 
 include:
   - path: 'gecko'
@@ -26,8 +25,9 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: iostream_eusart
     instance: [vcom]
   - id: app_assert
@@ -48,7 +48,7 @@ define:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
 - path: ../../documentation/example/adafruit_tft_lcd_ili9341/README.md

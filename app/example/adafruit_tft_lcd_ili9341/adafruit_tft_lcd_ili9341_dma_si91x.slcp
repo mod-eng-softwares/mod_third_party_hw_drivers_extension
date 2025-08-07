@@ -18,7 +18,6 @@ source:
   - path: si91x/app.c
   - path: app_main_screen.c
   - path: app_calib_screen.c
-  - path: main.c
 
 include:
   - path: 'si91x'
@@ -26,10 +25,10 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: app_assert
   - id: sleeptimer
@@ -58,9 +57,9 @@ configuration:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/adafruit_tft_lcd_ili9341/README.md

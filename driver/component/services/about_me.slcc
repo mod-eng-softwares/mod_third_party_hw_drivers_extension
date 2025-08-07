@@ -5,9 +5,8 @@ description: >
   #NOTE: This is a help component. Do not install.
 
 
-  To show all components in this extension, make sure that
-  Evaluation quality software components are enabled
-  in the Software Component view.
+  To show all components in this extension,
+  the Evaluation quality must be enabled in the Software Component view.
 
 
   The online Third Party Hardware Drivers documentation is available at the link below.

@@ -67,8 +67,10 @@ void app_init(void)
 {
   app_printf("- Buzzer 2 Click board driver, example application. -\n");
 
-#if (defined(SLI_SI917))
+#ifdef SIWG917M111MGTBA
   app_pwm_instance = &sl_pwm_channel_0_config;
+#elif SIWG917Y111MGABA
+  app_pwm_instance = &sl_pwm_channel_3_config;
 #else
   app_pwm_instance = &sl_pwm_mikroe;
 #endif

@@ -39,6 +39,9 @@
 
 #include "mikroe_drv8245p.h"
 #include "mikroe_dcmotor29_config.h"
+#ifndef SLI_SI917
+#include "spidrv.h"
+#endif
 
 static dcmotor29_t ctx;
 static dcmotor29_cfg_t ctx_cfg;
@@ -80,12 +83,17 @@ sl_status_t mikroe_drv8245p_init(mikroe_spi_handle_t spi_instance,
   ctx_cfg.spi_speed = MIKROE_DCMOTOR29_SPI_BITRATE;
 #endif
 
-#if defined(DCMOTOR29_CS_PORT) && defined(DCMOTOR29_CS_PIN)
+#ifdef SLI_SI917
   ctx_cfg.cs = hal_gpio_pin_name(DCMOTOR29_CS_PORT,
                                  DCMOTOR29_CS_PIN);
+#else
+  const SPIDRV_Handle_t ptr = (SPIDRV_Handle_t)spi_instance;
+  ctx_cfg.cs = hal_gpio_pin_name(ptr->initData.portCs, ptr->initData.pinCs);
+#endif
+
+  // CS pin need to init here since the mikroe_sdk_v2 missed this step
   digital_out_t struct_cs;
   digital_out_init(&struct_cs, ctx_cfg.cs);
-#endif
 
 #if (MIKROE_DCMOTOR29_I2C_UC == 1)
   ctx_cfg.i2c_speed = MIKROE_DCMOTOR29_I2C_SPEED_MODE;

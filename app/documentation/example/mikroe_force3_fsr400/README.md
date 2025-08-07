@@ -6,44 +6,63 @@ This project shows the driver implementation of a Force Sensing Resistor sensor 
 
 Force 3 Click is a compact add-on board with circuitry for implementing Force Sensing Resistor into your projects whose resistance changes when a force, pressure, or mechanical stress is applied. This board features an FSR 400 series 34-00004 single zone Force Sensing Resistor from Interlink Electronics, a robust polymer thick film (PTF) device that exhibits a decrease in resistance with an increase in force applied to the surface of the sensor. Simple and easy to integrate, ultra-thin, and cost-effective, Force 3 Click has an actuation force as low as 0.2N and a sensitivity range of up to 20N. It also provides 2-Wire I2C compatible control interface using an MCP3221, low-power 12-bit resolution A/D converter. This Click board™ is optimized for use in human-machine interface devices including automotive electronics, medical systems, industrial controls and robotics.
 
-![force_3_click](image/force_3_click.png)
+## Table Of Contents ##
 
-Force 3 Click is based on the FSR 400 series 34-00004 single zone Force Sensing Resistor IC from Interlink Electronics. Force-sensing resistors consist of a conductive polymer, which predictably changes resistance following the application of force to its surface. As the force on the sensor is increased, the resistance is decreased. This thin sensor is made of two membranes that are separated by a spacer around the edges. The top layer of the sensor consists of the area of the force-sensitive layer on the flexible film, while the bottom layer is comprised of conductive circuit traces on the flexible film. When pressed, the gap between the two membranes gets closed. This shorts the two membranes together, with a resistance that is proportional to an applied force.
-
-Force 3 Click also contains all the necessary circuitry, required to obtain precise measurements from the sensor. It communicates with the MCU using the MCP3221, a low-power 12-bit resolution A/D converter with an I2C interface. Data on the I2C bus can be transferred at rates of up to 100 kbit/s in the Standard-mode and up to 400 kbit/s in the Fast-mode. Maximum sample rates of 22.3 kSPS are possible with the MCP3221 in a continuous-conversion mode and SCL clock rate of 400 kHz.
-
-The sensor is placed in a voltage divider configuration with a fixed resistor R2 (10k). The output voltage is measured across resistor R2 and then sent to the analog pin of the A/D converter MCP3221. Output voltage value was calculated using the voltage divider formula, whose value is later used in the Test Example to accurately determine the strength of the applied force. The Test Example is made in such a way that, based on the value of the applied force, it is possible to obtain four output values such as Light Touch, Weak Squeeze, Medium Squeeze, and Strong Squeeze.
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
 
 ## Required Hardware ##
 
-- 1x [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit) BGM220 Bluetooth Module Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [Force 3 Click board](https://www.mikroe.com/force-3-click) based on FSR 400 sensor
 
 ## Hardware Connection ##
 
-- If the BGM220P Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the Force 3 Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the Force 3 Click board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The Force 3 Click board supports MikroBus, so it can connect easily to Explorer Kit via MikroBus header. Assure that the board's 45-degree corner matches the Explorer Kit's 45-degree white line.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the image below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-  ![board](image/hardware_connection.png)
+The tables below provide an overview of the pin connections.
 
-- If the Wi-Fi Development Kit is used:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | Force 3 Click |
-  | ----------- | -------------  | ------------------ | ------------- |
-  | I2C_SDA      | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6   | SDA            |
-  | I2C_SCL      | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7   | SCL            |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | Force 3 Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| I2C_SDA | PD3 | PD3 | PB5 | PD3 | ↔ | SDA |
+| I2C_SCL | PD2 | PD2 | PB4 | PD2 | ↔ | SCL |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | Force 3 Click |
+| --- | --- | --- | --- | --- | --- |
+| I2C_SDA | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6 [P16] | GPIO_6 | ↔ | SDA |
+| I2C_SCL | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7 [P15] | GPIO_7 | ↔ | SCL |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -52,7 +71,7 @@ You can either create a project based on an example project or start with an emp
 
 ### Create a project based on an example project ###
 
-1. From the Launcher Home, add your device to My Products, click on it, and click on the **EXAMPLE PROJECTS & DEMOS** tab. Find the example project filtering by *force*.
+1. From the Launcher Home, add your device to My Products, click on it, and click on the **EXAMPLE PROJECTS & DEMOS** tab. Find the example project filtering by *force 3*.
 
 2. Click **Create** button on the **Third Party Hardware Drivers - FSR400 - Force 3 Click (Mikroe)** example. Example project creation dialog pops up -> click Create and Finish and Project should be generated.
 
@@ -66,26 +85,18 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file 'app/example/mikroe_force3_fsr400/app.c' into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
+     - [Application] → [Utility] → [Log]
+     - [Third Party Hardware Drivers] → [Sensors] → [FSR 400 - Force 3 Click (Mikroe)]
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the BGM220P Explorer Kit is used:**
-
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
-        - [Application] → [Utility] → [Log]
-        - [Third Party Hardware Drivers] → [Sensors] → [FSR 400 - Force 3 Click (Mikroe)]
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2]
-        - [Third Party Hardware Drivers] → [Sensors] → [FSR 400 - Force 3 Click (Mikroe)]
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+     - [Third Party Hardware Drivers] → [Sensors] → [FSR 400 - Force 3 Click (Mikroe)]
 
 4. Build and flash this example to the board.
 

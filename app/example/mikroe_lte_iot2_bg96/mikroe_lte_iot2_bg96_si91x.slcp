@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
   - path: app_iostream_cli_si91x.c
 
 include:
@@ -26,10 +25,10 @@ include:
     - path: app_iostream_cli.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: mikroe_lte_iot2
     from: third_party_hw_drivers
@@ -40,15 +39,33 @@ toolchain_settings:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 configuration:
-  - name: SL_UART1_DMA_CONFIG_ENABLE
-    value: "0"
   - name: CIRCULAR_QUEUE_LEN_MAX
     value: "20"
+  - name: SL_USART0_DMA_CONFIG_ENABLE
+    value: 0
+  - name: SL_USART0_TX_PORT
+    value: ULP
+    condition: [brd2708a]
+  - name: SL_USART0_TX_PIN
+    value: 7
+    condition: [brd2708a]
+  - name: SL_USART0_TX_LOC
+    value: 8
+    condition: [brd2708a]
+  - name: SL_USART0_RX_PORT
+    value: ULP
+    condition: [brd2708a]
+  - name: SL_USART0_RX_PIN
+    value: 6
+    condition: [brd2708a]
+  - name: SL_USART0_RX_LOC
+    value: 13
+    condition: [brd2708a]
 
 readme:
   - path: ../../documentation/example/mikroe_lte_iot2_bg96/README.md
@@ -58,13 +75,11 @@ other_file:
     directory: "image"
   - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/config_queue_size.png
     directory: "image"
-  - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/config_uart_si91x.png
-    directory: "image"
   - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/config_sms_phone_number.png
     directory: "image"
   - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/config_pdu_phone_number.png
     directory: "image"
-  - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/hardware_connection_1.png
+  - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/hardware_connection.png
     directory: "image"
   - path: ../../documentation/example/mikroe_lte_iot2_bg96/image/log.png
     directory: "image"

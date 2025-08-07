@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,20 +23,26 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: sleeptimer
   - id: mikroe_pressure3_spi
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_GSPI_MASTER_CS0__PORT
+    value: HP
+  - name: SL_GSPI_MASTER_CS0__PIN
+    value: 49
+
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 toolchain_settings:
   - option: gcc_linker_option
@@ -54,10 +59,6 @@ other_file:
   - path: ../../documentation/example/mikroe_pressure3_dps310/image/log.png
     directory: "image"
   - path: ../../documentation/example/mikroe_pressure3_dps310/image/float.png
-    directory: "image"
-  - path: ../../documentation/example/mikroe_pressure3_dps310/image/spi_config.png
-    directory: "image"
-  - path: ../../documentation/example/mikroe_pressure3_dps310/image/pressure3_config.png
     directory: "image"
 
 ui_hints:

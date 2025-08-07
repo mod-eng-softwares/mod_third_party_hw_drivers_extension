@@ -8,43 +8,71 @@ Turbidity Click Bundle: This bundle gives you everything you need to take high-a
 
 The sensor can be used in various domains. For example, with the washing machines application, depending on the sensor value, the washing controller can determine the amount of soil in the water and make decisions on how long to wash in all cycles. By measuring the turbidity of the wash water, the washing machine can conserve energy on lightly soiled loads by only washing as long as necessary. This will result in energy savings for the consumer.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+  - [Driver Layer Diagram](#driver-layer-diagram)
+  - [Testing](#testing)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [Turbidity Click board](https://www.mikroe.com/turbidity-click) carries MCP3221 Low-Power 12-Bit A/D Converter
-
 - 1x [Turbidity Sensor - TSD10](https://www.mikroe.com/tsd-10-turbidity-sensor)
-
 - 1x [3-wire Male to Male Cable - 15 cm](https://www.mikroe.com/3-wire-male-to-male-cable-15-cm)
 
 ## Hardware Connection ##
 
-- If the EFR32xG24 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the Turbidity Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the IrThermo 3 board aligns with the 45-degree white line on the Explorer Kit.
 
-  The Turbidity Click board supports MikroBus, so it can connect easily to EFR32xG24 Explorer Kit via MikroBus header. Assure that the board's 45-degree corner matches the Explorer Kit's 45-degree white line.
-  The Turbidity Click features one 1x3 2.5mm connector suitable for connecting a Turbidity sensor via an additional 3-wire Male to Male Cable - 15 cm.
+The Turbidity Click features a 1x3 2.5mm connector suitable for connecting a Turbidity sensor via an additional 3-wire Male to Male Cable - 15 cm.
 
-  ![hardware_connection](image/hardware_connection.png "BRD2703A xG24 Explorer Kit Board and Turbidity Click Board")
+The hardware connection is illustrated in the image below.
 
-  The hardware connection will look like the figure below:
+![board](image/hardware_connection.png)
 
-  ![real_hardware_connection](image/hardware_connection1.png)
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-- If the Wi-Fi Development Kit is used:
+The tables below provide an overview of the pin connections.
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A | Turbidity Click  |
-  | -------------| ------------- | ------------------ | ---------------- |
-  | I2C_SDA      | ULP_GPIO_6 [EXP_16]  | ULP_GPIO_6  | SDA              |
-  | I2C_SCL      | ULP_GPIO_7 [EXP_15]  | ULP_GPIO_7  | SCL              |
+**Silicon Labs BLE Development Kit:**
+
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | Turbidity Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| I2C_SDA | PD3 | PD3 | PB5 | PD3 | ↔ | SDA |
+| I2C_SCL | PD2 | PD2 | PB4 | PD2 | ↔ | SCL |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | Turbidity Click |
+| --- | --- | --- | --- | --- | --- |
+| I2C_SDA | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6 [P16] | GPIO_6 | ↔ | SDA |
+| I2C_SCL | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7 [P15] | GPIO_7 | ↔ | SCL |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -67,31 +95,24 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_turbidity_tsd10/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Development Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
+     - [Application] → [Utility] → [Log]
+     - [Third-Party Hardware Drivers] → [Sensor] → [TSD-10 - Turbidity Click (Mikroe)]
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the EFR32xG24 Explorer Kit is used:**
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
-        - [Application] → [Utility] → [Log]
-        - [Third-Party Hardware Drivers] → [Sensor] → [TSD-10 - Turbidity Click (Mikroe)]
-
-      **If the Wi-Fi Development Kit is used:**
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2]
-        - [Third Party Hardware Drivers] → [Sensors] → [TSD-10 - Turbidity Click (Mikroe)]
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+     - [Third Party Hardware Drivers] → [Sensors] → [TSD-10 - Turbidity Click (Mikroe)]
 
 4. Enable **Printf float**
 
    - Open Properties of the project.
    - Select C/C++ Build → Settings → Tool Settings → GNU ARM C Linker → General → Check **Printf float**.
-
-      ![float](image/float.png)
+     ![float](image/float.png)
 
 5. Build and flash this example to the board.
 

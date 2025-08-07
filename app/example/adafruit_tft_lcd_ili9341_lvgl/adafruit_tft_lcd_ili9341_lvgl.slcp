@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: gecko/app.c
-  - path: main.c
   - path: app_ui/single_buffer_without_dma/ui_events_brd2703a.c
     condition: [brd2703a]
   - path: app_ui/single_buffer_without_dma/ui_events_brd2704a.c
@@ -40,8 +39,9 @@ include:
     - path: ui.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: sleeptimer
   - id: udelay
   - id: simple_led
@@ -60,7 +60,7 @@ define:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 configuration:
   - name: LV_BUFFER_MODE

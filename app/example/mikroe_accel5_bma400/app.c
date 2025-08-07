@@ -44,6 +44,7 @@
 
 #if (defined(SLI_SI917))
 #include "rsi_debug.h"
+#include "sl_si91x_driver_gpio.h"
 
 #ifdef SL_CATALOG_MIKROE_ACCEL5_BMA400_SPI_PRESENT
 #include "mikroe_bma400_spi.h"
@@ -273,7 +274,11 @@ static sl_status_t app_bma400_init(void)
                        ? MIKROE_BMA400_INT1_PORT
                        : (MIKROE_BMA400_INT1_PIN / 16);
   gpio_port_pin.pin = MIKROE_BMA400_INT1_PIN % 16;
-  int_no = PIN_INTR_NO;
+  if (MIKROE_BMA400_INT1_PORT == UULP_VBAT) {
+    int_no = MIKROE_BMA400_INT1_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt(&gpio_port_pin,
                                      int_no,
                                      SL_GPIO_INTERRUPT_RISING_EDGE,

@@ -65,6 +65,12 @@ typedef enum {
 } spi_master_mode_t;
 
 typedef enum {
+  SPI_MASTER_CS_MODE_HW = 0, // CS controlled by HW
+  SPI_MASTER_CS_MODE_SW, // CS controlled by SW
+  SPI_MASTER_CS_MODE_LAST // Last member of enum for validation
+} spi_master_cs_mode_t;
+
+typedef enum {
   SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_LOW = 0,
   SPI_MASTER_CHIP_SELECT_POLARITY_ACTIVE_HIGH,
 
@@ -96,6 +102,7 @@ err_t spi_master_set_default_write_data(spi_master_t *obj,
                                         uint8_t default_write_data);
 err_t spi_master_set_speed(spi_master_t *obj, uint32_t speed);
 err_t spi_master_set_mode(spi_master_t *obj, spi_master_mode_t mode);
+err_t spi_master_set_cs_mode(spi_master_cs_mode_t cs);
 err_t spi_master_write(spi_master_t *obj,
                        uint8_t *write_data_buffer,
                        size_t write_data_length);

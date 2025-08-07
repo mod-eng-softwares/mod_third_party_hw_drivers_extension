@@ -8,42 +8,72 @@ MIC 2 click is equipped with a small electret microphone, accompanied by a suita
 
 This example can be used to determine the sound intensity of your location. The combination of the EFR32xG24 Explorer Kit and Mikroe MIC 2 Click can act as a sound intensity measurement device.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [MIC 2 Click](https://www.mikroe.com/mic-2-click)
 
 ## Hardware Connection ##
 
-- If the EFR32xG24 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the MIC 2 Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the MIC 2 Click board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The MIC 2 Click board supports MikroBus, so it can connect easily to the Explorer Kit via MikroBus header. Assure that the 45-degree corner of the Click board matches the 45-degree white line of the Explorer Kit.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the image below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-  ![board](image/hardware_connection.png)
+The tables below provide an overview of the pin connections.
 
-- If the Wi-Fi Development Kit is used:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | MIC 2 Click  |
-  | -------------| -----------| -------------| ------------------------|
-  | I2C_SDA      | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6   | SDA            |
-  | I2C_SCL      | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7   | SCL            |
-  | Positive analog input | ULP_GPIO_1 [P16]    | ULP_GPIO_1   | AN    |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | MIC 2 Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| I2C_SDA | PD3 | PD3 | PB5 | PD3 | ↔ | SDA |
+| I2C_SCL | PD2 | PD2 | PB4 | PD2 | ↔ | SCL |
+| Positive analog input | PB0 | PB0 | PB0 | PB0 | ↔ | AN |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | MIC 2 Click |
+| --- | --- | --- | --- | --- | --- |
+| I2C_SDA | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6 [P16] | GPIO_6 | ↔ | SDA |
+| I2C_SCL | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7 [P15] | GPIO_7 | ↔ | SCL |
+| Positive analog input | ULP_GPIO_1 [P16] | ULP_GPIO_1 | GPIO_29 | ↔ | AN |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
 > [!TIP]
 > To show all components in the **Third Party Hardware Drivers** extension, the **Evaluation** quality must be enabled in the Software Component view.
+
+### Create a project based on an example project ###
 
 1. From the Launcher Home, add your board to My Products, click on it, and click on the **EXAMPLE PROJECTS & DEMOS** tab. Find the example project filtering by **"mic 2"**.
 
@@ -57,27 +87,19 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_mic2/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   **If the BLE Explorer Kit is used:**
+   - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **vcom**
+   - [Application] → [Utility] → [Log]
+   - [Services] → [Timers] → [Sleep Timer]
+   - [Third Party Hardware Drivers] → [Audio & Voice] → [MIC 2 Click (Mikroe)] → use the default configuration
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the EFR32xG24 Explorer Kit is used:**
-
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **vcom**
-        - [Application] → [Utility] → [Log]
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Third Party Hardware Drivers] → [Audio & Voice] → [MIC 2 Click (Mikroe)] → use the default configuration
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [ADC] → [channel_1] → use default configuration
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2]
-        - [Third Party Hardware Drivers] → [Audio & Voice] → [MIC 2 Click (Mikroe)] → use the default configuration
+   **If the Wi-Fi Development Kit is used:**
+   - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+   - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [ADC] → [channel_1] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+   - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+   - [Third Party Hardware Drivers] → [Audio & Voice] → [MIC 2 Click (Mikroe)] → use the default configuration
 
 4. Enable **Printf float**
 
@@ -100,7 +122,7 @@ After the sensor is initialed successfully, the application reads the analog sig
 
 To test the functionality, you can change the sound intensity surrounding the sensor in many ways. You can talk louder or applaud near the sensor. Then you will see the Decibel value change on the console in Simplicity Studio or other third-party terminal tools.
 
-You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like TeraTerm to receive the data from the USB. A screenshot of the console output is shown in the figure below.
+You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like Tera Term to receive the data from the USB. A screenshot of the console output is shown in the figure below.
 
 ![console_log](image/console_log.png)
 

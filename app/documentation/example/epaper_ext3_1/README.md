@@ -5,34 +5,72 @@
 Electronic paper (E-Paper) or intelligent paper, is a display device that reflects ambient light, mimicking the appearance of ordinary ink on paper. EPD Extension Kit Generation 3 (EXT3 Kit) is a new extension board that connects to E-Paper Display (EPD).
 This project aims to implement a hardware driver interacting with the EXT3-1 Kit to control an E-Paper Display.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
+
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
+
 - 1x [EPD Extension Kit Generation 3 revision 1](https://www.pervasivedisplays.com/product/epd-extension-kit-gen-3-ext3/#tab-3)
 - 1x [5.81″ E-ink displays](https://www.pervasivedisplays.com/product/5-81-e-ink-displays/)
 
 ## Hardware Connection ##
 
-To connect the EPD Extension Kit to the EFR32xG24 Explorer Kit, you can see the pins mapping table below.
+The tables below provide an overview of the pin connections.
 
-| BGM220P Explorer Kit | EFR32xG24 Explorer Kit | BRB4338A + BRD4002A | BRB2605A | EXT3-1 Kit | Pin function |
+**Silicon Labs BLE Explorer Kit:**
+
+| Pin function | BRD4108A | BRD4314A | BRD2703A | BRD2710A | ↔ | EXT3-1 Kit |
+| --- | --- | --- | --- | --- | --- | --- |
+| VCC 3.3V  | 3V3 | 3V3 | 3V3 | 3V3 | ↔ | 3V3 |
+| GND | GND | GND | GND | GND | ↔ | GND |
+| Master chip select pin of EPD | PC3 | PC3 | PC0 | PC3 | ↔ | ECSM [9] |
+| SPI SCK | PC2 | PC2 | PC1 | PC2 | ↔ | SCK [2] |
+| SPI MISO | PC1 | PC1 | PC2 | PC1 | ↔ | MISO [6] |
+| SPI MOSI | PC0 | PC0 | PC3 | PC0 | ↔ | MOSI [7] |
+| Serial bus for controlling data or command | PB4 | PB4 | PA0 | PB4 | ↔ | D/C [4] |
+| Reset signal input | PB2 | PB2 | PD5 | PB2 | ↔ | RST [5] |
+| Busy state output pin | PB3 | PB3 | PB1 | PB3 | ↔ | BUSY [3] |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Pin function | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | EXT3-1 Kit |
 | --- | --- | --- | --- | --- | --- |
-| 3V3 | 3V3 | 3V3 | VCC | 3V3 [1] | VCC 3.3V |
-| GND | GND | GND | GND | GND [10] |Ground |
-| PC3 | PC0 | GPIO_28 [P31]| GPIO_28 | ECSM [9] | Master chip select pin of EPD |
-| PC2 | PC1 | GPIO_25 [P25] | GPIO_25 | SCK [2] | SPI SCK |
-| PC1 | PC2 | GPIO_26 [P27] | GPIO_26 | MISO [6] | SPI MISO |
-| PC0 | PC3 | GPIO_27 [P29] | GPIO_27 | MOSI [7] | SPI MOSI |
-| PB4 | PA0 | GPIO_46 [P24] | GPIO_10 | D/C [4] | Serial bus for controlling data or command |
-| PB2 | PD5 | GPIO_48 [P28] | GPIO_12 | RST [5] | Reset signal input |
-| PB3 | PB1 | GPIO_47 [P26] | GPIO_11 | BUSY [3] |  Busy state output pin |
+| VCC 3.3V  | 3V3 | 3V3 [P20] | 3V3 | ↔ | 3V3 |
+| GND | GND | GND [P1] | GND | ↔ | GND |
+| Master chip select pin of EPD | GPIO_28 [P31]| GPIO_28 [P9] | GPIO_28 [CS] | ↔ | ECSM [9] |
+| SPI SCK | GPIO_25 [P25] | GPIO_25 [P3] | GPIO_25 [SCK] | ↔ | SCK [2] |
+| SPI MISO | GPIO_26 [P27] | GPIO_26 [P5] | GPIO_26 [MISO] | ↔ | MISO [6] |
+| SPI MOSI | GPIO_27 [P29] | GPIO_27 [P7] | GPIO_27 [MOSI] | ↔ | MOSI [7] |
+| Serial bus for controlling data or command | GPIO_46 [P24] | GPIO_10 [P23] | GPIO_29 [AN] | ↔ | D/C [4] |
+| Reset signal input | GPIO_48 [P28] | GPIO_12 [P25] | GPIO_30 [RST] | ↔ | RST [5] |
+| Busy state output pin | GPIO_47 [P26] | GPIO_11 [P22] | GPIO_12 [PWM] | ↔ | BUSY [3] |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -55,15 +93,10 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/epaper_ext3_1/app.c` and `app/example/epaper_ext3_1/silabs_logo.h` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-   - Open the .slcp file in the project.
-
-   - Select the SOFTWARE COMPONENTS tab.
-
-   - Install the following components:
-      - [Third Party Hardware Drivers] → [Display & LED] → [E-Paper EXT3-1 (Pervasive Displays)]
-      - [Third Party Hardware Drivers] → [Services] → [GLIB - OLED Graphics Library]
+   - [Third Party Hardware Drivers] → [Display & LED] → [E-Paper EXT3-1 (Pervasive Displays)]
+   - [Third Party Hardware Drivers] → [Services] → [GLIB - OLED Graphics Library]
 
 4. Build and flash the project to your device.
 

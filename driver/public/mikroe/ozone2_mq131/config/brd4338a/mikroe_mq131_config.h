@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -38,6 +38,8 @@
  ******************************************************************************/
 #ifndef MIKROE_MQ131_CONFIG_H
 #define MIKROE_MQ131_CONFIG_H
+
+#include "sl_si91x_gspi_common_config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -76,10 +78,13 @@ extern "C" {
 // <gpio optional=true> MIKROE_OZONE2_CS
 // $[GPIO_MIKROE_OZONE2_CS]
 #define MIKROE_OZONE2_CS_PORT                      HP
-#define MIKROE_OZONE2_CS_PIN                       46
+#define MIKROE_OZONE2_CS_PIN                       28
 // [GPIO_MIKROE_OZONE2_CS]$
 
 // <<< sl:end pin_tool >>>
+
+#define MIKROE_OZONE2_MISO_PORT   SL_GSPI_MASTER_MISO__PORT
+#define MIKROE_OZONE2_MISO_PIN    SL_GSPI_MASTER_MISO__PIN
 
 #ifdef __cplusplus
 }

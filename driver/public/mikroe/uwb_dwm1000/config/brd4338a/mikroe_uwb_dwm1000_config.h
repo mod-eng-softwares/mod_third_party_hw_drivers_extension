@@ -4,7 +4,7 @@
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -88,7 +88,7 @@ extern "C" {
 #define DWM1000_SPI_CS_PORT                      HP
 #endif
 #ifndef DWM1000_SPI_CS_PIN
-#define DWM1000_SPI_CS_PIN                       48
+#define DWM1000_SPI_CS_PIN                       28
 #endif
 // [GPIO_DWM1000_SPI_CS]$
 

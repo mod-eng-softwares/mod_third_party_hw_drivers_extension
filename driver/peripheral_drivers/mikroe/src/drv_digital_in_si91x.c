@@ -78,7 +78,8 @@ static err_t drv_digital_in_init(digital_in_t *in,
   gpio_config.port_pin.pin = hal_gpio_pin_index(name);
   gpio_config.direction = GPIO_INPUT;
 
-  if (gpio_config.port_pin.port == SL_ULP_GPIO_PORT) {
+  if ((gpio_config.port_pin.port == SL_GPIO_ULP_PORT)
+      || (gpio_config.port_pin.port == SL_GPIO_UULP_PORT)) {
     sl_si91x_gpio_enable_clock((sl_si91x_gpio_select_clock_t)ULPCLK_GPIO);
   } else {
     sl_si91x_gpio_enable_clock((sl_si91x_gpio_select_clock_t)M4CLK_GPIO);

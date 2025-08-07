@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,8 +23,9 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: app_log
   - id: iostream_eusart
     instance: [vcom]
@@ -40,20 +40,18 @@ configuration:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
   - path: ../../documentation/example/mikroe_ozone2_mq131/README.md
 
 other_file:
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/create_example.png
-    directory: images
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/hardware_connection.png
-    directory: images
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/log.png
-    directory: images
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/spidrv_config.png
-    directory: images
+  - path: ../../documentation/example/mikroe_ozone2_mq131/image/create_example.png
+    directory: image
+  - path: ../../documentation/example/mikroe_ozone2_mq131/image/hardware_connection.png
+    directory: image
+  - path: ../../documentation/example/mikroe_ozone2_mq131/image/log.png
+    directory: image
 
 ui_hints:
   highlight:

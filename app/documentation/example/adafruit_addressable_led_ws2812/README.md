@@ -8,10 +8,31 @@ The WS2812 is an intelligent RGB LED light source that integrates a control circ
 
 The WS2812 uses a single-wire NZR communication protocol for data transfer. Upon power-up, the DIN port receives data from the controller. The first LED captures the initial 24-bit data (8 bits each for Red, Green, and Blue) and stores it in its internal data latch. The remaining data is reshaped and transmitted to the next LED in the chain via the DO port. This cascading process continues, with each LED reducing the data by 24 bits. The WS2812 employs automatic reshaping technology, allowing for an unlimited number of LEDs in the chain, constrained only by the signal transmission speed.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x Series 2 device (e.g. [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit) or [BRD2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview))
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+- 1x [Silicon Labs BLE Development Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
+
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
+
 - 1x [WS2812 - Addressable LED (Adafruit)](https://cdn-shop.adafruit.com/datasheets/WS2812.pdf)
 
 ## Hardware Connection ##
@@ -19,6 +40,20 @@ The WS2812 uses a single-wire NZR communication protocol for data transfer. Upon
 Connect the white DIN wire to the MOSI pin of the board and the adjacent black wire to the GND pin of your board. Additionally, connect the 5V wire to a power source and the corresponding GND wire to the ground of the power source. For optimal performance, it is recommended to use a stable external power source, as the LED requires varying voltage levels depending on the colors displayed. The recommended voltage range is +5.0V to +7.0V. Note that relying on the board's power supply may result in voltage drops, potentially affecting functionality.
 
 ![connection](image/connection.png)
+
+The tables below provide an overview of the pin connections.
+
+**Silicon Labs BLE Development Kit:**
+
+| Description | BRD4108A | BRD4314A | BRD2703A | BRD2710A | ↔ | WS2812 - Addressable LED |
+| --- | --- | --- | --- | --- | --- | --- |
+| SPI TX PIN  | PC0 | PC0 | PC3 | PC0 | ↔ | SPI MOSI |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | WS2812 - Addressable LED |
+| --- | --- | --- | --- | --- | --- |
+| RTE_GSPI_MASTER_MOSI_PIN | GPIO_27 [P29] | GPIO_27 [P7] | GPIO_27 | ↔ | SPI MOSI |
 
 > [!TIP]
 > Always refer to the device's reference manual to get the correct pin layout.
@@ -28,6 +63,7 @@ Connect the white DIN wire to the MOSI pin of the board and the adjacent black w
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -50,23 +86,19 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/adafruit_addressable_led_ws2812/app.c` into the project root folder (overwriting existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-   - Open the .slcp file in the project.
+   - **If the BLE Development Kit is used**:
+     - [Application] → [Utility] → [Log]
+     - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
+     - [Platform] → [Driver] → [SPI] → [SPIDRV] → default instance name: mikroe
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Third Party Hardware Drivers] → [Display & LED] → [WS2812 - Addressable LED (Adafruit)] → [Configuration] → Set your desired number of LEDs
 
-   - Select the SOFTWARE COMPONENTS tab.
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [Third Party Hardware Drivers] → [Display & LED] → [WS2812 - Addressable LED (Adafruit)] → [Configuration] → Set your desired number of LEDs
 
-   - Install the following components:
-      - With Simplicity EFR32 SoCs:
-         - [Application] → [Utility] → [Log]
-         - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
-         - [Platform] → [Driver] → [SPI] → [SPIDRV] → default instance name: mikroe
-         - [Services] → [Timers] → [Sleep Timer]
-         - [Third Party Hardware Drivers] → [Display & LED] → [WS2812 - Addressable LED (Adafruit)] → [Configuration] → Set your desired number of LEDs
-      - With SiWx917 SoCs:
-         - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [GSPI]
-         - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-         - [Third Party Hardware Drivers] → [Display & LED] → [WS2812 - Addressable LED (Adafruit)] → [Configuration] → Set your desired number of LEDs
 4. Build and flash the project to your device.
 
 ## How It Works ##
@@ -82,7 +114,7 @@ You can either create a project based on an example project or start with an emp
 
 - The result will be as followed:
 
-   ![result](image/result_test.gif)
+  ![result](image/result_test.gif)
 
 ## Report Bugs & Get Support ##
 

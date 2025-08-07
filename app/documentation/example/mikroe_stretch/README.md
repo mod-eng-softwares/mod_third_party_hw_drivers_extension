@@ -6,36 +6,66 @@ This example project shows an example of Mikroe Stretch Click board driver integ
 
 Stretch Click is a compact add-on board for measuring stretch forces with conductive rubber cords. This board features circuitry that allows measuring the stretch forces of the 2mm diameter conductive rubber cord. This Click board™ comes equipped with the screw terminal, and two copper exposed pads, aside from the screw terminal, in addition to using the cord with alligator clamps.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+  - [Driver Layer Diagram](#driver-layer-diagram)
+  - [Software Component](#software-component)
+  - [Testing](#testing)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [Stretch Click](https://www.mikroe.com/stretch-click)
 
 ## Hardware Connection ##
 
-- If the EFR32xG24 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the Stretch Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the Stretch Click board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The Stretch Click board supports MikroBus, so it can connect easily to Explorer Kit via MikroBus header. Assure that the board's 45-degree corner matches the Explorer Kit's 45-degree white line.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the image below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-  ![hardware_connection](image/hardware_connection.png)
+The tables below provide an overview of the pin connections.
 
-- If the Wi-Fi Development Kit is used:
+**Silicon Labs BLE Development Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A | Stretch Click  |
-  | -------------| ------------- | -------------- | -------------- |
-  | Positive analog input | ULP_GPIO_1 [P16]   | ULP_GPIO_1  | OUT   |
-  | LED control           | GPIO_46 [P24]      | GPIO_10      | PWM   |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | Stretch Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| Positive analog | PB0 | PB0 | PB0 | PB0 | ↔ | AN |
+| LED control     | PB4 | PB4 | PA0 | PB4 | ↔ | PWM |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | Stretch Click |
+| --- | --- | --- | --- | --- | --- |
+| Positive analog input | ULP_GPIO_1 [P16] | ULP_GPIO_1 [P4] | GPIO_29 | ↔ | AN |
+| LED control  | GPIO_7 [P20] | GPIO_7 [P24] | GPIO_12 | ↔ | PWM |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -58,26 +88,18 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_stretch/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the EFR32xG24 Explorer Kit is used:**
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **vcom**
+     - [Application] → [Utility] → [Log]
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Third Party Hardware Drivers] → [Sensors] → [Stretch Click (Mikroe)] → use the default configuration.
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-        **If the EFR32xG24 Explorer Kit is used:**
-
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **vcom**
-        - [Application] → [Utility] → [Log]
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Third Party Hardware Drivers] → [Sensors] → [Stretch Click (Mikroe)] → use the default configuration.
-
-        **If the Wi-Fi Development Kit is used:**
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [ADC] → [channel_1] → use default configuration
-        - [Third Party Hardware Drivers] → [Sensors] → [Stretch Click (Mikroe)]
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [ADC] → [channel_1] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+     - [Third Party Hardware Drivers] → [Sensors] → [Stretch Click (Mikroe)]
 
 4. Build and flash this example to the board.
 

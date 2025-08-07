@@ -121,7 +121,9 @@ void app_process_action(void)
     app_printf("\r > Reading data failed\n");
   } else {
     app_printf(
-      "\r > Proximity value: % 4d\tAmbient light value: % 4d\tWhite light value: % 4d\n",
+      "\r > Proximity value: %4d\t "
+      "Ambient light value: %4d\t "
+      "White light value: %4d\n",
       prox,
       ambient,
       white);

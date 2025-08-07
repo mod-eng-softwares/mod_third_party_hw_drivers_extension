@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: gecko/app.c
-  - path: main.c
   - path: app_ui/ui_events_gecko.c
   - path: app_ui/ui_helpers.c
   - path: app_ui/ui.c
@@ -40,8 +39,9 @@ include:
     - path: ui.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: iostream_eusart
     instance: [vcom]
   - id: app_assert
@@ -66,7 +66,7 @@ define:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d_lvgl/README.md
@@ -82,11 +82,7 @@ other_file:
     directory: image
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d_lvgl/image/hxd8357d_display.png
     directory: image
-  - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d_lvgl/image/hardware_connect.png
-    directory: image
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d_lvgl/image/double_buffered_lvgl_settings.png
-    directory: image
-  - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d_lvgl/image/single_buffered_lvgl_settings.png
     directory: image
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d_lvgl/image/gspi.png
     directory: image

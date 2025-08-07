@@ -10,6 +10,9 @@ requires:
   - name: status
   - name: bluetooth_stack
   - name: bluetooth_feature_legacy_scanner
+  - name: bluetooth_feature_connection
+  - name: bluetooth_feature_connection_role_central
+  - name: bluetooth_feature_system
   - name: mbedtls_ccm
   - name: nvm3_default
 config_file:

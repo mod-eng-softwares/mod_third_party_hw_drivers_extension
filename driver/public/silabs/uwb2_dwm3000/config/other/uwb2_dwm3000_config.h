@@ -4,7 +4,7 @@
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -59,10 +59,6 @@ extern "C" {
 
 // <<< sl:start pin_tool >>>
 
-// <usart signal=TX,RX,CLK,(CS)> DWM3000
-// $[USART_DWM3000]
-// [USART_DWM3000]$
-
 // <gpio optional=true> DWM3000_RESET
 // $[GPIO_DWM3000_RESET]
 #warning "DWM3000_RESET is not configured"
@@ -87,7 +83,6 @@ extern "C" {
 
 // <gpio optional=true> DWM3000_WAKE
 // $[GPIO_DWM3000_WAKE]
-//#warning "DWM3000_WAKE is not configured"
 // #ifndef DWM3000_WAKE_PORT
 // #define DWM3000_WAKE_PORT                        0
 // #endif
@@ -98,7 +93,6 @@ extern "C" {
 
 // <gpio optional=true> DWM3000_ON
 // $[GPIO_DWM3000_ON]
-#warning "DWM3000_ON is not configured"
 // #ifndef DWM3000_ON_PORT
 // #define DWM3000_ON_PORT                          0
 // #endif
@@ -106,17 +100,6 @@ extern "C" {
 // #define DWM3000_ON_PIN                           0
 // #endif
 // [GPIO_DWM3000_ON]$
-
-// <gpio optional=true> DWM3000_CS
-// $[GPIO_DWM3000_CS]
-#warning "DWM3000_CS is not configured"
-// #ifndef DWM3000_CS_PORT
-// #define DWM3000_CS_PORT                          0
-// #endif
-// #ifndef DWM3000_CS_PIN
-// #define DWM3000_CS_PIN                           0
-// #endif
-// [GPIO_DWM3000_CS]$
 
 // <<< sl:end pin_tool >>>
 

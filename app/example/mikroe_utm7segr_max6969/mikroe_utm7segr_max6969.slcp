@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,8 +23,9 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: iostream_eusart
     instance: [vcom]
   - id: spidrv
@@ -43,7 +43,7 @@ define:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
   - path: ../../documentation/example/mikroe_utm7segr_max6969/README.md
@@ -54,6 +54,8 @@ other_file:
   - path: ../../documentation/example/mikroe_utm7segr_max6969/image/image_test.png
     directory: "image"
   - path: ../../documentation/example/mikroe_utm7segr_max6969/image/hardware_connection.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_utm7segr_max6969/image/pwm_config.png
     directory: "image"
 
 ui_hints:

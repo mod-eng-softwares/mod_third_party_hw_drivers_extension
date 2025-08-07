@@ -6,37 +6,65 @@ This example project shows an example for health parameters collection with the 
 
 The SparkFun Pulse Oximeter and Heart Rate Sensor is an I2C based biometric sensor, utilizing two chips from Maxim Integrated: the MAX32664 and MAX30101. MAX32664 is a Biometric Sensor Hub while MAX30101 is a Pulse Oximetry and Heart Rate Module. While the latter does all the sensing, the former is an incredibly small and fast Cortex M4 processor that handles all of the algorithmic calculations, digital filtering, pressure/position compensation, advanced R-wave detection, and automatic gain control.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+- 1x [Silicon Labs BLE Development Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
+  - [XG24-DK2601B](https://www.silabs.com/development-tools/wireless/efr32xg24-dev-kit)
+  - [SparkFun Thing Plus Matter - MGM240P](https://www.sparkfun.com/sparkfun-thing-plus-matter-mgm240p.html)
+
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
+
 - 1x [SparkFun Pulse Oximeter and Heart Rate Sensor - MAX30101 & MAX32664 (Qwiic)](https://www.sparkfun.com/products/15219)
 
 ## Hardware Connection ##
 
-- **If the EFR32xG24 Explorer Kit is used**:
+For the Silicon Labs boards that feature a Qwiic connector, a [Qwiic Cable](https://www.sparkfun.com/flexible-qwiic-cable-100mm.html) is used to connect to the SparkFun Pulse Oximeter and Heart Rate Sensor board, as illustrated in the figure below.
 
-  The SparkFun Pulse Oximeter and Heart Rate Sensor board support Qwiic, so it can connect easily to the Qwiic header of the Explorer Kit.
+![connection](image/hardware_connection.png)
 
-  ![hardware_connection](image/hardware_connection.png)
+For the Silicon Labs boards that do not have a Qwiic connector, consider using the [Qwiic Breadboard Cable](https://www.sparkfun.com/products/14425).
 
-- **If the Wi-Fi Development Kit is used**:
+The tables below provide an overview of the pin connections.
 
-   The hardware connection is shown in the table below:
+**Silicon Labs BLE Development Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A | MAX30101 & MAX32664 sensor board |
-  | -------------| ------------------- | ------------ | ------------------ |
-  | I2C_SDA      | ULP_GPIO_6 [EXP_16] | Qwiic cable  | SDA                |
-  | I2C_SCL      | ULP_GPIO_7 [EXP_15] | Qwiic cable  | SCL                |
+| Description | BRD4108A | BRD4314A | BRD2601B | BRD2703A | BRD2704A | BRD2710A | ↔ | SparkFun Pulse Oximeter and Heart Rate Sensor |
+| --- | --- | --- | --- | --- | --- | --- | --- |  --- |
+| I2C_SDA | PD3 | PD3 | PC5 | PC5 | PB4 | PD3 | ↔ | SDA |
+| I2C_SCL | PD2 | PD2 | PC4 | PC4 | PB3 | PD2 | ↔ | SCL |
 
-> [!NOTE]
-> This board has two additional pins on its header: the RESET and MFIO pin. These pins are required for the board to function because they determine if the board enters data collection mode or not.
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | SparkFun Pulse Oximeter and Heart Rate Sensor |
+| --- | --- | --- | --- | --- | --- |
+| I2C_SDA | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6 | GPIO_6 | ↔ | SDA |
+| I2C_SCL | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7 | GPIO_7 | ↔ | SCL |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -49,7 +77,7 @@ You can either create a project based on an example project or start with an emp
 
 2. Click **Create** button on the project **Third Party Hardware Drivers - MAX30101 & MAX32664 - Pulse Oximeter and Heart Rate Sensor (Sparkfun)**. Example project creation dialog pops up -> click Create and Finish and Project should be generated.
 
-    ![create_example](image/create_example.png)
+   ![create_example](image/create_example.png)
 
 3. Build and flash this example to the board.
 
@@ -57,31 +85,21 @@ You can either create a project based on an example project or start with an emp
 
 1. Create an "Empty C Project" project for your board using Simplicity Studio v5. Use the default project settings
 
-2. Copy the file `app/example/sparkfun_hr_po_max30101_max32664/app.c` into the project root folder (overwriting existing file)
+2. Copy the file `app/example/sparkfun_hr_po_max30101_max32664/app.c` into the project root folder (overwriting existing file).
 
-3. Set the test mode in the *app.c* file
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-4. Install the software components:
+   - **If the BLE Development Kit is used:**
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
+     - [Application] → [Utility] → [Log]
+     - [Platform] → [Driver] → [I2C] → [I2CSPM] → default instance name: qwiic
+     - [Third Party Hardware Drivers] → [Sensors] → [MAX30101 & MAX32664 - Pulse Oximeter and Heart Rate Sensor (Sparkfun)] → use default configuration
 
-    - Open the .slcp file in the project
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+     - [Third Party Hardware Drivers] → [Sensors] → [MAX30101 & MAX32664 - Pulse Oximeter and Heart Rate Sensor (Sparkfun)] → use default configuration
 
-    - Select the SOFTWARE COMPONENTS tab
-
-    - Install the following components:
-
-      **If the EFR32xG24 Explorer Kit is used:**
-
-      - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
-      - [Application] → [Utility] → [Log]
-      - [Platform] → [Driver] → [I2C] → [I2CSPM] → default instance name: qwiic
-      - [Third Party Hardware Drivers] → [Sensors] → [MAX30101 & MAX32664 - Pulse Oximeter and Heart Rate Sensor (Sparkfun)] → use default configuration
-
-      **If the Wi-Fi Development Kit is used:**
-
-      - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2]
-      - [Third Party Hardware Drivers] → [Sensors] → [MAX30101 & MAX32664 - Pulse Oximeter and Heart Rate Sensor (Sparkfun)] → use default configuration
-
-5. Build and flash the project to your device
+4. Build and flash the project to your device
 
 ## How It Works ##
 
@@ -162,11 +180,11 @@ There is trade off between higher resolution (i.e. longer pulse width) and the n
 
 This example demonstrates some of the available features of the Pulse Oximeter and Heart Rate Sensor. Follow the below steps to test the example:
 
-1. On your PC open a terminal program, such as the Console that is integrated in Simplicity Studio or a third-party tool terminal like TeraTerm to receive the logs from the virtual COM port. Note that your board uses the default baud rate of 115200.
+1. On your PC open a terminal program, such as the Console that is integrated in Simplicity Studio or a third-party tool terminal like Tera Term to receive the logs from the virtual COM port. Note that your board uses the default baud rate of 115200.
 
 2. Try to put your finger on the sensor with a proper pressure (solid contact between the finger and the sensor without optical leakage and don’t press with force) and check the logs on the terminal.
 
-    ![logging_screen](image/logs.png)
+   ![logging_screen](image/logs.png)
 
 ## Report Bugs & Get Support ##
 

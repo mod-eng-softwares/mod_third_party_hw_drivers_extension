@@ -109,7 +109,7 @@ extern "C" {
 // $[GPIO_TOUCHSCREEN_XM]
 #define TOUCHSCREEN_XM_PORT                            SL_GPIO_PORT_B
 #define TOUCHSCREEN_XM_PIN                             4
-// [GPIO_XM]$
+// [GPIO_TOUCHSCREEN_XM]$
 
 // <gpio optional=true> TOUCHSCREEN_YM
 // $[GPIO_TOUCHSCREEN_YM]

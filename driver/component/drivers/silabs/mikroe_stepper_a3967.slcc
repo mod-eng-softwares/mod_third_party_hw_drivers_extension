@@ -31,9 +31,12 @@ config_file:
   - path: public/silabs/stepper_a3967/config/brd4338a/mikroe_a3967_config.h
     file_id: mikroe_a3967_config
     condition: [brd4338a]
+  - path: public/silabs/stepper_a3967/config/brd2708a/mikroe_a3967_config.h
+    file_id: mikroe_a3967_config
+    condition: [brd2708a]
   - path: public/silabs/stepper_a3967/config/other/mikroe_a3967_config.h
     file_id: mikroe_a3967_config
-    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a]
+    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a, brd2708a]
 template_contribution:
   - name: component_catalog
     value: mikroe_stepper_a3967

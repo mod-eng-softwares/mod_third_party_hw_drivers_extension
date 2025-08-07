@@ -1,20 +1,41 @@
 /***************************************************************************//**
  * @file
- * @brief cli bare metal examples functions
+ * @brief cli baremetal examples functions
  *******************************************************************************
  * # License
- * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
- * The licensor of this software is Silicon Laboratories Inc. Your use of this
- * software is governed by the terms of Silicon Labs Master Software License
- * Agreement (MSLA) available at
- * www.silabs.com/about-us/legal/master-software-license-agreement. This
- * software is distributed to you in Source Code format and is governed by the
- * sections of the MSLA applicable to Source Code.
+ * SPDX-License-Identifier: Zlib
+ *
+ * The licensor of this software is Silicon Laboratories Inc.
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ *    claim that you wrote the original software. If you use this software
+ *    in a product, an acknowledgment in the product documentation would be
+ *    appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ *    misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source distribution.
+ *
+ *******************************************************************************
+ *
+ * EVALUATION QUALITY
+ * This code has been minimally tested to ensure that it builds with the
+ * specified dependency versions and is suitable as a demonstration for
+ * evaluation purposes only.
+ * This code will be maintained at the sole discretion of Silicon Labs.
  *
  ******************************************************************************/
-#include <string.h>
+#include "sl_string.h"
 #include "sl_sleeptimer.h"
 #include "sl_bt_api.h"
 #include "sl_cli.h"
@@ -143,20 +164,30 @@ void scan(sl_cli_command_arg_t *arguments)
 {
   char *instruction;
 
-  app_log("<<scan network>>\r\n");
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 1) {
+    app_log("Incorrect instruction! Please use with start or stop.\r\n");
+    return;
+  }
 
   // Get the instruction provided
   instruction = sl_cli_get_argument_string(arguments, 0);
 
   if (strcmp(instruction, "start") == 0) {
+    app_log("<<scan network: start>>\r\n");
     // scan start instruction provided
-    bthome_v2_server_start_scan_network();
+    if (bthome_v2_server_start_scan_network() != SL_STATUS_OK) {
+      app_log("<<scan network: start error>>\r\n");
+    }
   } else if (strcmp(instruction, "stop") == 0) {
+    app_log("<<scan network: stop>>\r\n");
     // scan stop instruction provided
-    sl_bt_scanner_stop();
+    if (sl_bt_scanner_stop() != SL_STATUS_OK) {
+      app_log("<<scan network: stop error>>\r\n");
+    }
   } else {
     // valid instruction provided
-    app_log("Incorrect instruction. Please use start or stop\r\n");
+    app_log("Incorrect instruction. Please use with start or stop.\r\n");
   }
 }
 
@@ -171,28 +202,42 @@ void key_register(sl_cli_command_arg_t *arguments)
   char *mac_str;
   char *key_str;
   char octet[2];
-  uint8_t mac[6];
-  uint8_t key[16];
+  bthome_v2_server_addr_t mac;
+  bthome_v2_server_key_t key;
 
   app_log("<<key register>>\r\n");
 
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 2) {
+    app_log("Incorrect instruction! Please use with MAC address and KEY.\r\n");
+    return;
+  }
+
   // Get the parameter provided
   mac_str = sl_cli_get_argument_string(arguments, 0);
+  if (sl_strlen(mac_str) != 12) {
+    app_log("Incorrect length MAC address!\r\n");
+    return;
+  }
   key_str = sl_cli_get_argument_string(arguments, 1);
+  if (sl_strlen(key_str) != 32) {
+    app_log("Incorrect length KEY!\r\n");
+    return;
+  }
 
   // Parse mac to 6 byte length format
   for (uint8_t i = 0; i < 6; i++) {
     memcpy(octet, (uint8_t *)&mac_str[2 * i], 2);
-    mac[i] = (uint8_t)strtol(octet, NULL, 16);
+    mac.data[i] = (uint8_t)strtol(octet, NULL, 16);
   }
 
   // Parse key to 16 byte length format
   for (uint8_t i = 0; i < 16; i++) {
     memcpy(octet, (uint8_t *)&key_str[2 * i], 2);
-    key[i] = (uint8_t)strtol(octet, NULL, 16);
+    key.data[i] = (uint8_t)strtol(octet, NULL, 16);
   }
 
-  bthome_v2_server_key_register(mac, key);
+  bthome_v2_server_key_register(&mac, &key);
 }
 
 /***************************************************************************//**
@@ -205,20 +250,30 @@ void key_remove(sl_cli_command_arg_t *arguments)
 {
   char *mac_str;
   char octet[2];
-  uint8_t mac[6];
+  bthome_v2_server_addr_t mac;
 
   app_log("<<key remove>>\r\n");
 
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 1) {
+    app_log("Incorrect instruction! Please use with MAC address.\r\n");
+    return;
+  }
+
   // Get the mac provided
   mac_str = sl_cli_get_argument_string(arguments, 0);
+  if (sl_strlen(mac_str) != 12) {
+    app_log("Incorrect length MAC address!\r\n");
+    return;
+  }
 
   // Parse mac to 6 byte length format
   for (uint8_t i = 0; i < 6; i++) {
     memcpy(octet, (uint8_t *)&mac_str[2 * i], 2);
-    mac[i] = (uint8_t)strtol(octet, NULL, 16);
+    mac.data[i] = (uint8_t)strtol(octet, NULL, 16);
   }
 
-  bthome_v2_server_key_remove(mac);
+  bthome_v2_server_key_remove(&mac);
 }
 
 /***************************************************************************//**
@@ -231,24 +286,34 @@ void key_get(sl_cli_command_arg_t *arguments)
 {
   char *mac_str;
   char octet[2];
-  uint8_t mac[6];
-  uint8_t key[16];
+  bthome_v2_server_addr_t mac;
+  bthome_v2_server_key_t key;
 
   app_log("<<key get>>\r\n");
 
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 1) {
+    app_log("Incorrect instruction! Please use with MAC address.\r\n");
+    return;
+  }
+
   // Get the mac provided
   mac_str = sl_cli_get_argument_string(arguments, 0);
+  if (sl_strlen(mac_str) != 12) {
+    app_log("Incorrect length MAC address!\r\n");
+    return;
+  }
 
   // Parse mac to 6 byte length format
   for (uint8_t i = 0; i < 6; i++) {
     memcpy(octet, (uint8_t *)&mac_str[2 * i], 2);
-    mac[i] = (uint8_t)strtol(octet, NULL, 16);
+    mac.data[i] = (uint8_t)strtol(octet, NULL, 16);
   }
 
-  bthome_v2_server_key_get(mac, key);
+  bthome_v2_server_key_get(&mac, &key);
   app_log("->bind key: ");
   for (uint8_t i = 0; i < 16; i++) {
-    app_log("%.2x ", key[i]);
+    app_log("%.2x ", key.data[i]);
   }
   app_log("\r\n");
 }
@@ -272,13 +337,13 @@ void device_list(sl_cli_command_arg_t *arguments)
     if (sc == SL_STATUS_OK) {
       app_log("->MAC: ");
       for (uint8_t j = 0; j < 6; j++) {
-        app_log("%.2x ", tmp.bthome_nvm3.mac[j]);
+        app_log("%.2x ", tmp.bthome_nvm3.mac.data[j]);
       }
       app_log("\r\n");
 
       app_log("  bind key: ");
       for (uint8_t j = 0; j < 16; j++) {
-        app_log("%.2x ", tmp.bthome_nvm3.key[j]);
+        app_log("%.2x ", tmp.bthome_nvm3.key.data[j]);
       }
       app_log("\r\n");
     }
@@ -299,8 +364,18 @@ void interested_add(sl_cli_command_arg_t *arguments)
 
   app_log("<<interested list add>>\r\n");
 
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 1) {
+    app_log("Incorrect instruction! Please use with MAC address.\r\n");
+    return;
+  }
+
   // Get the MAC provided
   mac_str = sl_cli_get_argument_string(arguments, 0);
+  if (sl_strlen(mac_str) != 12) {
+    app_log("Incorrect length MAC address!\r\n");
+    return;
+  }
 
   // Parse MAC to 6 byte length format
   for (uint8_t i = 0; i < 6; i++) {
@@ -309,13 +384,13 @@ void interested_add(sl_cli_command_arg_t *arguments)
   }
 
   if (interested_count == (MAX_INTERESTED_DEVICE - 1)) {
-    app_log("List of interested device is full\r\n");
+    app_log("List of interested device is full!\r\n");
     return;
   }
 
   for (uint8_t i = 0; i < interested_count; i++) {
     if (memcmp(interested_device[i], mac, 6) == 0) {
-      app_log("Device already exists\r\n");
+      app_log("Device already exists!\r\n");
       return;
     }
   }
@@ -343,8 +418,18 @@ void interested_remove(sl_cli_command_arg_t *arguments)
 
   app_log("<<interested list remove>>\r\n");
 
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 1) {
+    app_log("Incorrect instruction! Please use with MAC address.\r\n");
+    return;
+  }
+
   // Get the mac provided
   mac_str = sl_cli_get_argument_string(arguments, 0);
+  if (sl_strlen(mac_str) != 12) {
+    app_log("Incorrect length MAC address!\r\n");
+    return;
+  }
 
   // Parse mac to 6 byte length format
   for (uint8_t i = 0; i < 6; i++) {
@@ -361,7 +446,7 @@ void interested_remove(sl_cli_command_arg_t *arguments)
   }
 
   if (index == MAX_INTERESTED_DEVICE) {
-    app_log("Device not exists\r\n");
+    app_log("Device not exists!\r\n");
     return;
   }
 
@@ -386,23 +471,29 @@ void bthomev2_monitor(sl_cli_command_arg_t *arguments)
 {
   char *instruction;
 
-  app_log("<<BTHome v2 monitor>>\r\n");
+  // Check the arguments provided
+  if (sl_cli_get_argument_count(arguments) != 1) {
+    app_log("Incorrect instruction! Please use with start or stop.\r\n");
+    return;
+  }
 
   // Get the instruction provided
   instruction = sl_cli_get_argument_string(arguments, 0);
 
   if (strcmp(instruction, "start") == 0) {
+    app_log("<<BTHome v2 monitor: start>>\r\n");
     // start instruction provided
     sl_sleeptimer_start_periodic_timer_ms(&monitor_timer,
                                           3000,
                                           monitor_timer_callback,
                                           NULL, 0, 0);
   } else if (strcmp(instruction, "stop") == 0) {
+    app_log("<<BTHome v2 monitor: stop>>\r\n");
     // stop instruction provided
     sl_sleeptimer_stop_timer(&monitor_timer);
   } else {
     // valid instruction provided
-    app_log("Incorrect instruction. Please use start or stop\r\n");
+    app_log("Incorrect instruction. Please use start or stop.\r\n");
   }
 }
 
@@ -414,9 +505,9 @@ uint8_t get_device_count(void)
   return interested_count;
 }
 
-void get_device_mac(uint8_t index, uint8_t *mac)
+void get_device_mac(uint8_t index, bthome_v2_server_addr_t *mac)
 {
-  memcpy(mac, interested_device[index], 6);
+  memcpy(mac->data, interested_device[index], 6);
 }
 
 /*******************************************************************************

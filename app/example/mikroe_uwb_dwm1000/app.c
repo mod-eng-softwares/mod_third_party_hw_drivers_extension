@@ -37,11 +37,17 @@
  ******************************************************************************/
 #include "mikroe_uwb_dwm1000.h"
 #include "app_assert.h"
+#include "sl_sleeptimer.h"
+
+// Comment the line below to switch application mode to receiver
+#define DEMO_APP_TRANSMITTER
+
+// Inter-frame delay period, in milliseconds.
+#define TRANSMITTING_INTERVAL_MSEC   2000
 
 #if (defined(SLI_SI917))
 #include "rsi_debug.h"
 #include "sl_si91x_gspi.h"
-#include "sl_si91x_button_instances.h"
 
 #define app_printf(...) DEBUGOUT(__VA_ARGS__)
 
@@ -49,33 +55,23 @@ static sl_gspi_instance_t gspi_instance = SL_GSPI_MASTER;
 #else /* None Si91x device */
 #include "app_log.h"
 #include "sl_spidrv_instances.h"
-#include "sl_simple_button_instances.h"
 
 #define app_printf(...) app_log(__VA_ARGS__)
 #endif
 
-// ------------------------------------------------------------------ VARIABLES
+static mikroe_spi_handle_t app_spi_instance = NULL;
 
-// Device mode setter - selects the module working mode
-//   RX(receiver)/TX(transmitter)
-static uint8_t dev_mode = MIKROE_DWM1000_MODE_TX;
-
+#ifdef DEMO_APP_TRANSMITTER
 // Transmit buffers
 static uint8_t data_tx[7] = "Silabs";
 static uint8_t transmit_cnt = 0;
+static volatile bool tx_trigger_process = false;
+static sl_sleeptimer_timer_handle_t app_timer_handle;
 
-static volatile bool tx_requested = false;
+static void app_timer_callback(sl_sleeptimer_timer_handle_t *timer,
+                               void *data);
 
-// Transmit length read var
-static uint16_t temp_len = 0;
-
-// Received data buffer
-static uint8_t received_data[256] = { 0 };
-
-// Dev_status var
-static uint8_t dev_status = { 0 };
-
-static mikroe_spi_handle_t app_spi_instance = NULL;
+#endif
 
 void app_init(void)
 {
@@ -95,9 +91,9 @@ void app_init(void)
     app_printf("****** Error initializing the uwb device ******\r\n");
   }
 
-  sl_udelay_wait(100000);
+  sl_sleeptimer_delay_millisecond(100);
   mikroe_dwm1000_enable();
-  sl_udelay_wait(100000);
+  sl_sleeptimer_delay_millisecond(100);
 
   uint8_t id_raw[4] = { 0 };
 
@@ -122,22 +118,28 @@ void app_init(void)
 
   // Setting device mode and interrupt for that mode as well as clearing
   //   dev_status reg.
-  mikroe_dwm1000_set_mode(dev_mode);
+#ifdef DEMO_APP_TRANSMITTER
+  mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_TX);
+#else
+  mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_RX);
+#endif
+
   mikroe_dwm1000_int_mask_set();
   mikroe_dwm1000_clear_status();
 
   // Setting device address and network ID
   app_printf(" ------------------ \r\n");
-  if (MIKROE_DWM1000_MODE_RX == dev_mode) {
-    mikroe_dwm1000_set_dev_adr_n_network_id(6, 10);
-    app_printf(" -----RECEIVER----- \r\n");
-  } else if (MIKROE_DWM1000_MODE_TX == dev_mode) {
-    mikroe_dwm1000_set_dev_adr_n_network_id(5, 10);
-    app_printf(" ---TRANSMITTER--- \r\n");
-  }
+#ifdef DEMO_APP_TRANSMITTER
+  mikroe_dwm1000_set_dev_adr_n_network_id(5, 10);
+  app_printf(" ---TRANSMITTER--- \r\n");
+#else
+  mikroe_dwm1000_set_dev_adr_n_network_id(6, 10);
+  app_printf(" -----RECEIVER----- \r\n");
+#endif
+
   app_printf(" ------------------ \r\n");
 
-  sl_udelay_wait(100000);
+  sl_sleeptimer_delay_millisecond(100);
 
   // Setting default configuartion and tuning device for that configuration
   mikroe_dwm1000_use_smart_power(MIKROE_DWM1000_LOW);
@@ -148,31 +150,34 @@ void app_init(void)
   mikroe_dwm1000_set_channel(MIKROE_DWM1000_CHANNEL_5);
   mikroe_dwm1000_tune_config();
 
-  sl_udelay_wait(100000);
+  sl_sleeptimer_delay_millisecond(100);
 
-  if (MIKROE_DWM1000_MODE_RX == dev_mode) {
-    // Setup for first receive
-    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
-    mikroe_dwm1000_set_bit(MIKROE_DWM1000_REG_SYS_CFG, 29, MIKROE_DWM1000_HIGH);
-    mikroe_dwm1000_set_bit(MIKROE_DWM1000_REG_SYS_CFG, 30, MIKROE_DWM1000_HIGH);
-    mikroe_dwm1000_set_bit(MIKROE_DWM1000_REG_SYS_CFG, 31, MIKROE_DWM1000_HIGH);
-    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_RX);
-    mikroe_dwm1000_clear_status();
-    mikroe_dwm1000_start_transceiver();
-  } else if (MIKROE_DWM1000_MODE_TX == dev_mode) {
-    // Setup for first transmit
-    app_printf("Setting up first transmit. \r\n");
-    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
-    mikroe_dwm1000_clear_status();
-    mikroe_dwm1000_set_transmit(&data_tx[0], 7);
-    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_TX);
-    mikroe_dwm1000_start_transceiver();
-    transmit_cnt++;
+#ifndef DEMO_APP_TRANSMITTER
+  // Setup for first receive
+  mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
+  mikroe_dwm1000_set_bit(MIKROE_DWM1000_REG_SYS_CFG, 29, MIKROE_DWM1000_HIGH);
+  mikroe_dwm1000_set_bit(MIKROE_DWM1000_REG_SYS_CFG, 30, MIKROE_DWM1000_HIGH);
+  mikroe_dwm1000_set_bit(MIKROE_DWM1000_REG_SYS_CFG, 31, MIKROE_DWM1000_HIGH);
+  mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_RX);
+  mikroe_dwm1000_clear_status();
+  mikroe_dwm1000_start_transceiver();
+#else
+  // Setup for first transmit
+  app_printf("Setting up first transmit. \r\n");
+  mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
+  mikroe_dwm1000_clear_status();
+  mikroe_dwm1000_set_transmit(&data_tx[0], 7);
+  mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_TX);
+  mikroe_dwm1000_start_transceiver();
+  transmit_cnt++;
 
-    app_printf(" - Transmit %u done - \r\n", transmit_cnt);
-  }
-
-  sl_udelay_wait(2000000);
+  app_printf(" - Transmit %u done - \r\n", transmit_cnt);
+  sl_sleeptimer_start_periodic_timer_ms(&app_timer_handle,
+                                        TRANSMITTING_INTERVAL_MSEC,
+                                        app_timer_callback,
+                                        NULL,
+                                        0, 0);
+#endif
 }
 
 /***************************************************************************//**
@@ -180,9 +185,24 @@ void app_init(void)
  ******************************************************************************/
 void app_process_action(void)
 {
-  dev_status = mikroe_dwm1000_get_qint_pin_status();
+#ifdef DEMO_APP_TRANSMITTER
+  if (tx_trigger_process) {
+    tx_trigger_process = false;
+    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
+    mikroe_dwm1000_set_dev_adr_n_network_id(5, 10);
+    mikroe_dwm1000_clear_status();
+    mikroe_dwm1000_set_transmit(&data_tx[0], 7);
+    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_TX);
+    mikroe_dwm1000_start_transceiver();
+    transmit_cnt++;
+    app_printf(" - Transmit %u done - \r\n", transmit_cnt);
+  }
+#else
+  uint16_t temp_len = 0;
+  uint8_t received_data[256] = { 0 };
 
-  if (dev_status && (MIKROE_DWM1000_MODE_RX == dev_mode)) {
+  uint8_t dev_status = mikroe_dwm1000_get_qint_pin_status();
+  if (dev_status) {
     // Reading transmitted data, logs it and resetting to receive mode
     mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
     mikroe_dwm1000_clear_status();
@@ -195,41 +215,16 @@ void app_process_action(void)
     mikroe_dwm1000_int_mask_set();
     mikroe_dwm1000_clear_status();
   }
-
-  if (tx_requested && (MIKROE_DWM1000_MODE_TX == dev_mode)) {
-    // Transmits data, resetting to receive mode
-    tx_requested = false;
-    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_IDLE);
-    mikroe_dwm1000_set_dev_adr_n_network_id(5, 10);
-    mikroe_dwm1000_clear_status();
-    mikroe_dwm1000_set_transmit(&data_tx[0], 7);
-    mikroe_dwm1000_set_mode(MIKROE_DWM1000_MODE_TX);
-    mikroe_dwm1000_start_transceiver();
-    transmit_cnt++;
-
-    app_printf(" - Transmit %u done - \r\n", transmit_cnt);
-  }
+#endif
 }
 
-/******************************************************************************
- * Button callback, called if any button is pressed or released.
- *****************************************************************************/
-#if (defined(SLI_SI917))
-void sl_si91x_button_isr(uint8_t pin, int8_t state)
+#ifdef DEMO_APP_TRANSMITTER
+void app_timer_callback(sl_sleeptimer_timer_handle_t *handle, void *data)
 {
-  if ((pin == button_btn0.pin) && (state == 0)) {
-    tx_requested = true;
-  }
-}
+  (void) data;
+  (void) handle;
 
-#else
-void sl_button_on_change(const sl_button_t *handle)
-{
-  if (sl_button_get_state(handle) == SL_SIMPLE_BUTTON_PRESSED) {
-    if (&sl_button_btn0 == handle) {
-      tx_requested = true;
-    }
-  }
+  tx_trigger_process = true;
 }
 
 #endif

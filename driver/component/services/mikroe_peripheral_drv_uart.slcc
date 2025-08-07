@@ -9,7 +9,7 @@ root_path: driver
 requires:
   - name: iostream_transport
     condition: [device_efx]
-  - name: sl_uart
+  - name: sl_usart
     condition: [device_si91x]
   - name: app_assert
     condition: [device_si91x]

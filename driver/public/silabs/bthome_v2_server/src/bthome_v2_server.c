@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -54,6 +54,7 @@ static bthome_v2_server_callback_ptr_t bthome_v2_callback;
 // store found bthomev2 devices
 static bthome_v2_server_device_t device[MAX_DEVICE];
 static uint8_t device_count = 0;
+static bool is_scanning = false;
 
 // The CCM context for decrypt
 static mbedtls_ccm_context encrypt_ctx;
@@ -70,7 +71,7 @@ static sl_status_t decrypt_device_data(uint8_t index,
                                        uint8_t *data,
                                        uint8_t *data_length);
 
-static int get_device_index(uint8_t *mac);
+static int get_device_index(bthome_v2_server_addr_t *mac);
 static uint8_t get_byte_number(uint8_t id);
 static uint16_t get_factor(uint8_t id);
 
@@ -85,10 +86,20 @@ sl_status_t bthome_v2_server_start_scan_network(void)
 {
   sl_status_t sc;
 
+  // If is scanning, show all scanned BThome devices
+  if (is_scanning) {
+    for (int i = 0; i < device_count; i++) {
+      bthome_v2_callback(&device[i].mac,
+                         device[i].payload,
+                         device[i].payload_lenth);
+    }
+    return SL_STATUS_OK;
+  }
+
   // set parameters for scan
   sc = sl_bt_scanner_set_parameters(sl_bt_scanner_scan_mode_passive,
-                                    16,
-                                    16);
+                                    SCAN_INTERVAL,
+                                    SCAN_WINDOW);
   if (sc != SL_STATUS_OK) {
     return sc;
   }
@@ -100,13 +111,16 @@ sl_status_t bthome_v2_server_start_scan_network(void)
     return sc;
   }
 
+  is_scanning = true;
+
   return SL_STATUS_OK;
 }
 
 /***************************************************************************//**
  *  Register encrypt key for device by MAC address.
  ******************************************************************************/
-sl_status_t bthome_v2_server_key_register(uint8_t *mac, uint8_t *key)
+sl_status_t bthome_v2_server_key_register(bthome_v2_server_addr_t *mac,
+                                          bthome_v2_server_key_t *key)
 {
   sl_status_t sc;
 
@@ -122,7 +136,7 @@ sl_status_t bthome_v2_server_key_register(uint8_t *mac, uint8_t *key)
 /***************************************************************************//**
  *  Remove encrypt key.
  ******************************************************************************/
-sl_status_t bthome_v2_server_key_remove(uint8_t *mac)
+sl_status_t bthome_v2_server_key_remove(bthome_v2_server_addr_t *mac)
 {
   sl_status_t sc;
 
@@ -138,7 +152,8 @@ sl_status_t bthome_v2_server_key_remove(uint8_t *mac)
 /***************************************************************************//**
  *  Get encrypt key.
  ******************************************************************************/
-sl_status_t bthome_v2_server_key_get(uint8_t *mac, uint8_t *key)
+sl_status_t bthome_v2_server_key_get(bthome_v2_server_addr_t *mac,
+                                     bthome_v2_server_key_t *key)
 {
   sl_status_t sc;
 
@@ -154,14 +169,14 @@ sl_status_t bthome_v2_server_key_get(uint8_t *mac, uint8_t *key)
 /***************************************************************************//**
  *  Check whether the device encrypted and the key is registered.
  ******************************************************************************/
-sl_status_t bthome_v2_server_check_device(uint8_t *mac,
+sl_status_t bthome_v2_server_check_device(bthome_v2_server_addr_t *mac,
                                           bool *encrypted,
                                           bool *key_available)
 {
   sl_status_t sc;
   int index;
   uint8_t *payload;
-  uint8_t key[16];
+  bthome_v2_server_key_t key;
 
   if ((mac == NULL) || (encrypted == NULL) || (key_available == NULL)) {
     return SL_STATUS_NULL_POINTER;
@@ -181,7 +196,7 @@ sl_status_t bthome_v2_server_check_device(uint8_t *mac,
   }
 
   *key_available = false;
-  sc = bthome_v2_server_nvm3_find_device_key(mac, key);
+  sc = bthome_v2_server_nvm3_find_device_key(mac, &key);
   if (sc != SL_STATUS_OK) {
     return sc;
   }
@@ -193,7 +208,7 @@ sl_status_t bthome_v2_server_check_device(uint8_t *mac,
 /***************************************************************************//**
  *  Read sensor data (even for encrypted).
  ******************************************************************************/
-sl_status_t bthome_v2_server_sensor_data_read(uint8_t *mac,
+sl_status_t bthome_v2_server_sensor_data_read(bthome_v2_server_addr_t *mac,
                                               bthome_v2_server_sensor_data_t *object_data,
                                               uint8_t object_max,
                                               uint8_t *object_count,
@@ -260,9 +275,10 @@ void bthome_v2_server_register_callback(
 /***************************************************************************//**
  *  Default callback function.
  ******************************************************************************/
-SL_WEAK void bthome_v2_server_found_device_callback(uint8_t *mac,
-                                                    uint8_t *payload,
-                                                    uint8_t payload_length)
+SL_WEAK void bthome_v2_server_found_device_callback(
+  bthome_v2_server_addr_t *mac,
+  uint8_t *payload,
+  uint8_t payload_length)
 {
   (void)mac;
   (void)payload;
@@ -288,7 +304,7 @@ void bthome_v2_server_on_event(sl_bt_msg_t *evt)
     {
       sl_bt_evt_scanner_legacy_advertisement_report_t *resp =
         &evt->data.evt_scanner_legacy_advertisement_report;
-      uint8_t mac[6];
+      bthome_v2_server_addr_t mac;
       uint8_t payload[PAYLOAD_MAX_LEN];
       uint8_t payload_length;
       bool new_device_found = true;
@@ -296,12 +312,12 @@ void bthome_v2_server_on_event(sl_bt_msg_t *evt)
       if (find_bthome_v2_device(resp, payload, &payload_length)) {
         // reverse MAC address
         for (uint8_t i = 0; i < 6; i++) {
-          mac[i] = resp->address.addr[5 - i];
+          mac.data[i] = resp->address.addr[5 - i];
         }
 
         // check if found new bthomev2 device
         for (uint8_t i = 0; i < device_count; i++) {
-          if (memcmp(mac, device[i].mac, 6) == 0) {
+          if (memcmp(mac.data, device[i].mac.data, 6) == 0) {
             // update payload data of old device
             memcpy(device[i].payload,
                    payload,
@@ -315,7 +331,7 @@ void bthome_v2_server_on_event(sl_bt_msg_t *evt)
 
         // store new device
         if (new_device_found && (device_count < MAX_DEVICE)) {
-          memcpy(device[device_count].mac, mac, 6);
+          memcpy(device[device_count].mac.data, mac.data, 6);
           memcpy(device[device_count].payload,
                  payload,
                  payload_length);
@@ -325,7 +341,7 @@ void bthome_v2_server_on_event(sl_bt_msg_t *evt)
           device_count++;
 
           // callback function call here
-          bthome_v2_callback(mac, payload, payload_length);
+          bthome_v2_callback(&mac, payload, payload_length);
         }
       }
       break;
@@ -373,10 +389,10 @@ static bool find_bthome_v2_device(
 /***************************************************************************//**
  * Get device index.
  ******************************************************************************/
-static int get_device_index(uint8_t *mac)
+static int get_device_index(bthome_v2_server_addr_t *mac)
 {
   for (uint8_t i = 0; i < device_count; i++) {
-    if (memcmp(mac, device[i].mac, 6) == 0) {
+    if (memcmp(mac->data, device[i].mac.data, 6) == 0) {
       return i;
     }
   }
@@ -396,30 +412,30 @@ static sl_status_t decrypt_device_data(uint8_t index,
   uint8_t len = device[index].payload_lenth - 8 - 1;
   uint8_t ciphertext[len];
   uint8_t sensor_data[len];
-  uint8_t bind_key[BIND_KEY_LEN];
+  bthome_v2_server_key_t bind_key;
 
   mbedtls_ccm_free(&encrypt_ctx);
 
-  sc = bthome_v2_server_nvm3_find_device_key(device[index].mac, bind_key);
+  sc = bthome_v2_server_nvm3_find_device_key(&device[index].mac, &bind_key);
   if (sc != SL_STATUS_OK) {
     return SL_STATUS_INVALID_KEY;
   }
 
   sc = mbedtls_ccm_setkey(&encrypt_ctx,
                           MBEDTLS_CIPHER_ID_AES,
-                          bind_key,
+                          bind_key.data,
                           BIND_KEY_LEN * 8);
   if (sc != SL_STATUS_OK) {
     return SL_STATUS_FAIL;
   }
   // build initialization vector (nonce)
   // MAC
-  nonce[0] = device[index].mac[0];
-  nonce[1] = device[index].mac[1];
-  nonce[2] = device[index].mac[2];
-  nonce[3] = device[index].mac[3];
-  nonce[4] = device[index].mac[4];
-  nonce[5] = device[index].mac[5];
+  nonce[0] = device[index].mac.data[0];
+  nonce[1] = device[index].mac.data[1];
+  nonce[2] = device[index].mac.data[2];
+  nonce[3] = device[index].mac.data[3];
+  nonce[4] = device[index].mac.data[4];
+  nonce[5] = device[index].mac.data[5];
 
   // UUID
   nonce[6] = UUID1;

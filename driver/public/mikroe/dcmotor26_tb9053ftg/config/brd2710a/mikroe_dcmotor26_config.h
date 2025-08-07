@@ -93,12 +93,6 @@ extern "C" {
 
 // <<< sl:start pin_tool >>>
 
-// <gpio optional=true> DCMOTOR26_CS
-// $[GPIO_DCMOTOR26_CS]
-// #define DCMOTOR26_CS_PORT                             0
-// #define DCMOTOR26_CS_PIN                              0
-// [GPIO_DCMOTOR26_CS]$
-
 // <gpio optional=true> DCMOTOR26_CHANNEL_MONITOR
 // $[GPIO_DCMOTOR26_CHANNEL_MONITOR]
 #define DCMOTOR26_CHANNEL_MONITOR_PORT                   SL_GPIO_PORT_B

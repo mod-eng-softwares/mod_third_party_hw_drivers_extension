@@ -62,12 +62,6 @@ extern "C" {
 
 // <<< sl:start pin_tool >>>
 
-// <gpio optional=true> AS3935_CS
-// $[GPIO_AS3935_CS]
-#define AS3935_CS_PORT                            SL_GPIO_PORT_C
-#define AS3935_CS_PIN                             3
-// [GPIO_AS3935_CS]$
-
 // <gpio optional=true> AS3935_IRQ
 // $[GPIO_AS3935_IRQ]
 #define AS3935_IRQ_PORT                           SL_GPIO_PORT_B

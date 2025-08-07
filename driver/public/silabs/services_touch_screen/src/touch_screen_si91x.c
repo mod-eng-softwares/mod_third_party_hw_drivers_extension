@@ -40,7 +40,7 @@
 //                       Includes
 // -----------------------------------------------------------------------------
 #include "sl_si91x_adc.h"
-#include "gpio_helper_si91x.h"
+#include "sl_si91x_driver_gpio.h"
 #include "touch_screen.h"
 #include "touch_screen_config.h"
 
@@ -105,7 +105,6 @@ static sl_adc_channel_config_t adc_channel_config = {
   .channel = SL_ADC_CHANNEL_0,
   .input_type[SL_ADC_CHANNEL_0] = SL_ADC_SINGLE_ENDED,
   .pos_inp_sel[SL_ADC_CHANNEL_0] = TOUCHSCREEN_XM_POS_INPUT_CHNL_SEL,
-  .neg_inp_sel[SL_ADC_CHANNEL_0] = TOUCHSCREEN_XM_NEG_INPUT_CHNL_SEL,
   .num_of_samples[SL_ADC_CHANNEL_0] = 1,
   .sampling_rate[SL_ADC_CHANNEL_0] = 100000,
 };
@@ -223,36 +222,50 @@ static void delay_10us(uint32_t idelay)
   }
 }
 
+static sl_status_t gpio_pin_setup(uint16_t port,
+                                  uint16_t pin,
+                                  sl_si91x_gpio_direction_t mode,
+                                  uint8_t output_value)
+{
+  sl_si91x_gpio_pin_config_t pin_config = { { port, pin }, mode };
+  sl_gpio_t port_pin = { port, pin };
+  sl_status_t status = sl_gpio_set_configuration(pin_config);
+  if (status != SL_STATUS_OK) {
+    return status;
+  }
+  if (output_value) {
+    return sl_gpio_driver_set_pin(&port_pin);
+  } else {
+    return sl_gpio_driver_clear_pin(&port_pin);
+  }
+}
+
 static void set_input(enum TOUCH_SCREEN_CHANNEL channel)
 {
   switch (channel) {
     case TOUCH_SCREEN_CHANNEL_XM:
-      si91x_gpio_pin_setup(
+      gpio_pin_setup(
         TOUCHSCREEN_XM_PORT,
         TOUCHSCREEN_XM_PIN,
-        SL_GPIO_MODE_0,
         GPIO_INPUT,
         0);
       break;
     case TOUCH_SCREEN_CHANNEL_XP:
-      si91x_gpio_pin_setup(TOUCHSCREEN_XP_PORT,
-                           TOUCHSCREEN_XP_PIN,
-                           SL_GPIO_MODE_0,
-                           GPIO_INPUT,
-                           0);
+      gpio_pin_setup(TOUCHSCREEN_XP_PORT,
+                     TOUCHSCREEN_XP_PIN,
+                     GPIO_INPUT,
+                     0);
       break;
     case TOUCH_SCREEN_CHANNEL_YM:
-      si91x_gpio_pin_setup(TOUCHSCREEN_YM_PORT,
-                           TOUCHSCREEN_YM_PIN,
-                           SL_GPIO_MODE_0,
-                           GPIO_INPUT,
-                           0);
+      gpio_pin_setup(TOUCHSCREEN_YM_PORT,
+                     TOUCHSCREEN_YM_PIN,
+                     GPIO_INPUT,
+                     0);
       break;
     case TOUCH_SCREEN_CHANNEL_YP:
-      si91x_gpio_pin_setup(
+      gpio_pin_setup(
         TOUCHSCREEN_YP_PORT,
         TOUCHSCREEN_YP_PIN,
-        SL_GPIO_MODE_0,
         GPIO_INPUT,
         0);
       break;
@@ -263,32 +276,28 @@ static void set_output(enum TOUCH_SCREEN_CHANNEL channel, uint8_t value)
 {
   switch (channel) {
     case TOUCH_SCREEN_CHANNEL_XM:
-      si91x_gpio_pin_setup(
+      gpio_pin_setup(
         TOUCHSCREEN_XM_PORT,
         TOUCHSCREEN_XM_PIN,
-        SL_GPIO_MODE_0,
         GPIO_OUTPUT,
         value);
       break;
     case TOUCH_SCREEN_CHANNEL_XP:
-      si91x_gpio_pin_setup(TOUCHSCREEN_XP_PORT,
-                           TOUCHSCREEN_XP_PIN,
-                           SL_GPIO_MODE_0,
-                           GPIO_OUTPUT,
-                           value);
+      gpio_pin_setup(TOUCHSCREEN_XP_PORT,
+                     TOUCHSCREEN_XP_PIN,
+                     GPIO_OUTPUT,
+                     value);
       break;
     case TOUCH_SCREEN_CHANNEL_YM:
-      si91x_gpio_pin_setup(TOUCHSCREEN_YM_PORT,
-                           TOUCHSCREEN_YM_PIN,
-                           SL_GPIO_MODE_0,
-                           GPIO_OUTPUT,
-                           value);
+      gpio_pin_setup(TOUCHSCREEN_YM_PORT,
+                     TOUCHSCREEN_YM_PIN,
+                     GPIO_OUTPUT,
+                     value);
       break;
     case TOUCH_SCREEN_CHANNEL_YP:
-      si91x_gpio_pin_setup(
+      gpio_pin_setup(
         TOUCHSCREEN_YP_PORT,
         TOUCHSCREEN_YP_PIN,
-        SL_GPIO_MODE_0,
         GPIO_OUTPUT,
         value);
       break;

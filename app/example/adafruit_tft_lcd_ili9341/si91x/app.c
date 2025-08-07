@@ -39,6 +39,7 @@
 #include "adafruit_ili9341.h"
 #include "touch_screen.h"
 #include "glib.h"
+#include "sl_si91x_gspi_common_config.h"
 #include "adafruit_ili9341_spi_config.h"
 
 #define CALIB_ENABLED                   0
@@ -63,21 +64,10 @@ MIPI_DBI_SPI_INTERFACE_DEFINE(ili9341_config,
                               ADAFRUIT_ILI9341_BITRATE,
                               ADAFRUIT_ILI9341_CLOCK_MODE,
                               ADAFRUIT_ILI9341_CS_CONTROL,
-                              RTE_GSPI_MASTER_CLK_PORT,
-                              RTE_GSPI_MASTER_CLK_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MOSI_PORT,
-                              RTE_GSPI_MASTER_MOSI_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MISO_PORT,
-                              RTE_GSPI_MASTER_MISO_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_CS0_PORT,
-                              RTE_GSPI_MASTER_CS0_PIN,
-                              SL_GPIO_MODE_4,
+                              SL_GSPI_MASTER_CS0__PORT,
+                              SL_GSPI_MASTER_CS0__PIN,
                               ADAFRUIT_ILI9341_DC_PORT,
-                              ADAFRUIT_ILI9341_DC_PIN,
-                              SL_GPIO_MODE_0);
+                              ADAFRUIT_ILI9341_DC_PIN);
 
 void app_init(void)
 {

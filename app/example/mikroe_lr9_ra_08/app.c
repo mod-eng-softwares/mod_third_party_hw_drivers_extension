@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -39,22 +39,11 @@
 #include <string.h>
 #include "mikroe_ra_08.h"
 #include "sl_sleeptimer.h"
-
-#if (defined(SLI_SI917))
-#include "sl_si91x_usart.h"
-#include "rsi_debug.h"
-
-#define app_printf(...)                DEBUGOUT(__VA_ARGS__)
-#define USART_INSTANCE_USED            UART_1
-
-static usart_peripheral_t uart_instance = USART_INSTANCE_USED;
-#else
 #include "sl_iostream_init_usart_instances.h"
 #include "sl_iostream_init_eusart_instances.h"
 #include "app_log.h"
 
 #define app_printf(...)                app_log(__VA_ARGS__)
-#endif
 
 // Comment the line below to switch application mode to receiver
 #define DEMO_APP_TRANSMITTER
@@ -213,12 +202,8 @@ void app_init(void)
 {
   sl_status_t sc;
 
-#if (defined(SLI_SI917))
-  app_uart_instance = &uart_instance;
-#else
   app_uart_instance = sl_iostream_uart_mikroe_handle;
   app_log_iostream_set(sl_iostream_vcom_handle);
-#endif
 
   app_printf("Silicon Labs - LoRa 9 Click example.\n");
 

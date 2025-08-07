@@ -56,9 +56,6 @@
 #define LDMA_PERIPH   LDMA
 #endif
 
-static inline size_t uart_get_data_available(
-  sl_iostream_uart_context_t *uart_context);
-static sl_status_t uart_clear_rx_buffer(sl_iostream_t *stream);
 static void uart_config_baudrate(uart_t *obj);
 static void uart_config_frame(uart_t *obj);
 
@@ -276,111 +273,31 @@ err_t uart_println(uart_t *obj, char *text)
 
 size_t uart_bytes_available(uart_t *obj)
 {
-  sl_iostream_uart_t *ptr = (sl_iostream_uart_t *)obj->handle;
-  sl_iostream_usart_context_t *ctx =
-    (sl_iostream_usart_context_t *)ptr->stream.context;
-
-  return uart_get_data_available(&(ctx->context));
+  (void) obj;
+  // Currently this API is not supported
+  return 0;
 }
 
 void uart_clear(uart_t *obj)
 {
   sl_iostream_uart_t *ptr = (sl_iostream_uart_t *)obj->handle;
-  uart_clear_rx_buffer(&(ptr->stream));
+  sl_iostream_usart_context_t *ctx =
+    (sl_iostream_usart_context_t *)ptr->stream.context;
+
+  size_t read_size;
+  uint8_t buffer[ctx->context.rx_buffer_len];
+
+  // Try to read all available data in RX buffer
+  sl_iostream_read(&(ptr->stream),
+                   buffer,
+                   ctx->context.rx_buffer_len,
+                   &read_size);
 }
 
 void uart_close(uart_t *obj)
 {
   obj->handle = NULL;
   _owner = NULL;
-}
-
-/***************************************************************************//**
- * Get the next byte to be written to by the (L)DMA.
- *
- * @note Function should only be called if the LDMA is NOT in the new data detect
- * mode.
- ******************************************************************************/
-static inline uint8_t * __get_write_ptr(
-  const sl_iostream_uart_context_t *uart_context)
-{
-  uint8_t *write_ptr = NULL;
-  Ecode_t ecode;
-  bool dma_done;
-
-  ecode = DMADRV_TransferDone(uart_context->dma.channel, &dma_done);
-  EFM_ASSERT(ecode == ECODE_OK);
-
-  if (dma_done) {
-    // When the DMA is completely done, it has wrapped over the circular buffer
-    // and filled it up completely.
-    write_ptr = uart_context->rx_read_ptr;
-  } else {
-    write_ptr = (uint8_t *)LDMA_PERIPH->CH[uart_context->dma.channel].DST;
-  }
-
-  // Sanity check for buffer over/underflow
-  EFM_ASSERT(write_ptr <= (uart_context->rx_buffer + uart_context->rx_buffer_len)
-             && write_ptr >= uart_context->rx_buffer);
-
-  // Wrap dst around
-  if (write_ptr == (uart_context->rx_buffer + uart_context->rx_buffer_len)) {
-    write_ptr = uart_context->rx_buffer;
-  }
-
-  return write_ptr;
-}
-
-/***************************************************************************//**
- * Compute how many bytes available to read in UART ring buffer.
- *
- * @note Caller must ensure that rx buffer was not empty prior to calling,
- * or will hit an assert.
- ******************************************************************************/
-static inline size_t uart_get_data_available(
-  sl_iostream_uart_context_t *uart_context)
-{
-  const uint8_t *write_ptr = __get_write_ptr(uart_context);
-
-  if (write_ptr > uart_context->rx_read_ptr) {
-    // Read data between read_ptr and write_ptr
-    return write_ptr - uart_context->rx_read_ptr;
-  } else {
-    // write_ptr wrapped around. Read data from read_ptr to end of buffer.
-    // Sanity check that the read pointer didn't overflow.
-    EFM_ASSERT(uart_context->rx_read_ptr
-               < (uart_context->rx_buffer + uart_context->rx_buffer_len));
-
-    return (uart_context->rx_buffer + uart_context->rx_buffer_len)
-           - uart_context->rx_read_ptr;
-  }
-}
-
-static sl_status_t uart_clear_rx_buffer(sl_iostream_t *stream)
-{
-  sl_iostream_usart_context_t *context =
-    (sl_iostream_usart_context_t *)stream->context;
-  size_t data_size;
-
-  // Empty read buffer
-  data_size = uart_get_data_available(&(context->context));
-  while (data_size > 0) {
-    uint8_t tmp;
-    size_t read_size = 0;
-
-    if (SL_STATUS_OK != sl_iostream_read(stream,
-                                         &tmp,
-                                         1,
-                                         &read_size)) {
-      break;
-    }
-    if (read_size == 0) {
-      break;
-    }
-    data_size--;
-  }
-
-  return SL_STATUS_OK;
 }
 
 static void uart_config_baudrate(uart_t *obj)

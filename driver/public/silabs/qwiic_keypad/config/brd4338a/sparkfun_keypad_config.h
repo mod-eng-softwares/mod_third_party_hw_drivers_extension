@@ -68,4 +68,6 @@
 
 // <<< sl:end pin_tool >>>
 
+#define SPARKFUN_KEYPAD_INTR_NUMBER_CFG            PIN_INTR_0
+
 #endif // SPARKFUN_KEYPAD_CONFIG_H

@@ -42,6 +42,7 @@
 
 #if (defined(SLI_SI917))
 #include "sl_driver_gpio.h"
+#include "sl_si91x_driver_gpio.h"
 #include "rsi_debug.h"
 
 #define PIN_INTR_NO                  PIN_INTR_0
@@ -111,11 +112,15 @@ void app_init(void)
   gpio_port_pin.port = (WATER_DETECT_INT_PORT > 0)
                        ? WATER_DETECT_INT_PORT : (WATER_DETECT_INT_PIN / 16);
   gpio_port_pin.pin = WATER_DETECT_INT_PIN % 16;
-  int_no = PIN_INTR_NO;
+
+  if (WATER_DETECT_INT_PORT == UULP_VBAT) {
+    int_no = WATER_DETECT_INT_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt(&gpio_port_pin,
                                      int_no,
-                                     SL_GPIO_INTERRUPT_RISING_EDGE
-                                     | SL_GPIO_INTERRUPT_FALLING_EDGE,
+                                     SL_GPIO_INTERRUPT_RISE_FALL_EDGE,
                                      wd_int_callback,
                                      AVL_INTR_NO);
 #else // SLI_SI917

@@ -4,7 +4,7 @@
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -78,10 +78,10 @@ extern "C" {
 
 // <gpio optional=true> DWM1000_SPI_CS
 // $[DWM1000_SPI_CS]
-#warning "DWM1000_SPI_CS pin for DWM1000 is not configured"
 // #define DWM1000_SPI_CS_PORT                0
 // #define DWM1000_SPI_CS_PIN                 0
 // [DWM1000_SPI_CS]$
+
 // <<< sl:end pin_tool >>>
 
 #ifdef __cplusplus

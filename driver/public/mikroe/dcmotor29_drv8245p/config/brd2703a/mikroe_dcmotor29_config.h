@@ -4,7 +4,7 @@
  * @version 1.2.0
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -81,16 +81,6 @@ extern "C"
 // <<< end of configuration section >>>
 
 // <<< sl:start pin_tool >>>
-
-// <gpio optional=true> DCMOTOR29_CS
-// $[GPIO_DCMOTOR29_CS]
-#ifndef DCMOTOR29_CS_PORT
-#define DCMOTOR29_CS_PORT                        SL_GPIO_PORT_C
-#endif
-#ifndef DCMOTOR29_CS_PIN
-#define DCMOTOR29_CS_PIN                         0
-#endif
-// [GPIO_DCMOTOR29_CS]$
 
 // <gpio optional=true> DCMOTOR29_IP
 // $[GPIO_DCMOTOR29_IP]

@@ -32,9 +32,12 @@ config_file:
   - path: public/mikroe/servo_pca9685/config/brd4338a/mikroe_servo_config.h
     file_id: driver_config_servo
     condition: [brd4338a]
+  - path: public/mikroe/servo_pca9685/config/brd2708a/mikroe_servo_config.h
+    file_id: driver_config_servo
+    condition: [brd2708a]
   - path: public/mikroe/servo_pca9685/config/other/mikroe_servo_config.h
     file_id: driver_config_servo
-    unless: [brd2703a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a]
+    unless: [brd2703a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a, brd2708a]
 provides:
   - name: servo_pca9685
     allow_multiple: false

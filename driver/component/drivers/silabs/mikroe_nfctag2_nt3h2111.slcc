@@ -35,9 +35,12 @@ config_file:
   - path: public/silabs/nfctag2_nt3h2111/config/brd4338a/mikroe_nt3h2111_config.h
     file_id: driver_config_nt3h2111
     condition: [brd4338a]
+  - path: public/silabs/nfctag2_nt3h2111/config/brd2708a/mikroe_nt3h2111_config.h
+    file_id: driver_config_nt3h2111
+    condition: [brd2708a]
   - path: public/silabs/nfctag2_nt3h2111/config/other/mikroe_nt3h2111_config.h
     file_id: driver_config_nt3h2111
-    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a]
+    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a, brd2708a]
 provides:
   - name: mikroe_nfctag2
 template_contribution:

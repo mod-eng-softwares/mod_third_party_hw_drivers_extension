@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,10 +23,10 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: sleeptimer
   - id: adc_instance
@@ -36,24 +35,40 @@ component:
   - id: mikroe_ozone2
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_GSPI_MASTER_CS0__PORT
+    value: HP
+  - name: SL_GSPI_MASTER_CS0__PIN
+    value: 49
+  - name: SL_ADC_CH1_P_PORT
+    value: HP
+    condition:
+      - brd2708a
+  - name: SL_ADC_CH1_P_PIN
+    value: 29
+    condition:
+      - brd2708a
+  - name: SL_ADC_CH1_P_LOC
+    value: 8
+    condition:
+      - brd2708a
+
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/mikroe_ozone2_mq131/README.md
 
 other_file:
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/create_example.png
-    directory: images
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/hardware_connection.png
-    directory: images
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/log.png
-    directory: images
-  - path: ../../documentation/example/mikroe_ozone2_mq131/images/spidrv_config.png
-    directory: images
+  - path: ../../documentation/example/mikroe_ozone2_mq131/image/create_example.png
+    directory: image
+  - path: ../../documentation/example/mikroe_ozone2_mq131/image/hardware_connection.png
+    directory: image
+  - path: ../../documentation/example/mikroe_ozone2_mq131/image/log.png
+    directory: image
 
 ui_hints:
   highlight:

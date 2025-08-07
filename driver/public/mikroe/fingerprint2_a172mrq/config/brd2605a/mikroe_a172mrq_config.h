@@ -66,13 +66,13 @@ extern "C" {
 // <gpio optional=true> A172MRQ_GP1
 // $[GPIO_A172MRQ_GP1]
 #define A172MRQ_GP1_PORT         HP
-#define A172MRQ_GP1_PIN          29
+#define A172MRQ_GP1_PIN          6
 // [GPIO_A172MRQ_GP1]$
 
 // <gpio optional=true> A172MRQ_GP2
 // $[GPIO_A172MRQ_GP2]
 #define A172MRQ_GP2_PORT         HP
-#define A172MRQ_GP2_PIN          30
+#define A172MRQ_GP2_PIN          7
 // [GPIO_A172MRQ_GP2]$
 
 // <<< sl:end pin_tool >>>

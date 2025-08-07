@@ -31,4 +31,3 @@ source:
     condition: [device_efx]
   - path: peripheral_drivers/mikroe/src/drv_i2c_master_si91x.c
     condition: [device_si91x]
-

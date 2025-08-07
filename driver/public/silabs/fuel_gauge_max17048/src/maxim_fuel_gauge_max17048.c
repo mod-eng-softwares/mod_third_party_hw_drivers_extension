@@ -510,7 +510,11 @@ sl_status_t max17048_init(mikroe_i2c_handle_t i2cspm)
                          hal_gpio_pin_name(MAX17048_ALRT_PORT,
                                            MAX17048_ALRT_PIN));
 #if (defined(SLI_SI917))
-  int_no = PIN_INTR_NO;
+  if (MAX17048_ALRT_PORT == UULP_VBAT) {
+    int_no = MAX17048_ALRT_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_driver_configure_interrupt((sl_gpio_t *)&fuel_gauge.alrt_pin.pin,
                                      int_no,
                                      SL_GPIO_INTERRUPT_FALLING_EDGE,
@@ -811,9 +815,20 @@ uint32_t max17048_get_update_interval(void)
 void max17048_mask_interrupts(void)
 {
 #if (defined(SLI_SI917))
-  sl_gpio_clear_interrupts(PIN_INTR_NO);
-  sl_gpio_disable_interrupts((PIN_INTR_NO << 16)
-                             | SL_GPIO_INTERRUPT_FALL_EDGE);
+  if (MAX17048_ALRT_PORT == UULP_VBAT) {
+    sl_si91x_gpio_clear_uulp_interrupt(MAX17048_ALRT_PIN);
+    sl_si91x_gpio_configure_uulp_interrupt(SL_GPIO_INTERRUPT_NONE,
+                                           (uint8_t)MAX17048_ALRT_PIN);
+  } else if (MAX17048_ALRT_PORT == ULP) {
+    sl_si91x_gpio_clear_ulp_interrupt(MAX17048_ALRT_PIN);
+    sl_si91x_gpio_configure_ulp_pin_interrupt(PIN_INTR_NO,
+                                              SL_GPIO_INTERRUPT_NONE,
+                                              (uint8_t)MAX17048_ALRT_PIN);
+  } else {
+    sl_gpio_clear_interrupts(PIN_INTR_NO);
+    sl_gpio_disable_interrupts((PIN_INTR_NO << 16)
+                               | SL_GPIO_INTERRUPT_FALL_EDGE);
+  }
 #else // SLI_SI917
   sl_hal_gpio_clear_interrupts(1 << MAX17048_ALRT_PIN);
   sl_gpio_disable_interrupts(1 << MAX17048_ALRT_PIN);
@@ -830,9 +845,20 @@ void max17048_unmask_interrupts(void)
    * the interrupt was disabled.
    */
 #if (defined(SLI_SI917))
-  sl_gpio_clear_interrupts(PIN_INTR_NO);
-  sl_gpio_enable_interrupts((PIN_INTR_NO << 16)
-                            | SL_GPIO_INTERRUPT_FALL_EDGE);
+  if (MAX17048_ALRT_PORT == UULP_VBAT) {
+    sl_si91x_gpio_clear_uulp_interrupt(MAX17048_ALRT_PIN);
+    sl_si91x_gpio_configure_uulp_interrupt(SL_GPIO_INTERRUPT_FALL_EDGE,
+                                           (uint8_t)MAX17048_ALRT_PIN);
+  } else if (MAX17048_ALRT_PORT == ULP) {
+    sl_si91x_gpio_clear_ulp_interrupt(MAX17048_ALRT_PIN);
+    sl_si91x_gpio_configure_ulp_pin_interrupt(PIN_INTR_NO,
+                                              SL_GPIO_INTERRUPT_FALL_EDGE,
+                                              (uint8_t)MAX17048_ALRT_PIN);
+  } else {
+    sl_gpio_clear_interrupts(PIN_INTR_NO);
+    sl_gpio_enable_interrupts((PIN_INTR_NO << 16)
+                              | SL_GPIO_INTERRUPT_FALL_EDGE);
+  }
 #else // SLI_SI917
   sl_hal_gpio_clear_interrupts(1 << MAX17048_ALRT_PIN);
   sl_gpio_enable_interrupts(1 << MAX17048_ALRT_PIN);

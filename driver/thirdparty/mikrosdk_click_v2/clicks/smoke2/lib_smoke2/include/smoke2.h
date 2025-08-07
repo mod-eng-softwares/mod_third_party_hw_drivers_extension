@@ -250,6 +250,10 @@ typedef enum
 
 } smoke2_drv_t;
 
+// Silicon Labs fixed: 4/7/2025
+// Forward declaration of the context object to fix circular dependency
+struct smoke2_s;
+
 /**
  * @brief Smoke 2 Click driver interface.
  * @details Definition of driver interface of Smoke 2 Click driver.

@@ -53,8 +53,12 @@ static void radiation_callback(void);
 void app_init(void)
 {
   sparkfun_type5_init();
+  app_printf("Init done!\r\n");
   sparkfun_type5_register_noise_callback(noise_callback);
+  app_printf("Registered noise_callback!\r\n");
   sparkfun_type5_register_radiation_callback(radiation_callback);
+  app_printf("Registered radiation_callback!\r\n");
+  app_printf("Start measurement...\r\n");
 }
 
 /***************************************************************************//**

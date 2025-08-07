@@ -34,10 +34,7 @@
  ******************************************************************************/
 
 #include "mikroe_mq131.h"
-
-#ifdef SLI_SI917
-#include "RTE_Device_917.h"
-#else
+#ifndef SLI_SI917
 #include "spidrv.h"
 #endif
 
@@ -73,19 +70,19 @@ sl_status_t mikroe_ozone2_init(mikroe_spi_handle_t spi,
   cfg.adc_sel = OZONE2_ADC_SEL_SPI;
 
 #ifdef SLI_SI917
-  cfg.miso = hal_gpio_pin_name(RTE_GSPI_MASTER_MISO_PORT,
-                               RTE_GSPI_MASTER_MISO_PIN);
+  cfg.miso = hal_gpio_pin_name(MIKROE_OZONE2_MISO_PORT,
+                               MIKROE_OZONE2_MISO_PIN);
+  cfg.cs = hal_gpio_pin_name(MIKROE_OZONE2_CS_PORT,
+                             MIKROE_OZONE2_CS_PIN);
 #else
   const SPIDRV_Handle_t ptr = (SPIDRV_Handle_t)spi;
   cfg.miso = hal_gpio_pin_name(ptr->initData.portRx, ptr->initData.pinRx);
+  cfg.cs = hal_gpio_pin_name(ptr->initData.portCs, ptr->initData.pinCs);
 #endif
 
-#if defined(MIKROE_OZONE2_CS_PORT) && defined(MIKROE_OZONE2_CS_PIN)
-  cfg.cs = hal_gpio_pin_name(MIKROE_OZONE2_CS_PORT, MIKROE_OZONE2_CS_PIN);
   // CS pin need to init here since the mikroe_sdk_v2 missed this step
   digital_out_t struct_cs;
   digital_out_init(&struct_cs, cfg.cs);
-#endif
 
 #if (MIKROE_OZONE2_CLICK_SPI_UC == 1)
   cfg.spi_speed = MIKROE_OZONE2_CLICK_SPI_UC_BITRATE;

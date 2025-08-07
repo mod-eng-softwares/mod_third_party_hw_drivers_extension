@@ -6,36 +6,67 @@ This project shows the implementation of a Barcode reader using Barcode 2 Click 
 
 Barcode 2 Click is an adapter add-on board that contains a computerized image recognition system that is compliant with a wide range of different 1D and 2D barcode protocols. Barcode 2 Click can be used for both emerging mobile phone-based barcode applications, like coupons, e-tickets and boarding passes, and traditional applications.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit) BGM220 Bluetooth Module Explorer Kit
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
+
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
+
 - 1x [Barcode 2 Click board](https://www.mikroe.com/barcode-2-click)
 
 ## Hardware Connection ##
 
-- **If BGM220P Explorer Kit is used:**
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the Barcode 2 Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the Barcode 2 board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-    The MikroE Barcode 2 Click board supports MikroBus; therefore, it can easily connect to the MikroBus socket of the BGM220P Explorer Kit. Be sure that the 45-degree corner of the board matches the 45-degree white line of the Explorer Kit. The hardware connection is shown in the image below:
+![board](image/hardware_connection.png)
 
-    ![board](image/hardware_connection.png)
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-- **If the Wi-Fi Development Kit is used**:
+The tables below provide an overview of the pin connections.
 
-  The hardware connection is shown in the table below:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A    | MikroE Barcode 2 Click board |
-  | ------------ | ------------- | --------------- | --------------------------- |
-  | UART1_RX_PIN | GPIO_6 [P19]        | GPIO_6       | TX          |
-  | UART1_TX_PIN | GPIO_7 [P20]        | GPIO_7       | RX          |
-  | GPIO         | GPIO_46 [P24]       | GPIO_10      | RST         |
-  | GPIO         | GPIO_47 [P26]       | GPIO_11      | TRG         |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | Barcode 2 Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| UART Receive  | PB2 | PB2 | PD5 | PB2 | ↔ | TX  |
+| UART Transmit | PB1 | PB1 | PD4 | PB1 | ↔ | RX  |
+| RESET         | PC6 | PC6 | PC8 | PC6 | ↔ | RST |
+| Scan Trigger  | PB4 | PB4 | PA0 | PB4 | ↔ | TRG |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | Barcode 2 Click |
+| --- | --- | --- | --- | --- | --- |
+| UART Receive  | GPIO_29 [P33] | GPIO_29 [EXP11] | ULP_GPIO_6 | ↔ | TX  |
+| UART Transmit | GPIO_30 [P35] | GPIO_30 [EXP13] | ULP_GPIO_7 | ↔ | RX  |
+| Reset         | GPIO_46 [P24] | GPIO_10 [EXP23] | GPIO_30    | ↔ | RST |
+| Scan Trigger  | GPIO_47 [P26] | GPIO_11 [EXP22] | GPIO_12    | ↔ | TRG |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -58,29 +89,21 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_barcode2_em3080w/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Application] → [Utility] → [Assert]
+     - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
+     - [Application] → [Utility] → [Log]
+     - [Services] → [IO Stream] → [IO Stream: USART] → [mikroe] → Set "Receiver buffer size" to **256**
+     - [Third Party Hardware Drivers] → [Sensors] → [EM3080-W - Barcode 2 Click (Mikroe)] → use default configuration
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If BGM220P Explorer Kit is used:**
-
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Application] → [Utility] → [Assert]
-        - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
-        - [Application] → [Utility] → [Log]
-        - [Services] → [IO Stream] → [IO Stream: USART] → [mikroe] → Set "Receiver buffer size" to **256**
-        - [Third Party Hardware Drivers] → [Sensors] → [EM3080-W - Barcode 2 Click (Mikroe)] → use default configuration
-
-        **If the Wi-Fi Development Kit is used**:
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [Application] → [Utility] → [Assert]
-        - [Third Party Hardware Drivers] → [Sensors] → [EM3080-W - Barcode 2 Click (Mikroe)] → use default configuration
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [UART] → disable "UART1 DMA"
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [Application] → [Utility] → [Assert]
+     - [Third Party Hardware Drivers] → [Sensors] → [EM3080-W - Barcode 2 Click (Mikroe)] → use default configuration
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [USART] → disable "USART0 DMA". Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
 
 4. Build and flash this example to the board.
 

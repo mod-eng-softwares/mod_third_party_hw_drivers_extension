@@ -11,7 +11,6 @@ root_path: driver
 requires:
   - name: sl_gpio
     from: wiseconnect3_sdk
-  - name: gpio_helper_si91x
   - name: sl_gspi
     from: wiseconnect3_sdk
   - name: sl_clock_manager

@@ -21,6 +21,9 @@ config_file:
   - path: public/mikroe/uwb_dwm1000/config/brd2703a/mikroe_uwb_dwm1000_config.h
     file_id: driver_config_dwm1000
     condition: [brd2703a]
+  - path: public/mikroe/uwb_dwm1000/config/brd2708a/mikroe_uwb_dwm1000_config.h
+    file_id: driver_config_dwm1000
+    condition: [brd2708a]
   - path: public/mikroe/uwb_dwm1000/config/brd2710a/mikroe_uwb_dwm1000_config.h
     file_id: driver_config_dwm1000
     condition: [brd2710a]
@@ -38,7 +41,7 @@ config_file:
     condition: [brd4338a]
   - path: public/mikroe/uwb_dwm1000/config/other/mikroe_uwb_dwm1000_config.h
     file_id: driver_config_dwm1000
-    unless: [brd2703a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a]
+    unless: [brd2703a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a, brd2708a]
 include:
   - path: inc
     file_list:

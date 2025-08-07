@@ -31,7 +31,5 @@ include:
       - path: sl_lin.h
       - path: system.h
 source:
-  - path: public/silabs/services_lin_bus_slave/src/dma_master_s2.c
-    condition: [device_series_2]
-  - path: public/silabs/services_lin_bus_slave/src/sl_lin_s2.c
-    condition: [device_series_2]
+  - path: public/silabs/services_lin_bus_slave/src/dma_master.c
+  - path: public/silabs/services_lin_bus_slave/src/sl_lin.c

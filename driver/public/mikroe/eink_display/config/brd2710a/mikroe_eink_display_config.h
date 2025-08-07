@@ -50,9 +50,9 @@ extern "C" {
 // A CMSIS annotation block starts with the following line:
 // <<< Use Configuration Wizard in Context Menu >>>
 
-// <h> MIKROE E-PAPER SPI Configuration
+// <h> MIKROE EINK DISPLAY SPI Configuration
 
-// <e> MIKROE E-PAPER SPI UC Configuration
+// <e> MIKROE EINK DISPLAY SPI UC Configuration
 // <i> Enable: Peripheral configuration is taken straight from the configuration set in the universal configuration (UC).
 // <i> Disable: If the application demands it to be modified during runtime, use the default API to modify the peripheral configuration.
 // <i> Default: 0

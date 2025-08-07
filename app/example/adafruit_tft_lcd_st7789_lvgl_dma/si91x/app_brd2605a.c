@@ -44,6 +44,7 @@
 #include "sl_si91x_rgb_led_config.h"
 #include "sl_si91x_rgb_led_instances.h"
 #include "sl_si91x_rgb_led.h"
+#include "sl_si91x_gspi_common_config.h"
 #include "adafruit_st7789_spi_config.h"
 #include "adafruit_st7789.h"
 
@@ -55,21 +56,10 @@ MIPI_DBI_SPI_INTERFACE_DEFINE(st7789_config,
                               ADAFRUIT_ST7789_BITRATE,
                               ADAFRUIT_ST7789_CLOCK_MODE,
                               ADAFRUIT_ST7789_CS_CONTROL,
-                              RTE_GSPI_MASTER_CLK_PORT,
-                              RTE_GSPI_MASTER_CLK_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MOSI_PORT,
-                              RTE_GSPI_MASTER_MOSI_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MISO_PORT,
-                              RTE_GSPI_MASTER_MISO_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_CS0_PORT,
-                              RTE_GSPI_MASTER_CS0_PIN,
-                              SL_GPIO_MODE_4,
+                              SL_GSPI_MASTER_CS0__PORT,
+                              SL_GSPI_MASTER_CS0__PIN,
                               ADAFRUIT_ST7789_DC_PORT,
-                              ADAFRUIT_ST7789_DC_PIN,
-                              SL_GPIO_MODE_0);
+                              ADAFRUIT_ST7789_DC_PIN);
 
 static sl_sleeptimer_timer_handle_t lvgl_tick_timer;
 

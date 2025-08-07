@@ -66,7 +66,7 @@ extern "C" {
 // <gpio> CONFIG_MM5D91_00_GPIO2
 // $[GPIO_CONFIG_MM5D91_00_GPIO2]
 #define CONFIG_MM5D91_00_GPIO2_PORT                HP
-#define CONFIG_MM5D91_00_GPIO2_PIN                 30
+#define CONFIG_MM5D91_00_GPIO2_PIN                 6
 // [GPIO_CONFIG_MM5D91_00_GPIO2]$
 
 // <<< sl:end pin_tool >>>

@@ -3,7 +3,7 @@
  * @brief bthome v2 nvm3 header file.
  *******************************************************************************
  * # License
- * <b>Copyright 2023 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -41,8 +41,10 @@
 // -----------------------------------------------------------------------------
 //                                   Includes
 // -----------------------------------------------------------------------------
-#include "nvm3_default.h"
 #include "sl_status.h"
+#include "nvm3_default.h"
+#include "nvm3_default.h"
+#include "bthome_v2_server.h"
 
 // -----------------------------------------------------------------------------
 //                              Macros and Typedefs
@@ -56,8 +58,8 @@
 typedef union {
   uint8_t data[BTHOME_BLOCK_SIZE];
   struct {
-    uint8_t mac[6];
-    uint8_t key[16];
+    bthome_v2_server_addr_t mac;
+    bthome_v2_server_key_t key;
   } bthome_nvm3;
 } bthome_v2_server_data_t;
 
@@ -101,7 +103,7 @@ sl_status_t bthome_v2_server_nvm3_write(uint8_t index, uint8_t *value);
  * @return
  *    Object index or -1 if not found
  ******************************************************************************/
-int bthome_v2_server_nvm3_find_index(uint8_t *mac);
+int bthome_v2_server_nvm3_find_index(bthome_v2_server_addr_t *mac);
 
 /***************************************************************************//**
  * @brief
@@ -115,7 +117,8 @@ int bthome_v2_server_nvm3_find_index(uint8_t *mac);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_nvm3_save_device_key(uint8_t *mac, uint8_t *key);
+sl_status_t bthome_v2_server_nvm3_save_device_key(bthome_v2_server_addr_t *mac,
+                                                  bthome_v2_server_key_t *key);
 
 /***************************************************************************//**
  * @brief
@@ -129,7 +132,8 @@ sl_status_t bthome_v2_server_nvm3_save_device_key(uint8_t *mac, uint8_t *key);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_nvm3_find_device_key(uint8_t *mac, uint8_t *key);
+sl_status_t bthome_v2_server_nvm3_find_device_key(bthome_v2_server_addr_t *mac,
+                                                  bthome_v2_server_key_t *key);
 
 /***************************************************************************//**
  * @brief
@@ -141,6 +145,7 @@ sl_status_t bthome_v2_server_nvm3_find_device_key(uint8_t *mac, uint8_t *key);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_nvm3_remove_device_key(uint8_t *mac);
+sl_status_t bthome_v2_server_nvm3_remove_device_key(
+  bthome_v2_server_addr_t *mac);
 
-#endif /* BTHOME_V2_NVM3_H_ */
+#endif // BTHOME_V2_NVM3_H_

@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
   - path: sl_lin_test_master.c
 
 include:
@@ -27,8 +26,9 @@ include:
     - path: system.h
 
 component:
-  - id: sl_system
-  - id: device_init_core
+  - id: sl_main
+  - id: device_init
+  - id: clock_manager_core
   - id: device_init_clocks
   - id: device_init_dcdc
   - id: device_init_lfxo
@@ -59,12 +59,12 @@ readme:
   - path: ../../../documentation/example/silabs_lin_bus/README.md
 
 other_file:
-  - path: ../../../documentation/example/silabs_lin_bus/images/hardware_connection.jpg
-    directory: "images"
-  - path: ../../../documentation/example/silabs_lin_bus/images/create_example.png
-    directory: "images"
-  - path: ../../../documentation/example/silabs_lin_bus/images/log.png
-    directory: "images"
+  - path: ../../../documentation/example/silabs_lin_bus/image/hardware_connection.jpg
+    directory: "image"
+  - path: ../../../documentation/example/silabs_lin_bus/image/create_example.png
+    directory: "image"
+  - path: ../../../documentation/example/silabs_lin_bus/image/log.png
+    directory: "image"
 
 ui_hints:
   highlight:

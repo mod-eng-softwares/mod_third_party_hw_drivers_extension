@@ -50,6 +50,16 @@
 // <i> Default: 10
 #define MAX_DEVICE            10
 
+// <o SCAN_INTERVAL> The maximum number of device that can be managed.
+// <i> The time interval when the device starts its last scan until it begins the subsequent scan.
+// <i> Default: 16
+#define SCAN_INTERVAL         16
+
+// <o SCAN_WINDOW> Duration of the scan.
+// <i> The duration of the scan, which must be less than or equal to the SCAN_INTERVAL
+// <i> Default: 16
+#define SCAN_WINDOW           16
+
 // <<< end of configuration section >>>
 
 #endif // BTHOME_V2_SERVER_CONFIG_H_

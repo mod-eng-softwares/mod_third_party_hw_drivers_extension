@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -48,7 +48,7 @@
 #include "rsi_debug.h"
 
 #define app_printf(...)                DEBUGOUT(__VA_ARGS__)
-#define USART_INSTANCE_USED            UART_1
+#define USART_INSTANCE_USED            USART_0
 
 static usart_peripheral_t uart_instance = USART_INSTANCE_USED;
 #else

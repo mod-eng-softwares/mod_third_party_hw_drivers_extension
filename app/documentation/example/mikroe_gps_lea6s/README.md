@@ -6,38 +6,71 @@ This project shows the implementation of a GPS Click driver using LEA-6S from Mi
 
 GPS click is a compact solution for adding GPS functionality to your device. It carries the u-blox LEA-6S high-performance position engine. The click is designed to run on a 3.3V power supply and communicates with the target MCU through UART. GPS click can simultaneously track up to 16 satellites while searching for new ones. The LEA-6S module’s TTFF (time to first fix) is less than one second — this is the measure of time necessary for a GPS receiver to get satellite signals and navigation data, and based on this information, calculate a position (a fix).
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit) BGM220 Bluetooth Module Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [GPS Click board](https://www.mikroe.com/gps-click) based on LEA-6S
-
 - Option: 1x [GPS/GNSS Magnetic Mount Antenna](https://www.sparkfun.com/products/14986)
 
 ## Hardware Connection ##
 
-- If the BGM220 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the GPS Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the GPS board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The GPS Click board supports MikroBus, so it can connect easily to the Explorer Kit via MikroBus header. Assure that the 45-degree corner of Click board matches the 45-degree white line of the Explorer Kit. The GPS antenna needs to be connected to the GPS click board to ensure that the satellite signals can be received.
+![board](image/hardware_connection.png)
 
-  ![board](image/hardware_connection.png "BGM220 Explorer Kit Board and GPS Click Board")
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-- If the Wi-Fi Development Kit is used:
+The tables below provide an overview of the pin connections.
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | GPS Click |
-  | ----------------- | -------------- | ------------ | ----------- |
-  | UART1_RX_PIN      | GPIO_6 [P19]   | GPIO_6       | TX          |
-  | UART1_TX_PIN      | GPIO_7 [P20]   | GPIO_7       | RX          |
-  | RESET             | GPIO_46 [P24]  | GPIO_10      | RST         |
-  | Time Pulse        | GPIO_47 [P26]  | GPIO_11      | TP          |
+**Silicon Labs BLE Explorer Kit:**
+
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | GPS Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| UART Receive  | PB2 | PB2 | PD5 | PB2 | ↔ | TX  |
+| UART Transmit | PB1 | PB1 | PD4 | PB1 | ↔ | RX  |
+| RESET | PC6 | PC6 | PC8 | PC6 | ↔ | RST |
+| Time Pulse  | PB3 | PB3 | PB1 | PB3 | ↔ | TP |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | GPS Click |
+| --- | --- | --- | --- | --- | --- |
+| UART Receive  | GPIO_29 [P33] | GPIO_29 [EXP11] | ULP_GPIO_6 | ↔ | TX  |
+| UART Transmit | GPIO_30 [P35] | GPIO_30 [EXP13] | ULP_GPIO_7 | ↔ | RX  |
+| RESET         | GPIO_46 [P24] | GPIO_10 [EXP23] | GPIO_30    | ↔ | RST |
+| Time Pulse    | GPIO_47 [P26] | GPIO_11 [EXP22] | UULP_VBAT_GPIO_2 | ↔ | TP |
+
+> [!TIP]
+> The GPS antenna needs to be connected to the GPS click board to ensure that the satellite signals can be received.
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -60,27 +93,19 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_gpsclick_lea6s/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: mikroe
+     - [Application] → [Utility] → [Log]
+     - [Third Party Hardware Drivers] → [Sensors] → [LEA-6S - GPS Click (Mikroe)]
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the BGM220 Explorer Kit is used:**
-
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: mikroe
-        - [Application] → [Utility] → [Log]
-        - [Third Party Hardware Drivers] → [Sensors] → [LEA-6S - GPS Click (Mikroe)]
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [Third Party Hardware Drivers] → [Sensors] → [LEA-6S - GPS Click (Mikroe)] → use default configuration
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [UART] → disable "UART1 DMA"
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [Third Party Hardware Drivers] → [Sensors] → [LEA-6S - GPS Click (Mikroe)] → use default configuration
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [USART] → disable "USART0 DMA". Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
 
 4. Enable **Printf float**
 
@@ -92,7 +117,7 @@ You can either create a project based on an example project or start with an emp
 ## How It Works ##
 
 This example reads and processes data from GPS clicks.
-You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like TeraTerm to receive the data from the USB. A screenshot of the console output is shown in the figure below.
+You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like Tera Term to receive the data from the USB. A screenshot of the console output is shown in the figure below.
 
 ![usb_debug](image/gps_log.png "USB Debug Output Data")
 

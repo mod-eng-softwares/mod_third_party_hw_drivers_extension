@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -25,8 +24,9 @@ include:
     - path: silabs_logo.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: epaper_ext3_1
     from: third_party_hw_drivers
   - id: services_oled_glib
@@ -37,7 +37,7 @@ define:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
   - path: ../../documentation/example/epaper_ext3_1/README.md

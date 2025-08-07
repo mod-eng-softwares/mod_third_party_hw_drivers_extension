@@ -4,7 +4,7 @@
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -65,17 +65,17 @@ extern "C" {
 #define DWM3000_RESET_PORT                       HP
 #endif
 #ifndef DWM3000_RESET_PIN
-#define DWM3000_RESET_PIN 11
+#define DWM3000_RESET_PIN                        11
 #endif
 // [GPIO_DWM3000_RESET]$
 
 // <gpio optional=true> DWM3000_INT
 // $[GPIO_DWM3000_INT]
 #ifndef DWM3000_INT_PORT
-#define DWM3000_INT_PORT HP
+#define DWM3000_INT_PORT                         HP
 #endif
 #ifndef DWM3000_INT_PIN
-#define DWM3000_INT_PIN   10
+#define DWM3000_INT_PIN                          10
 #endif
 // [GPIO_DWM3000_INT]$
 
@@ -98,17 +98,6 @@ extern "C" {
 // #define DWM3000_ON_PIN    0
 // #endif
 // [GPIO_DWM3000_ON]$
-
-// <gpio optional=true> DWM3000_CS
-// $[GPIO_DWM3000_CS]
-// #ifndef DWM3000_CS_PORT
-// #define DWM3000_CS_PORT  0
-// #endif
-// #ifndef DWM3000_CS_PIN
-// #define DWM3000_CS_PIN    0
-// #endif
-// [GPIO_DWM3000_CS]$
-
 
 // <<< sl:end pin_tool >>>
 

@@ -1,6 +1,6 @@
 /***************************************************************************//**
- * @file micro_oled_dps310_config.h
- * @brief Micro OLED DPS310 Configuration
+ * @file mikroe_dps310_spi_config.h
+ * @brief DPS310 Configuration
  * @version 1.0.0
  *******************************************************************************
  * # License
@@ -60,16 +60,6 @@ extern "C" {
 // </e>
 // </h>
 // <<< end of configuration section >>>
-
-// <<< sl:start pin_tool >>>
-
-// <gpio optional=true> DPS310_CS
-// $[GPIO_DPS310_CS]
-#define DPS310_CS_PORT                        SL_GPIO_PORT_C
-#define DPS310_CS_PIN                         3
-// [GPIO_DPS310_CS]$
-
-// <<< sl:end pin_tool >>>
 
 #ifdef __cplusplus
 }

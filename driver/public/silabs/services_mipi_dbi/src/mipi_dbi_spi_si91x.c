@@ -42,12 +42,10 @@
 #include "sl_status.h"
 #include "sl_sleeptimer.h"
 #include "sl_component_catalog.h"
-#include "sl_si91x_clock_manager.h"
-#include "sl_si91x_peripheral_gpio.h"
-#include "gpio_helper_si91x.h"
+#include "sl_si91x_driver_gpio.h"
 #include "sl_si91x_gspi.h"
-#include "mipi_dbi.h"
 #include "mipi_dbi_spi.h"
+#include "mipi_dbi.h"
 
 #define wait_spi_transfer_ready(handle)               \
   do {                                                \
@@ -96,8 +94,9 @@ static void spi_select(const struct mipi_dbi_device *device)
     (struct mipi_dbi_gspi_config *)device->config;
 
   if (config->control_config->slave_select_mode == SL_GSPI_MASTER_SW) {
-    si91x_gpio_clear_pin_output(config->cs.port,
-                                config->cs.pin);
+    sl_gpio_t cs = config->cs;
+
+    sl_gpio_driver_clear_pin(&cs);
   }
 }
 
@@ -107,8 +106,9 @@ static void spi_deselect(const struct mipi_dbi_device *device)
     (struct mipi_dbi_gspi_config *)device->config;
 
   if (config->control_config->slave_select_mode == SL_GSPI_MASTER_SW) {
-    si91x_gpio_set_pin_output(config->cs.port,
-                              config->cs.pin);
+    sl_gpio_t cs = config->cs;
+
+    sl_gpio_driver_set_pin(&cs);
   }
 }
 
@@ -118,11 +118,13 @@ static void set_dc_mode(const struct mipi_dbi_device *device, bool mode)
     (struct mipi_dbi_gspi_config *)device->config;
 
   if (mode) {
-    si91x_gpio_set_pin_output(config->dc.port,
-                              config->dc.pin);
+    sl_gpio_t dc = config->dc;
+
+    sl_gpio_driver_set_pin(&dc);
   } else {
-    si91x_gpio_clear_pin_output(config->dc.port,
-                                config->dc.pin);
+    sl_gpio_t dc = config->dc;
+
+    sl_gpio_driver_clear_pin(&dc);
   }
 }
 
@@ -252,13 +254,19 @@ sl_status_t mipi_dbi_device_init(struct mipi_dbi_device *device,
   memcpy(&control_config, si91x_config->control_config, sizeof(control_config));
 //  gspi_configuration = control_config;
   // Configuration of clock with the default clock parameters
-  status = sl_si91x_gspi_configure_clock(&clock_config);
-  if (status != SL_STATUS_OK) {
-    return status;
-  }
+//  status = sl_si91x_gspi_configure_clock(&clock_config);
+//  if (status != SL_STATUS_OK) {
+//    return status;
+//  }
   // Pass the address of void pointer, it will be updated with the address
   // of GSPI instance which can be used in other APIs.
   status = sl_si91x_gspi_init(SL_GSPI_MASTER, &spi_handle);
+  if (status != SL_STATUS_OK) {
+    return status;
+  }
+
+  // Validation for executing the API only once
+  status = sl_si91x_gspi_set_slave_number(GSPI_SLAVE_0);
   if (status != SL_STATUS_OK) {
     return status;
   }
@@ -281,53 +289,26 @@ sl_status_t mipi_dbi_device_init(struct mipi_dbi_device *device,
     return status;
   }
 
-  // Validation for executing the API only once
-  status = sl_si91x_gspi_set_slave_number(GSPI_SLAVE_0);
+  status = sl_si91x_gpio_driver_enable_clock(
+    (sl_si91x_gpio_select_clock_t)M4CLK_GPIO);
   if (status != SL_STATUS_OK) {
     return status;
   }
 
-  status = si91x_gpio_pin_setup(si91x_config->cs.port,
-                                si91x_config->cs.pin,
-                                si91x_config->cs.mode,
-                                GPIO_OUTPUT,
-                                1);
-  if (status != SL_STATUS_OK) {
-    return status;
+  if (SL_GSPI_MASTER_SW == si91x_config->control_config->slave_select_mode) {
+    sl_si91x_gpio_pin_config_t cs_pin_config = { { si91x_config->cs.port,
+                                                   si91x_config->cs.pin },
+                                                 GPIO_OUTPUT };
+    status = sl_gpio_set_configuration(cs_pin_config);
+    if (status != SL_STATUS_OK) {
+      return status;
+    }
   }
 
-  status = si91x_gpio_pin_setup(si91x_config->dc.port,
-                                si91x_config->dc.pin,
-                                si91x_config->dc.mode,
-                                GPIO_OUTPUT,
-                                1);
-  if (status != SL_STATUS_OK) {
-    return status;
-  }
-
-  status = si91x_gpio_pin_setup(si91x_config->clk.port,
-                                si91x_config->clk.pin,
-                                si91x_config->clk.mode,
-                                GPIO_OUTPUT,
-                                0);
-  if (status != SL_STATUS_OK) {
-    return status;
-  }
-
-  status = si91x_gpio_pin_setup(si91x_config->tx.port,
-                                si91x_config->tx.pin,
-                                si91x_config->tx.mode,
-                                GPIO_OUTPUT,
-                                0);
-  if (status != SL_STATUS_OK) {
-    return status;
-  }
-
-  status = si91x_gpio_pin_setup(si91x_config->rx.port,
-                                si91x_config->rx.pin,
-                                si91x_config->rx.mode,
-                                GPIO_OUTPUT,
-                                0);
+  sl_si91x_gpio_pin_config_t dc_pin_config = { { si91x_config->dc.port,
+                                                 si91x_config->dc.pin },
+                                               GPIO_OUTPUT };
+  status = sl_gpio_set_configuration(dc_pin_config);
   if (status != SL_STATUS_OK) {
     return status;
   }

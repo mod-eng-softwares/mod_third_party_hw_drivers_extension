@@ -4,7 +4,7 @@
  * @version 1.2.0
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -92,12 +92,6 @@ extern "C" {
 // <<< end of configuration section >>>
 
 // <<< sl:start pin_tool >>>
-
-// <gpio optional=true> DCMOTOR26_CS
-// $[GPIO_DCMOTOR26_CS]
-// #define DCMOTOR26_CS_PORT                             0
-// #define DCMOTOR26_CS_PIN                              0
-// [GPIO_DCMOTOR26_CS]$
 
 // <gpio optional=true> DCMOTOR26_CHANNEL_MONITOR
 // $[GPIO_DCMOTOR26_CHANNEL_MONITOR]

@@ -10,9 +10,6 @@ requires:
   - name: sl_adc
     condition:
       - device_si91x
-  - name: gpio_helper_si91x
-    condition:
-      - device_si91x
 config_file:
   - path: public/silabs/services_touch_screen/config/brd4338a/touch_screen_config.h
     file_id: touch_screen_config
@@ -24,10 +21,14 @@ config_file:
     condition:
       - device_si91x
       - brd2605a
+  - path: public/silabs/services_touch_screen/config/brd2708a/touch_screen_config.h
+    file_id: touch_screen_config
+    condition:
+      - device_si91x
+      - brd2708a
   - path: public/silabs/services_touch_screen/config/other/touch_screen_config.h
     file_id: touch_screen_config
-    unless: [brd4338a, brd2605a]
-
+    unless: [brd4338a, brd2605a, brd2708a]
 template_contribution:
   - name: component_catalog
     value: touch_screen_analog_si91x

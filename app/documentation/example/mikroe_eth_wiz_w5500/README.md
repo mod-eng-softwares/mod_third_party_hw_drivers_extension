@@ -8,38 +8,71 @@ W5500 enables users to have the Internet connectivity in their applications just
 
 The board can be used for industrial automation systems, IP set-top boxes, VoIP/Video phone systems, security systems, home networks and gateways and test and measurement equipment and for many other applications.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+  - [Testing](#testing)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit) BGM220 Bluetooth Module Explorer Kit
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
+
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
+
 - 1x [ETH WIZ Click board](https://www.mikroe.com/eth-wiz-click)
 - 1x Ethernet Cable, e.g. [Ethernet Roll Cable](https://www.mikroe.com/ethernet-roll-transparent)
 
 ## Hardware Connection ##
 
-- **If the BGM220P Explorer Kit is used:**
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the ETH WIZ Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the ETH WIZ Click board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The ETH WIZ Click board supports MikroBus; therefore, it can easily connect to the MikroBus socket of the BGM220P Explorer Kit. Be sure that the 45-degree corner of the board matches the 45-degree white line of the Explorer Kit. The hardware connection is shown in the image below:
+![board](image/board.png)
 
-  ![board](image/board.png)
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-- **If the Wi-Fi Development Kit is used**:
+The tables below provide an overview of the pin connections.
 
-  The hardware connection is shown in the table below:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | ETH WIZ Click       |
-  | -------------------------| ------------- | -------------------- | ------------------ |
-  | GPIO_RESET               | GPIO_47 [P26]       | GPIO_11        | RESET              |
-  | GPIO_CS                  | GPIO_46 [P24]       | GPIO_10        | CS                 |
-  | RTE_GSPI_MASTER_CLK_PIN  | GPIO_25 [P25]       | GPIO_25        | SCK                |
-  | RTE_GSPI_MASTER_MISO_PIN | GPIO_26 [P27]       | GPIO_26        | SDO                |
-  | RTE_GSPI_MASTER_MOSI_PIN | GPIO_27 [P29]       | GPIO_27        | SDI                |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | ETH WIZ Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| SPI CS PIN  | PC3 | PC3 | PC0 | PC3 | ↔ | CS  |
+| SPI CLK PIN | PC2 | PC2 | PC1 | PC2 | ↔ | SCK |
+| SPI RX PIN  | PC1 | PC1 | PC2 | PC1 | ↔ | SDO |
+| SPI TX PIN  | PC0 | PC0 | PC3 | PC0 | ↔ | SDI |
+| Reset       | PC6 | PC6 | PC8 | PC6 | ↔ | RST |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | ETH WIZ Click |
+| --- | --- | --- | --- | --- | --- |
+| RTE_GSPI_MASTER_CLK_PIN  | GPIO_25 [P25] | GPIO_25 [P3] | GPIO_25 | ↔ | SCK |
+| RTE_GSPI_MASTER_MISO_PIN | GPIO_26 [P27] | GPIO_26 [P5] | GPIO_26 | ↔ | SDO |
+| RTE_GSPI_MASTER_MOSI_PIN | GPIO_27 [P29] | GPIO_27 [P7] | GPIO_27 | ↔ | SDI |
+| GPIO_CS                  | GPIO_28 [P31] | GPIO_28 [P9] | GPIO_28 | ↔ | CS  |
+| Reset           | GPIO_30 [P35] | GPIO_30 [P13] | GPIO_30 | ↔ | RST |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -52,7 +85,7 @@ You can either create a project based on an example project or start with an emp
 
 2. Click **Create** button on the **Third Party Hardware Drivers - W5500 - ETH Wiz Click (Mikroe)** example. Example project creation dialog pops up -> click Create and Finish and Project should be generated.
 
-    ![create_example](image/create_example.png)
+   ![create_example](image/create_example.png)
 
 3. Build and flash this example to the board.
 
@@ -62,29 +95,19 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_eth_wiz_w5500/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-   - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [IO Stream] → [IO Stream: EUSART] with the default instance name: **vcom**
+     - [Application] → [Utility] → [Log]
+     - [Application] → [Utility] → [Assert]
+     - [Platform] → [Driver] → [SPI] → [SPIDRV] → [mikroe] → change the configuration for [SPI master chip select (CS) control scheme] to "CS controlled by the application"
+     - [Third Party Hardware Drivers] → [Interface] → [W5500 - ETH WIZ Click (Mikroe)] → use the default configuration
 
-   - Select the *SOFTWARE COMPONENTS* tab.
-
-   - Install the following components:
-
-      **If the BGM220P Explorer Kit is used:**
-       - [Services] → [IO Stream] → [IO Stream: EUSART] with the default instance name: **vcom**
-       - [Application] → [Utility] → [Log]
-       - [Application] → [Utility] → [Assert]
-       - [Platform] → [Driver] → [SPI] → [SPIDRV] → [mikroe] → change the configuration for [SPI master chip select (CS) control scheme] to "CS controlled by the application" and select the CS pin to None as below:
-
-           ![spi config](image/spi_config.png)
-
-       - [Third Party Hardware Drivers] → [Interface] → [W5500 - ETH WIZ Click (Mikroe)] → use the default configuration
-
-          ![config](image/w5500_config.png)
-
-      **If the Wi-Fi Development Kit is used:**
-       - [Third Party Hardware Drivers] → [Interface] → [W5500 - ETH WIZ Click (Mikroe)] → use the default configuration
-       - [Application] → [Utility] → [Assert]
+   - **If the Wi-Fi Development Kit is used:**
+     - [Third Party Hardware Drivers] → [Interface] → [W5500 - ETH WIZ Click (Mikroe)] → use the default configuration
+     - [Application] → [Utility] → [Assert]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [GSPI] → Configure a different pin as CS0 to replace GPIO 28 (e.g. GPIO 49), since GPIO 28 is already managed by the [W5500 - ETH WIZ Click (Mikroe)] component
 
 4. Build and flash the project to your device.
 

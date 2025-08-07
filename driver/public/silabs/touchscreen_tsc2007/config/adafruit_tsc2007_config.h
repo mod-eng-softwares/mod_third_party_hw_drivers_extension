@@ -104,16 +104,6 @@ extern "C" {
 
 // <<< end of configuration section >>>
 
-// <<< sl:start pin_tool >>>
-
-// <gpio optional=true> ADAFRUIT_TSC2007_INT
-// $[GPIO_ADAFRUIT_TSC2007_INT]
-#define ADAFRUIT_TSC2007_INT_PORT                SL_GPIO_PORT_B
-#define ADAFRUIT_TSC2007_INT_PIN                 0
-// [GPIO_ADAFRUIT_TSC2007_INT]$
-
-// <<< sl:end pin_tool >>>
-
 #ifdef __cplusplus
 }
 #endif

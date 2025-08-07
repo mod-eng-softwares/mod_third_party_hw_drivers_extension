@@ -35,10 +35,12 @@ config_file:
   - path: public/mikroe/eink_display/config/brd4338a/mikroe_eink_display_config.h
     file_id: mikroe_eink_display_config
     condition: [brd4338a]
+  - path: public/mikroe/eink_display/config/brd2708a/mikroe_eink_display_config.h
+    file_id: mikroe_eink_display_config
+    condition: [brd2708a]
   - path: public/mikroe/eink_display/config/other/mikroe_eink_display_config.h
     file_id: mikroe_eink_display_config
-    unless: [brd4314a, brd4108a, brd2703a, brd4182a, brd2605a, brd4338a, brd2710a]
-
+    unless: [brd4314a, brd4108a, brd2703a, brd4182a, brd2605a, brd4338a, brd2710a, brd2708a]
 template_contribution:
   - name: component_catalog
     value: mikroe_eink_display

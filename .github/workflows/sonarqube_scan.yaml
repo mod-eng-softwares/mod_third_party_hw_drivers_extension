@@ -1,0 +1,203 @@
+name: SonarQube-Scan
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, edited]
+
+env:
+  SL_SLC_PATH: ${{ github.workspace }}/tools/slc_cli/slc
+  SL_SDK_PATH: ${{ github.workspace }}/sdk
+  SL_STUDIO_BUILD_PATH: ${{ github.workspace }}/tools/SimplicityStudio_v5
+  STUDIO_ADAPTER_PACK_PATH: ${{ github.workspace }}/tools/SimplicityStudio_v5/developer/adapter_packs
+  POST_BUILD_EXE: ${{ github.workspace }}/tools/SimplicityStudio_v5/developer/adapter_packs/commander/commander
+  WORKSPACE: ${{ github.workspace }}
+
+jobs:
+  sonarqube_scan:
+    if: github.repository_visibility != 'public'
+    runs-on: silabs-internal
+    steps:
+    - name: Get repository name
+      run: |
+        REPO_NAME=$(echo $GITHUB_REPOSITORY | cut -d "/" -f 2)
+        echo "repo=$REPO_NAME" >> $GITHUB_ENV
+
+    - name: Create GitHub App Token
+      id: app-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ vars.GH_APP_ID }}
+        private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+        owner: ${{ github.repository_owner }}
+
+    - name: Checkout code repository
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.repository  }}
+        token: ${{ steps.app-token.outputs.token }}
+        path: 'projects'
+
+    - name: Checkout tools repository
+      uses: actions/checkout@v4
+      with:
+        repository: SiliconLabsSoftware/aep_ci_tools
+        ref: 'pr_checking'
+        token: ${{ steps.app-token.outputs.token }}
+        path: 'aep_ci_tools'
+
+    - name: Check the changes
+      id: pr_check
+      run: |
+        echo ${{ github.base_ref }}
+
+        cd projects
+        bash ${{ github.workspace }}/aep_ci_tools/tphd_scripts/third_party_check_changed_projects.sh \
+        ${{ github.base_ref }} ${{ github.event.pull_request.number }}
+
+        if [ ! -f  $WORKSPACE/changed_projects.txt ] || [ ! -s  $WORKSPACE/changed_projects.txt ]; then
+          echo "has_changes=false" >> $GITHUB_OUTPUT
+          echo "No project changes detected...........Skipped"
+          exit 0
+        fi
+        echo "has_changes=true" >> $GITHUB_OUTPUT
+        echo "...........Changed projects:..........."
+        cat $WORKSPACE/changed_projects.txt
+
+    - name: Setup Java
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'oracle'
+        java-version: '21'
+
+    - name: Install Dependencies
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      run: |
+        bash aep_ci_tools/scripts/install_tools.sh
+        # Clone sdk type and version in .slce file
+        python3 $WORKSPACE/aep_ci_tools/tphd_scripts/clone_sdk_version.py $WORKSPACE/projects/third_party_hw_drivers.slce
+
+    - name: Download and install SonarQube scanner and Wrapper
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      run: bash ${{ github.workspace }}/aep_ci_tools/scripts/install_sonar_dependencies.sh
+
+    - name: Run build-wrapper
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      run: |
+        cp -r projects third_party_hw_drivers_extension
+        mkdir -p $SL_SDK_PATH/extension/third_party_hw_drivers_extension
+        cp -R $WORKSPACE/third_party_hw_drivers_extension $SL_SDK_PATH/extension
+        $SL_SLC_PATH configuration --sdk $SL_SDK_PATH
+        $SL_SLC_PATH signature trust --sdk $SL_SDK_PATH
+        $SL_SLC_PATH signature trust -extpath $SL_SDK_PATH/extension/third_party_hw_drivers_extension
+
+        mkdir -p $WORKSPACE/changed_projects/projects/app/example
+        while read -r line; do
+          if [[ $line == *"app/example"* ]]; then
+            IFS='/ ' read -r -a array <<< "$line"
+            project_dir="app/example/${array[2]}"
+            cp -R "$WORKSPACE/projects/$project_dir" "$WORKSPACE/changed_projects/projects/app/example"
+          fi
+        done < "$WORKSPACE/changed_projects.txt"
+
+        if [ ! -d "$WORKSPACE/changed_projects/projects/app/documentation/example" ]; then
+          mkdir -p $WORKSPACE/changed_projects/projects/app/documentation/example
+        fi
+        cp -R $WORKSPACE/projects/app/documentation/example $WORKSPACE/changed_projects/projects/app/documentation
+
+        export SCRIPT_PATH="$WORKSPACE/aep_ci_tools/scripts/checkproject_third_party.py"
+        export PROJECT_PATH=$WORKSPACE/changed_projects
+        find $PROJECT_PATH -name *.slcp > solution_list.txt
+        FILE=$WORKSPACE/solution_list.txt
+        STRING=".slcp"
+        if grep -q "$STRING" "$FILE"; then
+          printf "%0.s*" {1..50}
+          printf "\nFound .slcp changed."
+        else
+          printf "%0.s*" {1..50}
+          printf "\n===> Will build for all projects\n\n"
+          export buid_all=True
+        fi
+
+        if [[ $buid_all == True ]];then export PROJECT_PATH="$WORKSPACE/projects/app/example"; fi;
+        export CHECK_SONARQUBE=1
+        ${{ github.workspace}}/aep_ci_tools/build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
+        --out-dir wrapper_out python3 -u $SCRIPT_PATH --release --slcpgcc $PROJECT_PATH
+
+        echo "changed_projects_path=$PROJECT_PATH" >> $GITHUB_ENV
+
+    - name: Prepare included sources
+      id: included_src
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      run: |
+        find $changed_projects_path -name *.slcp > solution_list.txt
+        size=$(stat -c %s solution_list.txt)
+        if [ $size = 0 ]; then
+          echo "No solution files found"
+          exit 1
+        fi
+
+        # Scan list .c and .h files
+        python3 $WORKSPACE/aep_ci_tools/tphd_scripts/third_party_get_source_files.py solution_list.txt >> $WORKSPACE/source_list.txt
+        size=$(stat -c %s source_list.txt)
+        if [ $size = 0 ]; then
+          echo "No source files found"
+          exit 1
+        fi
+        # Combine into a variable
+        while read line; do echo $line >> source_list2.txt; done < source_list.txt
+        combile=''
+        while read line
+        do
+          combile+=$line,
+        done < source_list2.txt
+        # Remove last comma (,)
+        export included_sources="${combile%?}"
+
+        echo ==============================================
+        echo $included_sources
+        echo ==============================================
+
+        echo "sonar.inclusions:" $included_sources
+        echo "sonar_inclusions=$included_sources" >> $GITHUB_OUTPUT
+
+    - name: Run SonarQube scanner
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      run: |
+        ${{ github.workspace}}/aep_ci_tools/sonar-scanner-cli-linux-x64/bin/sonar-scanner \
+        -D"sonar.verbose=true" \
+        -D"sonar.qualitygate.wait=True" \
+        -D"sonar.cfamily.compile-commands=wrapper_out/compile_commands.json" \
+        -D"sonar.branch.name=${{ github.event.pull_request.head.ref }}" \
+        -D"sonar.scm.disabled=True" \
+        -D"sonar.projectName=${{ env.repo }}" \
+        -D"sonar.projectKey=${{ env.repo }}" \
+        -D"sonar.projectBaseDir=$SL_SDK_PATH/extension/third_party_hw_drivers_extension" \
+        -D"sonar.sources=." \
+        -D"sonar.inclusions=${{ steps.included_src.outputs.sonar_inclusions }}" \
+        -D"sonar.host.url=https://sonarqube.silabs.net" \
+        -D"sonar.token=${{ secrets.SONAR_TOKEN }}" \
+        -D"sonar.language=cxx" \
+        -D"sonar.cfamily.cache.enabled=false" > sonar_log.txt
+      continue-on-error: true
+
+    - name: Upload Scanner report
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: sonar_log
+        path: sonar_log.txt
+        retention-days: 90
+
+    - name: Check log file to set status of the job
+      if: ${{ steps.pr_check.outputs.has_changes == 'true' }}
+      run: |
+        echo "Check report here: https://sonarqube.silabs.net/dashboard?id=${{ env.repo }}&branch=${{ github.event.pull_request.head.ref }}"
+        if grep -qe "EXECUTION SUCCESS" sonar_log.txt; then
+          echo "Result: Success"
+          echo "result_sonar=success" >> $GITHUB_ENV
+
+        else
+          echo "Result: Failure"
+          exit 1
+        fi

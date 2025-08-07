@@ -18,7 +18,6 @@ source:
   - path: gecko/app.c
   - path: app_main_screen.c
   - path: app_calib_screen.c
-  - path: main.c
 
 include:
   - path: 'gecko'
@@ -26,8 +25,9 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: iostream_eusart
     instance: [vcom]
   - id: app_assert
@@ -48,15 +48,13 @@ define:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/README.md
 
 other_file:
-  - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/create_example_with_dma_mode.png
-    directory: image
-  - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/create_example_without_dma_mode.png
+  - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/create_example.png
     directory: image
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/result.GIF
     directory: image
@@ -65,8 +63,6 @@ other_file:
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/touch_settings.png
     directory: image
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/hxd8357d_display.png
-    directory: image
-  - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/hardware_connect.png
     directory: image
   - path: ../../documentation/example/adafruit_tft_lcd_hxd8357d/image/gspi.png
     directory: image

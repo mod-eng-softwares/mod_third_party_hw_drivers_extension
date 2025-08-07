@@ -79,12 +79,6 @@ extern "C" {
 #define MIKROE_OZONE2_AN_PIN                       0
 // [GPIO_MIKROE_OZONE2_AN]$
 
-// <gpio optional=true> MIKROE_OZONE2_CS
-// $[GPIO_MIKROE_OZONE2_CS]
-#define MIKROE_OZONE2_CS_PORT                      SL_GPIO_PORT_C
-#define MIKROE_OZONE2_CS_PIN                       3
-// [GPIO_MIKROE_OZONE2_CS]$
-
 // <<< sl:end pin_tool >>>
 
 #ifdef __cplusplus

@@ -6,40 +6,62 @@ This example project shows an example for Mikroe OBDII Click board driver integr
 
 The OBDII Click can be used for the communication with the Electronic Control Unit (ECU) of a vehicle, via several different OBD II diagnostic protocols such as CAN, K LINE, L LINE and J1850. The STN1110 IC is used to process requests sent by the MCU via the UART interface and return back the responses from the ECU network nodes.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+  - [Testing](#testing)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
-
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
-
+- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit  
+  *or*  
+  1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 - 1x [OBDII Click board](https://www.mikroe.com/obdii-click)
-
 - 1x [OBDII cable](https://www.mikroe.com/obd-ii-to-db9-cable)
 
 ## Hardware Connection ##
 
-- If the EFR32xG24 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the OBDII Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the OBDII board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The OBDII Click board supports MikroBus, so it can connect easily to the Explorer Kit via MikroBus header. Assure that the 45-degree corner of Click board matches the 45-degree white line of the Explorer Kit.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the image below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-    ![board](image/hardware_connection.png)
+The tables below provide an overview of the pin connections.
 
-- If the Wi-Fi Development Kit is used:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | OBDII Click |
-  | ----------------- | -------------- | ------------ | ----------- |
-  | UART1_RX_PIN      | GPIO_6 [P19]   | GPIO_6       | TX          |
-  | UART1_TX_PIN      | GPIO_7 [P20]   | GPIO_7       | RX          |
-  | RESET             | GPIO_46 [P24]  | GPIO_10      | RST         |
-  | INTERRUPT         | GPIO_47 [P26]  | GPIO_11      | INT         |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | OBDII Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| UART Receive  | PB2 | PB2 | PD5 | PB2 | ↔ | TX  |
+| UART Transmit | PB1 | PB1 | PD4 | PB1 | ↔ | RX  |
+| RESET         | PC6 | PC6 | PC8 | PC6 | ↔ | RST |
+| INTERRUPT     | PB3 | PB3 | PB1 | PB3 | ↔ | INT |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | OBDII Click |
+| --- | --- | --- | --- | --- | --- |
+| UART Receive  | GPIO_29 [P33] | GPIO_29 [EXP11] | ULP_GPIO_6 | ↔ | TX  |
+| UART Transmit | GPIO_30 [P35] | GPIO_30 [EXP13] | ULP_GPIO_7 | ↔ | RX  |
+| Reset         | GPIO_46 [P24] | GPIO_10 [EXP23] | GPIO_30    | ↔ | RST |
+| INTERRUPT     | GPIO_46 [P24] | GPIO_10 [EXP23] | UULP_VBAT_GPIO_2 | ↔ | INT |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -52,7 +74,7 @@ You can either create a project based on an example project or start with an emp
 
 2. Click **Create** button on the **Third Party Hardware Drivers - STN1110 - OBDII Click (Mikroe)** example. Example project creation dialog pops up -> click Create and Finish and Project should be generated.
 
-    ![Create_example](image/create_example.png)
+   ![Create_example](image/create_example.png)
 
 3. Build and flash this example to the board.
 
@@ -62,29 +84,21 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_obdii_stn1110/app.c` into the project root folder (overwriting existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the EFR32xG24 Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: **vcom**
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **mikroe**
+     - [Third Party Hardware Drivers] → [Interface] → [STN1110 - OBDII Click (Mikroe)] → use default configuration
+     - [Application] → [Utility] → [Assert]
+     - [Application] → [Utility] → [Log]
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the EFR32xG24 Explorer Kit is used:**
-
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: **vcom**
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **mikroe**
-        - [Third Party Hardware Drivers] → [Interface] → [STN1110 - OBDII Click (Mikroe)] → use default configuration
-        - [Application] → [Utility] → [Assert]
-        - [Application] → [Utility] → [Log]
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [Application] → [Utility] → [Assert]
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [Third Party Hardware Drivers] → [Interface] → [STN1110 - OBDII Click (Mikroe)] → use default configuration
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [UART] → disable "UART1 DMA"
+   - **If the Wi-Fi Development Kit is used:**
+     - [Application] → [Utility] → [Assert]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [Third Party Hardware Drivers] → [Interface] → [STN1110 - OBDII Click (Mikroe)] → use default configuration
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [USART] → disable "USART0 DMA". Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
 
 4. Build and flash this example to the board.
 
@@ -98,7 +112,7 @@ You can either create a project based on an example project or start with an emp
 
 This example demonstrates the use of OBDII click board by reading the engine RPM and vehicle speed and displaying results on the USB UART once per second.
 
-You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like TeraTerm to receive the data from the USB. A screenshot of the console output is shown in the figure below.
+You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like Tera Term to receive the data from the USB. A screenshot of the console output is shown in the figure below.
 
 ![logging_screen](image/log.png)
 

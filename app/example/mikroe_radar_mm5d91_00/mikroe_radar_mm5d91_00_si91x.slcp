@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,10 +23,10 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: sleeptimer
   - id: mikroe_radar
@@ -35,13 +34,31 @@ component:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 configuration:
-  - name: SL_UART1_DMA_CONFIG_ENABLE
-    value: "0"
+  - name: SL_USART0_DMA_CONFIG_ENABLE
+    value: 0
+  - name: SL_USART0_TX_PORT
+    value: ULP
+    condition: [brd2708a]
+  - name: SL_USART0_TX_PIN
+    value: 7
+    condition: [brd2708a]
+  - name: SL_USART0_TX_LOC
+    value: 8
+    condition: [brd2708a]
+  - name: SL_USART0_RX_PORT
+    value: ULP
+    condition: [brd2708a]
+  - name: SL_USART0_RX_PIN
+    value: 6
+    condition: [brd2708a]
+  - name: SL_USART0_RX_LOC
+    value: 13
+    condition: [brd2708a]
 
 readme:
   - path: ../../documentation/example/mikroe_radar_mm5d91_00/README.md

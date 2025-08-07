@@ -1,10 +1,10 @@
 /***************************************************************************//**
- * @file w5x00_config.h
+ * @file mikroe_w5x00_config.h
  * @brief Wiznet w5x00 config.
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -89,7 +89,7 @@ extern "C" {
 #define W5500_RESET_PORT                         HP
 #endif
 #ifndef W5500_RESET_PIN
-#define W5500_RESET_PIN                          10
+#define W5500_RESET_PIN                          30
 #endif
 // [GPIO_W5500_RESET]$
 
@@ -99,7 +99,7 @@ extern "C" {
 #define MIKROE_W5500_CS_PORT                    HP
 #endif
 #ifndef MIKROE_W5500_CS_PIN
-#define MIKROE_W5500_CS_PIN                     11
+#define MIKROE_W5500_CS_PIN                     28
 #endif
 // [GPIO_MIKROE_W5500_CS]$
 

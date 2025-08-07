@@ -27,6 +27,10 @@
 
 #include "obdii.h"
 
+// Silicon Labs Fixed" 8/7/2025
+// Fixed: Include the string.h header for strlen function.
+#include "string.h"
+
 void obdii_cfg_setup ( obdii_cfg_t *cfg ) 
 {
     // Communication gpio pins
@@ -94,7 +98,10 @@ err_t obdii_generic_read ( obdii_t *ctx, uint8_t *data_out, uint16_t len )
 void obdii_send_command ( obdii_t *ctx, uint8_t *cmd )
 {
     uint8_t cr_byte = '\r';
-    obdii_generic_write ( ctx, cmd, strlen ( cmd ) );
+
+    // Silicon Labs Fixed: 8/7/2025
+    // Type cast to const char* to match the expected type of strlen
+    obdii_generic_write ( ctx, cmd, strlen ( (const char *)cmd ) );
     obdii_generic_write ( ctx, &cr_byte, 1 );
     Delay_10ms ( );
 }

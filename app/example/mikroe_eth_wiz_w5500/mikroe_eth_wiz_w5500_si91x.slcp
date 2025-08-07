@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -25,19 +24,25 @@ include:
 
 component:
   - id: app_assert
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: mikroe_eth_wiz
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_GSPI_MASTER_CS0__PORT
+    value: HP
+  - name: SL_GSPI_MASTER_CS0__PIN
+    value: 49
+
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/mikroe_eth_wiz_w5500/README.md
@@ -54,10 +59,6 @@ other_file:
   - path: ../../documentation/example/mikroe_eth_wiz_w5500/image/log.png
     directory: "image"
   - path: ../../documentation/example/mikroe_eth_wiz_w5500/image/software_layers.png
-    directory: "image"
-  - path: ../../documentation/example/mikroe_eth_wiz_w5500/image/w5500_config.png
-    directory: "image"
-  - path: ../../documentation/example/mikroe_eth_wiz_w5500/image/spi_config.png
     directory: "image"
 
 ui_hints:

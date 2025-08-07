@@ -37,7 +37,9 @@
  ******************************************************************************/
 #include "app_assert.h"
 #include "rsi_debug.h"
+#include "sl_component_catalog.h"
 #include "sl_si91x_i2c.h"
+#include "sl_si91x_gspi_common_config.h"
 #include "adafruit_ili9341.h"
 #include "adafruit_tsc2007.h"
 #include "adafruit_ili9341_spi_config.h"
@@ -48,6 +50,7 @@
 static glib_context_t g_context;
 
 static sl_i2c_instance_t i2c_instance = SL_I2C2;
+
 static const struct adafruit_tsc2007_config adafruit_tsc2007_config = {
   .mikroe_drv_i2c_handle = (void *)&i2c_instance
 };
@@ -56,21 +59,10 @@ MIPI_DBI_SPI_INTERFACE_DEFINE(ili9341_config,
                               ADAFRUIT_ILI9341_BITRATE,
                               ADAFRUIT_ILI9341_CLOCK_MODE,
                               ADAFRUIT_ILI9341_CS_CONTROL,
-                              RTE_GSPI_MASTER_CLK_PORT,
-                              RTE_GSPI_MASTER_CLK_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MOSI_PORT,
-                              RTE_GSPI_MASTER_MOSI_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MISO_PORT,
-                              RTE_GSPI_MASTER_MISO_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_CS0_PORT,
-                              RTE_GSPI_MASTER_CS0_PIN,
-                              SL_GPIO_MODE_4,
+                              SL_GSPI_MASTER_CS0__PORT,
+                              SL_GSPI_MASTER_CS0__PIN,
                               ADAFRUIT_ILI9341_DC_PORT,
-                              ADAFRUIT_ILI9341_DC_PIN,
-                              SL_GPIO_MODE_0);
+                              ADAFRUIT_ILI9341_DC_PIN);
 
 static void screen_print(
   int16_t glib_y_ofset,

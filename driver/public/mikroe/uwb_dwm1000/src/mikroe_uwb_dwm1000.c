@@ -39,10 +39,8 @@
 
 #include "mikroe_uwb_dwm1000.h"
 #include "mikroe_uwb_dwm1000_config.h"
-
-#if (defined(SLI_SI917))
-#else
-#include "sl_spidrv_mikroe_config.h"
+#ifndef SLI_SI917
+#include "spidrv.h"
 #endif
 // ------------------------------------------------------------- PRIVATE MACROS
 
@@ -112,20 +110,14 @@ sl_status_t mikroe_dwm1000_init(mikroe_spi_handle_t spi_instance)
                                   DWM1000_INT_PIN);
 #endif
 
-#if (defined(SLI_SI917))
-#if defined(DWM1000_SPI_CS_PORT) && defined(DWM1000_SPI_CS_PIN)
-  uwb_cfg.cs = hal_gpio_pin_name(DWM1000_SPI_CS_PORT,
-                                 DWM1000_SPI_CS_PIN);
-#endif
+#ifdef SLI_SI917
+  uwb_cfg.cs = hal_gpio_pin_name(DWM1000_SPI_CS_PORT, DWM1000_SPI_CS_PIN);
 #else
-#if defined(SL_SPIDRV_MIKROE_CS_PORT) && defined(SL_SPIDRV_MIKROE_CS_PIN)
-  uwb_cfg.cs = hal_gpio_pin_name(SL_SPIDRV_MIKROE_CS_PORT,
-                                 SL_SPIDRV_MIKROE_CS_PIN);
-#endif
+  const SPIDRV_Handle_t ptr = (SPIDRV_Handle_t)spi_instance;
+  uwb_cfg.cs = hal_gpio_pin_name(ptr->initData.portCs, ptr->initData.pinCs);
 #endif
 
   digital_out_init(&cs_out, uwb_cfg.cs);
-  digital_out_high(&cs_out);
 
   if (uwb_init(&uwb, &uwb_cfg) != UWB_OK) {
     return SL_STATUS_INITIALIZATION;
@@ -136,18 +128,16 @@ sl_status_t mikroe_dwm1000_init(mikroe_spi_handle_t spi_instance)
   return SL_STATUS_OK;
 }
 
-sl_status_t mikroe_dwm1000_generic_write(
-  uint8_t reg_adr,
-  uint8_t *tx_buf,
-  uint16_t buf_len)
+sl_status_t mikroe_dwm1000_generic_write(uint8_t reg_adr,
+                                         uint8_t *tx_buf,
+                                         uint16_t buf_len)
 {
   return uwb_generic_write(&uwb, reg_adr, tx_buf, buf_len);
 }
 
-sl_status_t mikroe_dwm1000_generic_read(
-  uint8_t reg_adr,
-  uint8_t *rx_buf,
-  uint16_t buf_len)
+sl_status_t mikroe_dwm1000_generic_read(uint8_t reg_adr,
+                                        uint8_t *rx_buf,
+                                        uint16_t buf_len)
 {
   return uwb_generic_read(&uwb, reg_adr, rx_buf, buf_len);
 }

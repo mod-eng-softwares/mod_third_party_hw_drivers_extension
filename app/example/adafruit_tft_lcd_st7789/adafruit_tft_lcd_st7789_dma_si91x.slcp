@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: si91x/app.c
-  - path: main.c
   - path: bird_image.c
   - path: cactus_plants_image.c
   - path: cat_image.c
@@ -29,12 +28,12 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
-  - id: app_assert
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
+  - id: app_assert
   - id: tft_lcd_st7789_dma
     from: third_party_hw_drivers
   - id: services_oled_glib
@@ -48,9 +47,9 @@ configuration:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/adafruit_tft_lcd_st7789/README.md

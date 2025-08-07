@@ -3,7 +3,7 @@
  * @brief Core application logic.
  *******************************************************************************
  * # License
- * <b>Copyright 2020 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -25,6 +25,14 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  *    misrepresented as being the original software.
  * 3. This notice may not be removed or altered from any source distribution.
+ *
+ *******************************************************************************
+ *
+ * EVALUATION QUALITY
+ * This code has been minimally tested to ensure that it builds with the
+ * specified dependency versions and is suitable as a demonstration for
+ * evaluation purposes only.
+ * This code will be maintained at the sole discretion of Silicon Labs.
  *
  ******************************************************************************/
 #include "em_common.h"
@@ -82,7 +90,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
     case sl_bt_evt_system_external_signal_id:
       if (evt->data.evt_system_external_signal.extsignals
           == SIGNAL_LOG_DATA) {
-        uint8_t mac[6];
+        bthome_v2_server_addr_t mac;
         uint8_t device_count;
         bthome_v2_server_sensor_data_t object[10];
         uint8_t object_count;
@@ -92,14 +100,14 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
         device_count = get_device_count();
 
         for (uint8_t i = 0; i < device_count; i++) {
-          get_device_mac(i, mac);
+          get_device_mac(i, &mac);
           app_log("->MAC: ");
           for (uint8_t j = 0; j < 6; j++) {
-            app_log("%.2x ", mac[j]);
+            app_log("%.2x ", mac.data[j]);
           }
           app_log("\r\n");
 
-          bthome_v2_server_check_device(mac, &encrypted, &key_available);
+          bthome_v2_server_check_device(&mac, &encrypted, &key_available);
 
           app_log("  Encryption: %s",
                   (encrypted) ? "Yes\r\n" : "No\r\n");
@@ -111,7 +119,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
           }
 
           object_count = 0;
-          bthome_v2_server_sensor_data_read(mac,
+          bthome_v2_server_sensor_data_read(&mac,
                                             object,
                                             10,
                                             &object_count,
@@ -134,7 +142,7 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
   }
 }
 
-void bthome_v2_server_found_device_callback(uint8_t *mac,
+void bthome_v2_server_found_device_callback(bthome_v2_server_addr_t *mac,
                                             uint8_t *payload,
                                             uint8_t payload_length)
 {
@@ -145,7 +153,7 @@ void bthome_v2_server_found_device_callback(uint8_t *mac,
 
   app_log("\r\n->MAC: ");
   for (uint8_t i = 0; i < 6; i++) {
-    app_log("%.2x ", mac[i]);
+    app_log("%.2x ", mac->data[i]);
   }
   app_log("\r\n");
 

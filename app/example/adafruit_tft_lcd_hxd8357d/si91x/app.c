@@ -36,6 +36,7 @@
  *
  ******************************************************************************/
 #include "app_assert.h"
+#include "sl_si91x_gspi_common_config.h"
 #include "adafruit_hxd8357d.h"
 #include "adafruit_hxd8357d_spi_config.h"
 #include "touch_screen.h"
@@ -62,21 +63,10 @@ MIPI_DBI_SPI_INTERFACE_DEFINE(hxd8357d_config,
                               ADAFRUIT_HXD8357D_BITRATE,
                               ADAFRUIT_HXD8357D_CLOCK_MODE,
                               ADAFRUIT_HXD8357D_CS_CONTROL,
-                              RTE_GSPI_MASTER_CLK_PORT,
-                              RTE_GSPI_MASTER_CLK_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MOSI_PORT,
-                              RTE_GSPI_MASTER_MOSI_PIN,
-                              SL_GPIO_MODE_4,
-                              RTE_GSPI_MASTER_MISO_PORT,
-                              RTE_GSPI_MASTER_MISO_PIN,
-                              SL_GPIO_MODE_4,
                               RTE_GSPI_MASTER_CS0_PORT,
                               RTE_GSPI_MASTER_CS0_PIN,
-                              SL_GPIO_MODE_4,
                               ADAFRUIT_HXD8357D_DC_PORT,
-                              ADAFRUIT_HXD8357D_DC_PIN,
-                              SL_GPIO_MODE_0);
+                              ADAFRUIT_HXD8357D_DC_PIN);
 
 void app_init(void)
 {

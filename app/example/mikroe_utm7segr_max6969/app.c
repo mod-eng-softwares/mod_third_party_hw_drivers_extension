@@ -69,13 +69,21 @@ static void app_timer_cb(sl_sleeptimer_timer_handle_t *handle, void *data);
 void app_init(void)
 {
   app_printf("UT-M 7-SEG R Click Example\r\n");
+
 #if (defined(SLI_SI917))
   app_spi_instance = &gspi_instance;
-  app_pwm_instance = &sl_pwm_channel_0_config;
 #else
   app_spi_instance = sl_spidrv_mikroe_handle;
+#endif
+
+#ifdef SIWG917M111MGTBA
+  app_pwm_instance = &sl_pwm_channel_0_config;
+#elif SIWG917Y111MGABA
+  app_pwm_instance = &sl_pwm_channel_3_config;
+#else
   app_pwm_instance = &sl_pwm_mikroe;
 #endif
+
   sl_status_t stt = mikroe_max6969_init(app_spi_instance, app_pwm_instance);
   app_assert_status(stt);
 

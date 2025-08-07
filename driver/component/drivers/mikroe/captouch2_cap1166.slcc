@@ -30,9 +30,12 @@ config_file:
   - path: public/mikroe/captouch2_cap1166/config/brd4338a/mikroe_cap1166_config.h
     file_id: driver_config_captouch2
     condition: [brd4338a]
+  - path: public/mikroe/captouch2_cap1166/config/brd2708a/mikroe_cap1166_config.h
+    file_id: driver_config_captouch2
+    condition: [brd2708a]
   - path: public/mikroe/captouch2_cap1166/config/other/mikroe_cap1166_config.h
     file_id: driver_config_captouch2
-    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a]
+    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a, brd2708a]
 template_contribution:
   - name: component_catalog
     value: mikroe_captouch2

@@ -74,7 +74,14 @@ void app_init(void)
 
 #if (defined(SLI_SI917))
   app_spi_instance = &gspi_instance;
+
+#ifdef SIWG917Y111MGABA
+  app_pwm_instance = &sl_pwm_channel_3_config;
+
+#else
   app_pwm_instance = &sl_pwm_channel_0_config;
+#endif
+
 #else
   app_spi_instance = sl_spidrv_mikroe_handle;
   app_pwm_instance = &sl_pwm_mikroe;

@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -158,11 +158,25 @@
 #define EVENT_DIMMER_LEFT               0x01
 #define EVENT_DIMMER_RIGHT              0x02
 
+/**
+ * @brief BThome V2 Server address
+ */
+typedef struct {
+  uint8_t data[6]; /**< BThome V2 Server address */
+} bthome_v2_server_addr_t;
+
+/**
+ * @brief BThome V2 Server key
+ */
+typedef struct {
+  uint8_t data[16]; /**< BThome V2 Server key */
+} bthome_v2_server_key_t;
+
 /***************************************************************************//**
  * @brief
  *    Typedef for callback.
  ******************************************************************************/
-typedef void (*bthome_v2_server_callback_ptr_t)(uint8_t *mac,
+typedef void (*bthome_v2_server_callback_ptr_t)(bthome_v2_server_addr_t *mac,
                                                 uint8_t *payload,
                                                 uint8_t payload_length);
 
@@ -184,7 +198,7 @@ typedef struct sensor_data
  ******************************************************************************/
 typedef struct bthome_device
 {
-  uint8_t mac[6];
+  bthome_v2_server_addr_t mac;
   uint8_t payload[PAYLOAD_MAX_LEN];
   uint8_t payload_lenth;
   uint32_t last_update_time;
@@ -212,7 +226,8 @@ sl_status_t bthome_v2_server_start_scan_network(void);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_key_register(uint8_t *mac, uint8_t *key);
+sl_status_t bthome_v2_server_key_register(bthome_v2_server_addr_t *mac,
+                                          bthome_v2_server_key_t *key);
 
 /***************************************************************************//**
  * @brief
@@ -224,7 +239,7 @@ sl_status_t bthome_v2_server_key_register(uint8_t *mac, uint8_t *key);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_key_remove(uint8_t *mac);
+sl_status_t bthome_v2_server_key_remove(bthome_v2_server_addr_t *mac);
 
 /***************************************************************************//**
  * @brief
@@ -238,7 +253,8 @@ sl_status_t bthome_v2_server_key_remove(uint8_t *mac);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_key_get(uint8_t *mac, uint8_t *key);
+sl_status_t bthome_v2_server_key_get(bthome_v2_server_addr_t *mac,
+                                     bthome_v2_server_key_t *key);
 
 /***************************************************************************//**
  * @brief
@@ -254,7 +270,7 @@ sl_status_t bthome_v2_server_key_get(uint8_t *mac, uint8_t *key);
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_check_device(uint8_t *mac,
+sl_status_t bthome_v2_server_check_device(bthome_v2_server_addr_t *mac,
                                           bool *encrypted,
                                           bool *key_available);
 
@@ -276,7 +292,7 @@ sl_status_t bthome_v2_server_check_device(uint8_t *mac,
  * @return
  *    Error status
  ******************************************************************************/
-sl_status_t bthome_v2_server_sensor_data_read(uint8_t *mac,
+sl_status_t bthome_v2_server_sensor_data_read(bthome_v2_server_addr_t *mac,
                                               bthome_v2_server_sensor_data_t *object_data,
                                               uint8_t object_max,
                                               uint8_t *object_count,
@@ -300,9 +316,10 @@ void bthome_v2_server_register_callback(
  *    Default callback function when found new devices.
  *    User can override this function for other use.
  ******************************************************************************/
-SL_WEAK void bthome_v2_server_found_device_callback(uint8_t *mac,
-                                                    uint8_t *payload,
-                                                    uint8_t payload_length);
+SL_WEAK void bthome_v2_server_found_device_callback(
+  bthome_v2_server_addr_t *mac,
+  uint8_t *payload,
+  uint8_t payload_length);
 
 /***************************************************************************//**
  * @brief
@@ -314,4 +331,4 @@ SL_WEAK void bthome_v2_server_found_device_callback(uint8_t *mac,
  ******************************************************************************/
 void bthome_v2_server_on_event(sl_bt_msg_t *evt);
 
-#endif /* BTHOME_V2_SERVER_H_ */
+#endif // BTHOME_V2_SERVER_H_

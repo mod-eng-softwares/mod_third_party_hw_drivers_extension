@@ -55,9 +55,6 @@ static sl_i2c_instance_t i2c_instance = I2C_INSTANCE_USED;
 #define app_printf(...)          app_log(__VA_ARGS__)
 #endif
 
-#define NFC2_IRQ_STATE_LOW       0
-#define NFC2_IRQ_STATE_HIGH      1
-
 static mikroe_i2c_handle_t app_i2c_instance = NULL;
 
 static mikroe_pn7150_control_packet_t ctrl_pck_data;

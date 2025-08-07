@@ -7,12 +7,9 @@ category: Human Machine Interface
 quality: evaluation
 root_path: driver
 requires:
-  - name: emlib_adc
-    condition:
-      - device_series_1
   - name: emlib_iadc
     condition:
-      - device_series_2
+      - device_efx
   - name: emlib_gpio
 config_file:
   - path: public/silabs/services_touch_screen/config/brd2601b/touch_screen_config.h
@@ -47,9 +44,6 @@ include:
     file_list:
       - path: touch_screen.h
 source:
-  - path: public/silabs/services_touch_screen/src/touch_screen_gecko_s1.c
-    condition:
-      - device_series_1
   - path: public/silabs/services_touch_screen/src/touch_screen_gecko_s2.c
     condition:
-      - device_series_2
+      - device_efx

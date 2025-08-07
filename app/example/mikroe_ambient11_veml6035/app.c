@@ -84,7 +84,7 @@ void app_init(void)
 #else
   app_i2c_instance = sl_i2cspm_mikroe;
 #endif
-  // Initalizes I2C driver, applies low sensitiviti settings ( GAIN = 0, DG = 0,
+  // Initializes I2C driver, applies low sensitivity settings ( GAIN = 0, DG = 0,
   //  SENS = 0 and IT = 100ms )
   stt = mikroe_ambient11_init(app_i2c_instance);
   sl_sleeptimer_delay_millisecond(100);

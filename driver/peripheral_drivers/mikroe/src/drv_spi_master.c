@@ -219,11 +219,15 @@ err_t spi_master_read(spi_master_t *obj,
                       uint8_t *read_data_buffer,
                       size_t read_data_length)
 {
-  uint8_t write_data_buffer[read_data_length];
-
   if (_acquire(obj, false) != ACQUIRE_SUCCESS) {
     return SPI_MASTER_ERROR;
   }
+
+  if (read_data_length > DMADRV_MAX_XFER_COUNT) {
+    return SPI_MASTER_ERROR;
+  }
+
+  uint8_t write_data_buffer[read_data_length];
 
   if (last_spi_speed_used != obj->config.speed) {
     last_spi_speed_used = obj->config.speed;
@@ -301,13 +305,18 @@ err_t spi_master_write_then_read(spi_master_t *obj,
                                  uint8_t *read_data_buffer,
                                  size_t length_read_data)
 {
-  size_t tx_len = length_write_data + length_read_data;
-  uint8_t tx_buffer[tx_len];
-  uint8_t rx_buffer[tx_len];
-
   if (_acquire(obj, false) != ACQUIRE_SUCCESS) {
     return SPI_MASTER_ERROR;
   }
+
+  size_t tx_len = length_write_data + length_read_data;
+
+  if (tx_len > DMADRV_MAX_XFER_COUNT) {
+    return SPI_MASTER_ERROR;
+  }
+
+  uint8_t tx_buffer[tx_len];
+  uint8_t rx_buffer[tx_len];
 
   if (last_spi_speed_used != obj->config.speed) {
     last_spi_speed_used = obj->config.speed;

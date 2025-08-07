@@ -1,10 +1,10 @@
 /***************************************************************************//**
- * @file w5x00_config.h
+ * @file mikroe_w5x00_config.h
  * @brief Wiznet w5x00 config.
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -96,7 +96,6 @@ extern "C" {
 
 // <gpio optional=true> MIKROE_W5500_CS
 // $[GPIO_MIKROE_W5500_CS]
-#warning "GPIO_MIKROE_W5500_CS is not configured"
 //#ifndef MIKROE_W5500_CS_PORT
 //#define MIKROE_W5500_CS_PORT                    0
 //#endif

@@ -38,7 +38,7 @@
 #if (defined(SLI_SI917))
 #include "sl_driver_gpio.h"
 
-#define PIN_INTR_NO               PIN_INTR_0
+#define PIN_INTR_NO               SPARKFUN_KEYPAD_INTR_NUMBER_CFG
 #define AVL_INTR_NO               0 // available interrupt number
 #else // SLI_SI917
 #include "sl_gpio.h"
@@ -113,8 +113,11 @@ sl_status_t sparkfun_keypad_init(mikroe_i2c_handle_t i2c_handle,
 
     int32_t int_no;
 #if (defined(SLI_SI917))
-
-    int_no = PIN_INTR_NO;
+    if (SPARKFUN_KEYPAD_GPIO_INT_PORT == UULP_VBAT) {
+      int_no = SPARKFUN_KEYPAD_GPIO_INT_PIN;
+    } else {
+      int_no = PIN_INTR_NO;
+    }
     sl_gpio_driver_configure_interrupt(
       (sl_gpio_t *)&qwiic_keypad.interrupt_pin.pin,
       int_no,

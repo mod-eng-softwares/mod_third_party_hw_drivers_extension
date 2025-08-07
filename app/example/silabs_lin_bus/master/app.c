@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2023 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -35,22 +35,11 @@
  * This code will be maintained at the sole discretion of Silicon Labs.
  *
  ******************************************************************************/
-#include "sl_component_catalog.h"
-#include "sl_system_init.h"
-#if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
-#include "sl_power_manager.h"
-#endif // SL_CATALOG_POWER_MANAGER_PRESENT
-#if defined(SL_CATALOG_KERNEL_PRESENT)
-#include "sl_system_kernel.h"
-#else // SL_CATALOG_KERNEL_PRESENT
-#include "sl_system_process_action.h"
-#endif // SL_CATALOG_KERNEL_PRESENT
-
-#include "sl_lin_test_master.h"
-
 #include <stdio.h>
+#include <stdlib.h>
 #include <em_cmu.h>
 #include <em_timer.h>
+#include "sl_lin_test_master.h"
 
 #define RUNS_PER_TEST 500
 
@@ -192,7 +181,6 @@ void app_init(void)
 
   sl_lin_master_init(20000);
 
-  // while (1)
   {
     puts(
       "\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");

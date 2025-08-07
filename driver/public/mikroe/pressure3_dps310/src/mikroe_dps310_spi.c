@@ -39,6 +39,9 @@
 
 #include "mikroe_dps310_spi.h"
 #include "mikroe_dps310_spi_config.h"
+#ifndef SLI_SI917
+#include "spidrv.h"
+#endif
 
 /********************************************************************************
  * static variables
@@ -64,8 +67,11 @@ sl_status_t mikroe_pressure3_init(mikroe_spi_handle_t spidrv_inst)
   // Configure default i2csmp instance
   ctx.spi.handle = spidrv_inst;
 
-#if defined(DPS310_CS_PORT) && defined(DPS310_CS_PIN)
+#ifdef SLI_SI917
   cfg.cs = hal_gpio_pin_name(DPS310_CS_PORT, DPS310_CS_PIN);
+#else
+  const SPIDRV_Handle_t ptr = (SPIDRV_Handle_t)spidrv_inst;
+  cfg.cs = hal_gpio_pin_name(ptr->initData.portCs, ptr->initData.pinCs);
 #endif
 
 #if (MIKROE_DPS310_SPI_UC == 1)

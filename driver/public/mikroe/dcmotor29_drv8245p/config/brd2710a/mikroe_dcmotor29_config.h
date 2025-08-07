@@ -82,16 +82,6 @@ extern "C"
 
 // <<< sl:start pin_tool >>>
 
-// <gpio optional=true> DCMOTOR29_CS
-// $[GPIO_DCMOTOR29_CS]
-#ifndef DCMOTOR29_CS_PORT
-#define DCMOTOR29_CS_PORT                        SL_GPIO_PORT_C
-#endif
-#ifndef DCMOTOR29_CS_PIN
-#define DCMOTOR29_CS_PIN                         3
-#endif
-// [GPIO_DCMOTOR29_CS]$
-
 // <gpio optional=true> DCMOTOR29_IP
 // $[GPIO_DCMOTOR29_IP]
 #ifndef DCMOTOR29_IP_PORT

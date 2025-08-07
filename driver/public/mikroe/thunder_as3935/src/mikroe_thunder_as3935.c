@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -42,6 +42,9 @@
 // -----------------------------------------------------------------------------
 #include "mikroe_thunder_as3935.h"
 #include "mikroe_thunder_as3935_config.h"
+#ifndef SLI_SI917
+#include "spidrv.h"
+#endif
 
 // -----------------------------------------------------------------------------
 //                       Local Variables
@@ -55,8 +58,8 @@ static bool initialized = false;
 // -----------------------------------------------------------------------------
 
 /**************************************************************************//**
-*  Thunder click initialization.
-******************************************************************************/
+ *  Thunder click initialization.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_init(mikroe_spi_handle_t spi_instance)
 {
   if (spi_instance == NULL) {
@@ -76,12 +79,16 @@ sl_status_t mikroe_thunder_as3935_init(mikroe_spi_handle_t spi_instance)
   thunder_cfg.irq = hal_gpio_pin_name(AS3935_IRQ_PORT, AS3935_IRQ_PIN);
 #endif
 
-#if defined(AS3935_CS_PORT) && defined(AS3935_CS_PIN)
+#ifdef SLI_SI917
   thunder_cfg.cs = hal_gpio_pin_name(AS3935_CS_PORT, AS3935_CS_PIN);
+#else
+  const SPIDRV_Handle_t ptr = (SPIDRV_Handle_t)spi_instance;
+  thunder_cfg.cs = hal_gpio_pin_name(ptr->initData.portCs, ptr->initData.pinCs);
+#endif
+
   // CS pin need to init here since the mikroe_sdk_v2 missed this step
   digital_out_t struct_cs;
   digital_out_init(&struct_cs, thunder_cfg.cs);
-#endif
 
 #if (MIKROE_AS3935_SPI_UC == 1)
   thunder_cfg.spi_speed = MIKROE_AS3935_SPI_BITRATE;
@@ -96,8 +103,8 @@ sl_status_t mikroe_thunder_as3935_init(mikroe_spi_handle_t spi_instance)
 }
 
 /**************************************************************************//**
-*  Thunder click set instance.
-******************************************************************************/
+ *  Thunder click set instance.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_set_spi_instance(
   mikroe_spi_handle_t spi_instance)
 {
@@ -113,8 +120,8 @@ sl_status_t mikroe_thunder_as3935_set_spi_instance(
 }
 
 /**************************************************************************//**
-*  Thunder click default configuration.
-******************************************************************************/
+ *  Thunder click default configuration.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_default_cfg(void)
 {
   thunder_default_cfg(&thunder_ctx);
@@ -122,24 +129,24 @@ sl_status_t mikroe_thunder_as3935_default_cfg(void)
 }
 
 /**************************************************************************//**
-*  Thunder click write reg function.
-******************************************************************************/
+ *  Thunder click write reg function.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_write_reg(uint8_t reg, uint8_t data_in)
 {
   return thunder_write_reg(&thunder_ctx, reg, data_in);
 }
 
 /**************************************************************************//**
-*  Thunder click read reg function.
-******************************************************************************/
+ *  Thunder click read reg function.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_read_reg(uint8_t reg, uint8_t *data_out)
 {
   return thunder_read_reg(&thunder_ctx, reg, data_out);
 }
 
 /**************************************************************************//**
-*  Thunder click command Send function.
-******************************************************************************/
+ *  Thunder click command Send function.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_send_command(uint8_t command)
 {
   thunder_send_command(&thunder_ctx, command);
@@ -147,16 +154,16 @@ sl_status_t mikroe_thunder_as3935_send_command(uint8_t command)
 }
 
 /**************************************************************************//**
-*  Thunder click interrupt Check function.
-******************************************************************************/
+ *  Thunder click interrupt Check function.
+ ******************************************************************************/
 uint8_t mikroe_thunder_as3935_check_int(void)
 {
   return thunder_check_int(&thunder_ctx);
 }
 
 /**************************************************************************//**
-*  Thunder click storm Information Get function.
-******************************************************************************/
+ *  Thunder click storm Information Get function.
+ ******************************************************************************/
 sl_status_t mikroe_thunder_as3935_get_storm_info(uint32_t *energy_out,
                                                  uint8_t *distance_out)
 {
@@ -165,8 +172,8 @@ sl_status_t mikroe_thunder_as3935_get_storm_info(uint32_t *energy_out,
 }
 
 /**************************************************************************//**
-*  Thunder click IRQ pin Check function.
-******************************************************************************/
+ *  Thunder click IRQ pin Check function.
+ ******************************************************************************/
 uint8_t mikroe_thunder_as3935_check_irq_pin(void)
 {
   return thunder_check_irq_pin(&thunder_ctx);

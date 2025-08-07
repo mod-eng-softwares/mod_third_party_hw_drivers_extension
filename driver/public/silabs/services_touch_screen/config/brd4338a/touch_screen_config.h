@@ -47,11 +47,11 @@ extern "C"
 
 // <o TOUCHSCREEN_HOR_RES> Touch Screen Horizontal Resolution
 // <i> Default: 240
-#define TOUCHSCREEN_HOR_RES              320
+#define TOUCHSCREEN_HOR_RES              240
 
 // <o TOUCHSCREEN_VER_RES> Touch Screen Vertical Resolution
 // <i> Default: 320
-#define TOUCHSCREEN_VER_RES              480
+#define TOUCHSCREEN_VER_RES              320
 
 // <o TOUCHSCREEN_XPLATE_RES> X-plate resistance
 // <i> Default: 200
@@ -75,110 +75,262 @@ extern "C"
 
 // <o TOUCHSCREEN_X_MIN> Calib X-min
 // <i> Default: 460
-#define TOUCHSCREEN_X_MIN                678
+#define TOUCHSCREEN_X_MIN                598
 
 // <o TOUCHSCREEN_X_MAX> Calib X-max
 // <i> Default: 3620
-#define TOUCHSCREEN_X_MAX                3566
+#define TOUCHSCREEN_X_MAX                3618
 
 // <o TOUCHSCREEN_Y_MIN> Calib Y-min
 // <i> Default: 340
-#define TOUCHSCREEN_Y_MIN                393
+#define TOUCHSCREEN_Y_MIN                420
 
 // <o TOUCHSCREEN_Y_MAX> Calib Y-max
 // <i> Default: 3580
-#define TOUCHSCREEN_Y_MAX                3521
+#define TOUCHSCREEN_Y_MAX                3402
+
+// </h>
+
+// <h> Touch ADC channel settings
+// <o TOUCHSCREEN_XM_ADC_CHANNEL> TOUCHSCREEN_XM
+//   <1=> SL_ADC_CH1
+//   <2=> SL_ADC_CH2
+// <i> Selection of the ADC input type.
+#define TOUCHSCREEN_XM_ADC_CHANNEL 1
+
+// <o TOUCHSCREEN_YP_ADC_CHANNEL> TOUCHSCREEN_YP
+//   <1=> SL_ADC_CH1
+//   <2=> SL_ADC_CH2
+// <i> Selection of the ADC input type.
+#define TOUCHSCREEN_YP_ADC_CHANNEL 2
 
 // </h>
 
 // <<< end of configuration section >>>
 
 // <<< sl:start pin_tool >>>
-// <adc_ch1 signal=P,N> SL_ADC_XM
-// $[ADC_CH1_SL_ADC_XM]
-#ifndef SL_ADC_XM_PERIPHERAL                    
-#define SL_ADC_XM_PERIPHERAL                 ADC_CH1
+// <adc_ch1 signal=P,(N)> SL_ADC_CH1
+// $[ADC_CH1_SL_ADC_CH1]
+#ifndef SL_ADC_CH1_PERIPHERAL                   
+#define SL_ADC_CH1_PERIPHERAL                    ADC_CH1
 #endif
-#ifndef SL_ADC_XM_PERIPHERAL_NO                 
-#define SL_ADC_XM_PERIPHERAL_NO              1
+#ifndef SL_ADC_CH1_PERIPHERAL_NO                
+#define SL_ADC_CH1_PERIPHERAL_NO                 1
 #endif
 
 // ADC_CH1 P on ULP_GPIO_8/GPIO_72
-#ifndef SL_ADC_XM_P_PORT                        
-#define SL_ADC_XM_P_PORT                     ULP
+#ifndef SL_ADC_CH1_P_PORT                       
+#define SL_ADC_CH1_P_PORT                        ULP
 #endif
-#ifndef SL_ADC_XM_P_PIN                         
-#define SL_ADC_XM_P_PIN                      8
+#ifndef SL_ADC_CH1_P_PIN                        
+#define SL_ADC_CH1_P_PIN                         8
 #endif
-#ifndef SL_ADC_XM_P_LOC                         
-#define SL_ADC_XM_P_LOC                      4
+#ifndef SL_ADC_CH1_P_LOC                        
+#define SL_ADC_CH1_P_LOC                         4
 #endif
 
-// ADC_CH1 N on ULP_GPIO_5/GPIO_69
-#ifndef SL_ADC_XM_N_PORT                        
-#define SL_ADC_XM_N_PORT                     ULP
-#endif
-#ifndef SL_ADC_XM_N_PIN                         
-#define SL_ADC_XM_N_PIN                      5
-#endif
-#ifndef SL_ADC_XM_N_LOC                         
-#define SL_ADC_XM_N_LOC                      345
-#endif
-// [ADC_CH1_SL_ADC_XM]$
+// [ADC_CH1_SL_ADC_CH1]$
 
-// <adc_ch2 signal=P,N> SL_ADC_YP
-// $[ADC_CH2_SL_ADC_YP]
-#ifndef SL_ADC_YP_PERIPHERAL                    
-#define SL_ADC_YP_PERIPHERAL                 ADC_CH2
+// <adc_ch2 signal=P,(N)> SL_ADC_CH2
+// $[ADC_CH2_SL_ADC_CH2]
+#ifndef SL_ADC_CH2_PERIPHERAL                   
+#define SL_ADC_CH2_PERIPHERAL                    ADC_CH2
 #endif
-#ifndef SL_ADC_YP_PERIPHERAL_NO                 
-#define SL_ADC_YP_PERIPHERAL_NO              2
+#ifndef SL_ADC_CH2_PERIPHERAL_NO                
+#define SL_ADC_CH2_PERIPHERAL_NO                 2
 #endif
 
 // ADC_CH2 P on ULP_GPIO_1/GPIO_65
-#ifndef SL_ADC_YP_P_PORT                        
-#define SL_ADC_YP_P_PORT                     ULP
+#ifndef SL_ADC_CH2_P_PORT                       
+#define SL_ADC_CH2_P_PORT                        ULP
 #endif
-#ifndef SL_ADC_YP_P_PIN                         
-#define SL_ADC_YP_P_PIN                      1
+#ifndef SL_ADC_CH2_P_PIN                        
+#define SL_ADC_CH2_P_PIN                         1
 #endif
-#ifndef SL_ADC_YP_P_LOC                         
-#define SL_ADC_YP_P_LOC                      29
+#ifndef SL_ADC_CH2_P_LOC                        
+#define SL_ADC_CH2_P_LOC                         29
 #endif
 
-// ADC_CH2 N on GPIO_30
-#ifndef SL_ADC_YP_N_PORT                        
-#define SL_ADC_YP_N_PORT                     HP
-#endif
-#ifndef SL_ADC_YP_N_PIN                         
-#define SL_ADC_YP_N_PIN                      30
-#endif
-#ifndef SL_ADC_YP_N_LOC                         
-#define SL_ADC_YP_N_LOC                      360
-#endif
-// [ADC_CH2_SL_ADC_YP]$
+// [ADC_CH2_SL_ADC_CH2]$
 
 // <gpio> TOUCHSCREEN_XP
 // $[GPIO_TOUCHSCREEN_XP]
 #ifndef TOUCHSCREEN_XP_PORT                     
-#define TOUCHSCREEN_XP_PORT                  HP
+#define TOUCHSCREEN_XP_PORT                      HP
 #endif
 #ifndef TOUCHSCREEN_XP_PIN                      
-#define TOUCHSCREEN_XP_PIN                   7
+#define TOUCHSCREEN_XP_PIN                       7
 #endif
 // [GPIO_TOUCHSCREEN_XP]$
 
 // <gpio> TOUCHSCREEN_YM
 // $[GPIO_TOUCHSCREEN_YM]
 #ifndef TOUCHSCREEN_YM_PORT                     
-#define TOUCHSCREEN_YM_PORT                  HP
+#define TOUCHSCREEN_YM_PORT                      HP
 #endif
 #ifndef TOUCHSCREEN_YM_PIN                      
-#define TOUCHSCREEN_YM_PIN                   6
+#define TOUCHSCREEN_YM_PIN                       6
 #endif
 // [GPIO_TOUCHSCREEN_YM]$
 
 // <<< sl:end pin_tool >>>
+
+#if (!defined(SL_ADC_CH1_N_PORT) && (SL_ADC_CHANNEL_1_INPUT_TYPE == ADC_DIFFERENTIAL_INPUT))
+#warning "Channel_1's ADC_N pin is not set up for a differential input type"
+#endif
+
+// Positive Input Channel Selection
+#ifdef SL_ADC_CH1_P_PIN
+#define SL_ADC_CHANNEL_1_POS_INPUT_CHNL_SEL \
+  ((SL_ADC_CH1_P_PIN == 0)    ? 0           \
+   : (SL_ADC_CH1_P_PIN == 2)  ? 1           \
+   : (SL_ADC_CH1_P_PIN == 4)  ? 2           \
+   : (SL_ADC_CH1_P_PIN == 6)  ? 3           \
+   : (SL_ADC_CH1_P_PIN == 8)  ? 4           \
+   : (SL_ADC_CH1_P_PIN == 10) ? 5           \
+   : (SL_ADC_CH1_P_PIN == 25) ? 6           \
+   : (SL_ADC_CH1_P_PIN == 27) ? 7           \
+   : (SL_ADC_CH1_P_PIN == 29) ? 8           \
+   : (SL_ADC_CH1_P_PIN == 1)  ? 10          \
+   : (SL_ADC_CH1_P_PIN == 3)  ? 11          \
+   : (SL_ADC_CH1_P_PIN == 5)  ? 12          \
+   : (SL_ADC_CH1_P_PIN == 11) ? 13          \
+   : (SL_ADC_CH1_P_PIN == 9)  ? 14          \
+   : (SL_ADC_CH1_P_PIN == 7)  ? 15          \
+   : (SL_ADC_CH1_P_PIN == 26) ? 16          \
+   : (SL_ADC_CH1_P_PIN == 28) ? 17          \
+   : (SL_ADC_CH1_P_PIN == 30) ? 18          \
+                              : -1)
+#else
+#define SL_ADC_CHANNEL_1_POS_INPUT_CHNL_SEL 10
+#endif
+// Negative Input Channel Selection
+#ifdef SL_ADC_CH1_N_PIN
+#define SL_ADC_CHANNEL_1_NEG_INPUT_CHNL_SEL \
+  ((SL_ADC_CH1_N_PIN == 1)    ? 0           \
+   : (SL_ADC_CH1_N_PIN == 3)  ? 1           \
+   : (SL_ADC_CH1_N_PIN == 5)  ? 2           \
+   : (SL_ADC_CH1_N_PIN == 11) ? 3           \
+   : (SL_ADC_CH1_N_PIN == 9)  ? 4           \
+   : (SL_ADC_CH1_N_PIN == 7)  ? 5           \
+   : (SL_ADC_CH1_N_PIN == 26) ? 6           \
+   : (SL_ADC_CH1_N_PIN == 28) ? 7           \
+   : (SL_ADC_CH1_N_PIN == 30) ? 8           \
+                              : -1)
+#else
+#define SL_ADC_CHANNEL_1_NEG_INPUT_CHNL_SEL 7
+#endif
+
+#if (!defined(SL_ADC_CH2_N_PORT) && (SL_ADC_CHANNEL_2_INPUT_TYPE == ADC_DIFFERENTIAL_INPUT))
+#warning "Channel_2's ADC_N pin is not set up for a differential input type"
+#endif
+
+// Positive Input Channel Selection
+#ifdef SL_ADC_CH2_P_PIN
+#define SL_ADC_CHANNEL_2_POS_INPUT_CHNL_SEL \
+  ((SL_ADC_CH2_P_PIN == 0)    ? 0           \
+   : (SL_ADC_CH2_P_PIN == 2)  ? 1           \
+   : (SL_ADC_CH2_P_PIN == 4)  ? 2           \
+   : (SL_ADC_CH2_P_PIN == 6)  ? 3           \
+   : (SL_ADC_CH2_P_PIN == 8)  ? 4           \
+   : (SL_ADC_CH2_P_PIN == 10) ? 5           \
+   : (SL_ADC_CH2_P_PIN == 25) ? 6           \
+   : (SL_ADC_CH2_P_PIN == 27) ? 7           \
+   : (SL_ADC_CH2_P_PIN == 29) ? 8           \
+   : (SL_ADC_CH2_P_PIN == 1)  ? 10          \
+   : (SL_ADC_CH2_P_PIN == 3)  ? 11          \
+   : (SL_ADC_CH2_P_PIN == 5)  ? 12          \
+   : (SL_ADC_CH2_P_PIN == 11) ? 13          \
+   : (SL_ADC_CH2_P_PIN == 9)  ? 14          \
+   : (SL_ADC_CH2_P_PIN == 7)  ? 15          \
+   : (SL_ADC_CH2_P_PIN == 26) ? 16          \
+   : (SL_ADC_CH2_P_PIN == 28) ? 17          \
+   : (SL_ADC_CH2_P_PIN == 30) ? 18          \
+                              : -1)
+#else
+#define SL_ADC_CHANNEL_2_POS_INPUT_CHNL_SEL 7
+#endif
+// Negative Input Channel Selection
+#ifdef SL_ADC_CH2_N_PIN
+#define SL_ADC_CHANNEL_2_NEG_INPUT_CHNL_SEL \
+  ((SL_ADC_CH2_N_PIN == 1)    ? 0           \
+   : (SL_ADC_CH2_N_PIN == 3)  ? 1           \
+   : (SL_ADC_CH2_N_PIN == 5)  ? 2           \
+   : (SL_ADC_CH2_N_PIN == 11) ? 3           \
+   : (SL_ADC_CH2_N_PIN == 9)  ? 4           \
+   : (SL_ADC_CH2_N_PIN == 7)  ? 5           \
+   : (SL_ADC_CH2_N_PIN == 26) ? 6           \
+   : (SL_ADC_CH2_N_PIN == 28) ? 7           \
+   : (SL_ADC_CH2_N_PIN == 30) ? 8           \
+                              : -1)
+#else
+#define SL_ADC_CHANNEL_2_NEG_INPUT_CHNL_SEL 8
+#endif
+
+#if ((TOUCHSCREEN_XM_ADC_CHANNEL != 1       \
+      && TOUCHSCREEN_XM_ADC_CHANNEL != 2)   \
+     ||                                     \
+     (TOUCHSCREEN_YP_ADC_CHANNEL != 1       \
+      && TOUCHSCREEN_YP_ADC_CHANNEL != 2)   \
+     ||                                     \
+     (TOUCHSCREEN_XM_ADC_CHANNEL == TOUCHSCREEN_YP_ADC_CHANNEL))
+#error \
+  "Select 2 ADC instances for XM & YP, ADC instance needs to be channel 1 or 2"
+#endif
+
+#if TOUCHSCREEN_XM_ADC_CHANNEL == 1
+#define SL_ADC_XM_PERIPHERAL                     SL_ADC_CH1_PERIPHERAL
+#define SL_ADC_XM_PERIPHERAL_NO                  1
+#define SL_ADC_XM_P_PORT                         SL_ADC_CH1_P_PORT
+#define SL_ADC_XM_P_PIN                          SL_ADC_CH1_P_PIN
+#define TOUCHSCREEN_XM_POS_INPUT_CHNL_SEL        SL_ADC_CHANNEL_1_POS_INPUT_CHNL_SEL
+#ifdef SL_ADC_CH1_N_PIN
+#define SL_ADC_XM_N_PORT                         SL_ADC_CH1_N_PORT
+#define SL_ADC_XM_N_PIN                          SL_ADC_CH1_N_PIN
+#define TOUCHSCREEN_XM_NEG_INPUT_CHNL_SEL        SL_ADC_CHANNEL_1_NEG_INPUT_CHNL_SEL
+#endif
+#elif TOUCHSCREEN_XM_ADC_CHANNEL == 2
+#define SL_ADC_XM_PERIPHERAL                     SL_ADC_CH2_PERIPHERAL
+#define SL_ADC_XM_PERIPHERAL_NO                  2
+#define SL_ADC_XM_P_PORT                         SL_ADC_CH2_P_PORT
+#define SL_ADC_XM_P_PIN                          SL_ADC_CH2_P_PIN
+#define TOUCHSCREEN_XM_POS_INPUT_CHNL_SEL        SL_ADC_CHANNEL_2_POS_INPUT_CHNL_SEL
+#ifdef SL_ADC_CH2_N_PIN
+#define SL_ADC_XM_N_PORT                         SL_ADC_CH2_N_PORT
+#define SL_ADC_XM_N_PIN                          SL_ADC_CH2_N_PIN
+#define TOUCHSCREEN_XM_NEG_INPUT_CHNL_SEL        SL_ADC_CHANNEL_2_NEG_INPUT_CHNL_SEL
+#endif
+#endif
+
+#if TOUCHSCREEN_YP_ADC_CHANNEL == 1
+#define SL_ADC_YP_PERIPHERAL                     SL_ADC_CH1_PERIPHERAL
+#define SL_ADC_YP_PERIPHERAL_NO                  1
+#define SL_ADC_YP_P_PORT                         SL_ADC_CH1_P_PORT
+#define SL_ADC_YP_P_PIN                          SL_ADC_CH1_P_PIN
+#define TOUCHSCREEN_YP_POS_INPUT_CHNL_SEL        SL_ADC_CHANNEL_1_POS_INPUT_CHNL_SEL
+#ifdef SL_ADC_CH1_N_PIN
+#define SL_ADC_YP_N_PORT                         SL_ADC_CH1_N_PORT
+#define SL_ADC_YP_N_PIN                          SL_ADC_CH1_N_PIN
+#define TOUCHSCREEN_YP_NEG_INPUT_CHNL_SEL        SL_ADC_CHANNEL_1_NEG_INPUT_CHNL_SEL
+#endif
+#elif TOUCHSCREEN_YP_ADC_CHANNEL == 2
+#define SL_ADC_YP_PERIPHERAL                     SL_ADC_CH2_PERIPHERAL
+#define SL_ADC_YP_PERIPHERAL_NO                  2
+#define SL_ADC_YP_P_PORT                         SL_ADC_CH2_P_PORT
+#define SL_ADC_YP_P_PIN                          SL_ADC_CH2_P_PIN
+#define TOUCHSCREEN_YP_POS_INPUT_CHNL_SEL        SL_ADC_CHANNEL_2_POS_INPUT_CHNL_SEL
+#ifdef SL_ADC_CH2_N_PIN
+#define SL_ADC_YP_N_PORT                         SL_ADC_CH2_N_PORT
+#define SL_ADC_YP_N_PIN                          SL_ADC_CH2_N_PIN
+#define TOUCHSCREEN_YP_NEG_INPUT_CHNL_SEL        SL_ADC_CHANNEL_2_NEG_INPUT_CHNL_SEL
+#endif
+#endif
+
+#define TOUCHSCREEN_XM_PORT                      SL_ADC_XM_P_PORT
+#define TOUCHSCREEN_XM_PIN                       SL_ADC_XM_P_PIN
+
+#define TOUCHSCREEN_YP_PORT                      SL_ADC_YP_P_PORT
+#define TOUCHSCREEN_YP_PIN                       SL_ADC_YP_P_PIN
 
 #ifndef HP
 #define HP                                   0
@@ -192,99 +344,10 @@ extern "C"
 #define UULP_VBAT                            5
 #endif
 
-// Positive Input Channel 1 Selection
-#ifdef SL_ADC_XM_P_PIN
-#define TOUCHSCREEN_XM_POS_INPUT_CHNL_SEL \
-  ((SL_ADC_XM_P_PIN == 0)    ? 0          \
-   : (SL_ADC_XM_P_PIN == 2)  ? 1          \
-   : (SL_ADC_XM_P_PIN == 4)  ? 2          \
-   : (SL_ADC_XM_P_PIN == 6)  ? 3          \
-   : (SL_ADC_XM_P_PIN == 8)  ? 4          \
-   : (SL_ADC_XM_P_PIN == 10) ? 5          \
-   : (SL_ADC_XM_P_PIN == 25) ? 6          \
-   : (SL_ADC_XM_P_PIN == 27) ? 7          \
-   : (SL_ADC_XM_P_PIN == 29) ? 8          \
-   : (SL_ADC_XM_P_PIN == 1)  ? 10         \
-   : (SL_ADC_XM_P_PIN == 3)  ? 11         \
-   : (SL_ADC_XM_P_PIN == 5)  ? 12         \
-   : (SL_ADC_XM_P_PIN == 11) ? 13         \
-   : (SL_ADC_XM_P_PIN == 9)  ? 14         \
-   : (SL_ADC_XM_P_PIN == 7)  ? 15         \
-   : (SL_ADC_XM_P_PIN == 26) ? 16         \
-   : (SL_ADC_XM_P_PIN == 28) ? 17         \
-   : (SL_ADC_XM_P_PIN == 30) ? 18         \
-                              : -1)
-#else
-#define TOUCHSCREEN_XM_POS_INPUT_CHNL_SEL 10
-#endif
-// Negative Input Channel Selection
-#ifdef SL_ADC_XM_N_PIN
-#define TOUCHSCREEN_XM_NEG_INPUT_CHNL_SEL \
-  ((SL_ADC_XM_N_PIN == 1)    ? 0          \
-   : (SL_ADC_XM_N_PIN == 3)  ? 1          \
-   : (SL_ADC_XM_N_PIN == 5)  ? 2          \
-   : (SL_ADC_XM_N_PIN == 11) ? 3          \
-   : (SL_ADC_XM_N_PIN == 9)  ? 4          \
-   : (SL_ADC_XM_N_PIN == 7)  ? 5          \
-   : (SL_ADC_XM_N_PIN == 26) ? 6          \
-   : (SL_ADC_XM_N_PIN == 28) ? 7          \
-   : (SL_ADC_XM_N_PIN == 30) ? 8          \
-                              : -1)
-#else
-#define TOUCHSCREEN_XM_NEG_INPUT_CHNL_SEL 7
-#endif
-
-// Positive Input Channel 2 Selection
-#ifdef SL_ADC_XM_P_PIN
-#define TOUCHSCREEN_YP_POS_INPUT_CHNL_SEL \
-  ((SL_ADC_YP_P_PIN == 0)    ? 0          \
-   : (SL_ADC_YP_P_PIN == 2)  ? 1          \
-   : (SL_ADC_YP_P_PIN == 4)  ? 2          \
-   : (SL_ADC_YP_P_PIN == 6)  ? 3          \
-   : (SL_ADC_YP_P_PIN == 8)  ? 4          \
-   : (SL_ADC_YP_P_PIN == 10) ? 5          \
-   : (SL_ADC_YP_P_PIN == 25) ? 6          \
-   : (SL_ADC_YP_P_PIN == 27) ? 7          \
-   : (SL_ADC_YP_P_PIN == 29) ? 8          \
-   : (SL_ADC_YP_P_PIN == 1)  ? 10         \
-   : (SL_ADC_YP_P_PIN == 3)  ? 11         \
-   : (SL_ADC_YP_P_PIN == 5)  ? 12         \
-   : (SL_ADC_YP_P_PIN == 11) ? 13         \
-   : (SL_ADC_YP_P_PIN == 9)  ? 14         \
-   : (SL_ADC_YP_P_PIN == 7)  ? 15         \
-   : (SL_ADC_YP_P_PIN == 26) ? 16         \
-   : (SL_ADC_YP_P_PIN == 28) ? 17         \
-   : (SL_ADC_YP_P_PIN == 30) ? 18         \
-                              : -1)
-#else
-#define TOUCHSCREEN_YP_POS_INPUT_CHNL_SEL 10
-#endif
-// Negative Input Channel Selection
-#ifdef SL_ADC_YP_N_PIN
-#define TOUCHSCREEN_YP_NEG_INPUT_CHNL_SEL \
-  ((SL_ADC_YP_N_PIN == 1)    ? 0           \
-   : (SL_ADC_YP_N_PIN == 3)  ? 1           \
-   : (SL_ADC_YP_N_PIN == 5)  ? 2           \
-   : (SL_ADC_YP_N_PIN == 11) ? 3           \
-   : (SL_ADC_YP_N_PIN == 9)  ? 4           \
-   : (SL_ADC_YP_N_PIN == 7)  ? 5           \
-   : (SL_ADC_YP_N_PIN == 26) ? 6           \
-   : (SL_ADC_YP_N_PIN == 28) ? 7           \
-   : (SL_ADC_YP_N_PIN == 30) ? 8           \
-                              : -1)
-#else
-#define TOUCHSCREEN_YP_NEG_INPUT_CHNL_SEL 7
-#endif
-
-#define TOUCHSCREEN_XM_PORT                      SL_ADC_XM_P_PORT
-#define TOUCHSCREEN_XM_PIN                       SL_ADC_XM_P_PIN
-
-#define TOUCHSCREEN_YP_PORT                      SL_ADC_YP_P_PORT
-#define TOUCHSCREEN_YP_PIN                       SL_ADC_YP_P_PIN
-
 #ifdef __cplusplus
 extern "C"
 }
 #endif
 
 #endif // TOUCH_SCREEN_CONFIG_H_
+

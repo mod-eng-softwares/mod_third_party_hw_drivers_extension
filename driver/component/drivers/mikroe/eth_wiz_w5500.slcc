@@ -13,11 +13,13 @@ requires:
   - name: sleeptimer
   - name: mikroe_peripheral_driver_spi
   - name: mikroe_peripheral_driver_digital_io
-
 config_file:
   - path: public/mikroe/eth_wiz_w5500/config/brd2703a/mikroe_w5500_config.h
     file_id: driver_config_eth_wiz
     condition: [brd2703a]
+  - path: public/mikroe/eth_wiz_w5500/config/brd2708a/mikroe_w5500_config.h
+    file_id: driver_config_eth_wiz
+    condition: [brd2708a]
   - path: public/mikroe/eth_wiz_w5500/config/brd2710a/mikroe_w5500_config.h
     file_id: driver_config_eth_wiz
     condition: [brd2710a]
@@ -35,14 +37,12 @@ config_file:
     condition: [brd4338a]
   - path: public/mikroe/eth_wiz_w5500/config/other/mikroe_w5500_config.h
     file_id: driver_config_eth_wiz
-    unless: [brd2703a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a]
-
+    unless: [brd2703a, brd4108a, brd4314a, brd2605a, brd4338a, brd2710a, brd2708a]
 template_contribution:
   - name: component_catalog
     value: mikroe_eth_wiz
 provides:
   - name: mikroe_eth_wiz
-
 include:
   - path: public/mikroe/eth_wiz_w5500/inc
     file_list:

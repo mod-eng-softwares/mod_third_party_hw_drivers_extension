@@ -9,40 +9,64 @@ This driver has the related drivers, which may be worth reading before. Find the
 - [SCD41 - HVAC Click (Mikroe)](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/app/documentation/example/mikroe_hvac_scd41)
 - [SPS30 - Particulate Matter Sensor (Sparkfun) - I2C](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/tree/master/app/documentation/example/sparkfun_particulate_matter_sensor_sps30)
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [HVAC Click board](https://www.mikroe.com/hvac-click) based on SCD41 sensor
-
 - 1x [SPS30 - Particulate Matter Sensor](https://www.sparkfun.com/products/15103)
 
 ## Hardware Connection ##
 
-- **If the EFR32xG24 Explorer Kit is used**:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the HVAC Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the HVAC Click board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The HVAC Click board supports MikroBus, so it can connect easily to the MikroBus header of the Explorer Kit. Be sure that the 45-degree corner of the Click Board matches the 45-degree white line of the Silicon Labs Explorer Kit. The Click board also has extra connector to connect with the Particulate Matter Sensor SPS30.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the image below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-  ![board](image/hardware_connection.png)
+The tables below provide an overview of the pin connections.
 
-- **If the Wi-Fi Development Kit is used**:
+**Silicon Labs BLE Explorer Kit:**
 
-  The hardware connection is shown in the table below:
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | HVAC Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| I2C_SDA | PD3 | PD3 | PB5 | PD3 | ↔ | SDA |
+| I2C_SCL | PD2 | PD2 | PB4 | PD2 | ↔ | SCL |
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | HVAC Click   |
-  | -------------| -----------| -------------| ------------------------|
-  | I2C_SDA      | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6   | SDA            |
-  | I2C_SCL      | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7   | SCL            |
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | HVAC Click |
+| --- | --- | --- | --- | --- | --- |
+| I2C_SDA | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6 [P16] | GPIO_6 | ↔ | SDA |
+| I2C_SCL | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7 [P15] | GPIO_7 | ↔ | SCL |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -65,33 +89,26 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_hvac_bundle_scd41_sps30/app.c` into the project root folder (overwriting the existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
+     - [Application] → [Utility] → [Log]
+     - [Application] → [Utility] → [Assert]
+     - [Third Party Hardware Drivers] → [Sensors] → [SCD41 & SPS30 - HVAC Click Bundle (Mikroe)]
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-        - **If the Explorer Kit is used:**
-          - [Services] → [Timers] → [Sleep Timer]
-          - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: vcom
-          - [Application] → [Utility] → [Log]
-          - [Application] → [Utility] → [Assert]
-          - [Third Party Hardware Drivers] → [Sensors] → [SCD41 & SPS30 - HVAC Click Bundle (Mikroe)]
-
-        - **If the Wi-Fi Development Kit is used:**
-          - [Application] → [Utility] → [Assert]
-          - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-          - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2]
-          - [Third Party Hardware Drivers] → [Sensors] → [SCD41 & SPS30 - HVAC Click Bundle (Mikroe)]
+   - **If the Wi-Fi Development Kit is used:**
+     - [Application] → [Utility] → [Assert]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [I2C] → [i2c2] → Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+     - [Third Party Hardware Drivers] → [Sensors] → [SCD41 & SPS30 - HVAC Click Bundle (Mikroe)]
 
 4. Enable **Printf float**
 
    - Open Properties of the project.
    - Select C/C++ Build → Settings → Tool Settings → GNU ARM C Linker → General → Check **Printf float**.
-
-      ![float](image/print_float.png)
+     ![float](image/print_float.png)
 
 5. Build and flash this example to the board.
 

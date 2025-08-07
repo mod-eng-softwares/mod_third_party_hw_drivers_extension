@@ -7,15 +7,25 @@ purposes and is not to be used in a production environment.
 
 A key point was to not disturb the Bluetooth LE communication due to its time-critical nature, so the slave side has been implemented by keeping performance in mind, striving for keeping the code as short and fast as possible. Most things are done in the background via interrupt handlers and DMA transfers, and the compilation is optimized with a fixed set of compiler parameters. As the bus is driven solely by the master side, data transfers are executed on predefined endpoints, and the connection with the upper layers of the application are provided via callbacks.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
 - 3 x [EFR32MG22 2.4 GHz 6 dBm Radio Board BRD4182A](https://www.silabs.com/documents/public/user-guides/ug430-brd4182a-user-guide.pdf)
 
-## Connections Required ##
+## Hardware Connection ##
 
 The testing environment consists of a master device and two slave devices. Connections are made through the expansion header. All the LIN_TX and LIN_RX pins should be connected together on every devices, connected to the single-wire bus, and at least pulled up by a 5-10K resistor to 3.3V. An external USB-to-serial converter is required to access the console. For more detail please refer to the ["Pin assignments](#pin-assignments) and ["Testing environment"](#testing-environment) section.
 
-![hardware_connection](images/hardware_connection.jpg)
+![hardware_connection](image/hardware_connection.jpg)
 
 ## Setup ##
 
@@ -27,11 +37,11 @@ You can either create a project based on an example project or start with an emp
 
 2. Click **Create** button to create the example project. There are 3 projects that need to be generated to run this example:
 
-    - **Third Party Hardware Drivers - LIN bus slave device 1**: An example of using LIN bus slave driver with several endpoints for testing purpose. It also include a simple BLE example to demonstrate that the driver is not disturb the Bluetooth LE communication.
-    - **Third Party Hardware Drivers - LIN bus slave device 2**: Another LIN slave node with difference enpoints.
-    - **Third Party Hardware Drivers - LIN bus master**: A basic driver for master node which comunicate with 2 slave and do some test case.
+   - **Third Party Hardware Drivers - LIN bus slave device 1**: An example of using LIN bus slave driver with several endpoints for testing purpose. It also include a simple BLE example to demonstrate that the driver is not disturb the Bluetooth LE communication.
+   - **Third Party Hardware Drivers - LIN bus slave device 2**: Another LIN slave node with difference enpoints.
+   - **Third Party Hardware Drivers - LIN bus master**: A basic driver for master node which comunicate with 2 slave and do some test case.
 
-    ![Create_example](images/create_example.png)
+   ![Create_example](image/create_example.png)
 
 3. Build and flash this example to the board.
 
@@ -45,24 +55,24 @@ You can either create a project based on an example project or start with an emp
 
 3. Uninstall software components in the .slcp
 
-    - **[Service] → [Device Initialization] → [Automatic Device Initialization]**
+   - **[Service] → [Device Initialization] → [Automatic Device Initialization]**
 
-4. Install software components in the .slcp
+4. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - **[Services] → [IO Stream] → [IO Stream: USART]** → default instance name: vcom
-    - **[Platform] → [Peripheral] → [LDMA]**
-    - **[Platform] → [Peripheral] → [LETIMER]**
-    - **[Platform] → [Peripheral] → [USART]**
-    - **[Platform] → [Peripheral] → [PRS]**
-    - **[Services] → [Clocks] → [HFXO Manager]**
-    - **[Services] → [Power Manager] → [Power Manager]**
-    - **[Services] → [Device Initialization] → [Peripherals] → [Core]**
-    - **[Services] → [Device Initialization] → [Peripherals] → [Clocks]**
-    - **[Services] → [Device Initialization] → [Peripherals] → [DC-DC Converter]**
-    - **[Services] → [Device Initialization] → [Peripherals] → [Energy Management Unit (EMU)]**
-    - **[Services] → [Device Initialization] → [Peripherals] → [Low Frequency Crystal Oscillator (LFXO)]**
-    - **[Services] → [Device Initialization] → [Peripherals] → [High Frequency Crystal Oscillator (HFXO)]**
-    - **[Thid Party] → [Tiny printf]**
+   - **[Services] → [IO Stream] → [IO Stream: USART]** → default instance name: vcom
+   - **[Platform] → [Peripheral] → [LDMA]**
+   - **[Platform] → [Peripheral] → [LETIMER]**
+   - **[Platform] → [Peripheral] → [USART]**
+   - **[Platform] → [Peripheral] → [PRS]**
+   - **[Services] → [Clocks] → [HFXO Manager]**
+   - **[Services] → [Power Manager] → [Power Manager]**
+   - **[Services] → [Device Initialization] → [Peripherals] → [Core]**
+   - **[Services] → [Device Initialization] → [Peripherals] → [Clocks]**
+   - **[Services] → [Device Initialization] → [Peripherals] → [DC-DC Converter]**
+   - **[Services] → [Device Initialization] → [Peripherals] → [Energy Management Unit (EMU)]**
+   - **[Services] → [Device Initialization] → [Peripherals] → [Low Frequency Crystal Oscillator (LFXO)]**
+   - **[Services] → [Device Initialization] → [Peripherals] → [High Frequency Crystal Oscillator (HFXO)]**
+   - **[Thid Party] → [Tiny printf]**
 
 5. Save the files, build and ready to flash or debug.
 
@@ -74,11 +84,12 @@ You can either create a project based on an example project or start with an emp
 
 2. Then copy the files `app/example/silabs_lin_bus/slave/app.c` into the project root folder and overwriting existing file.
 
-3. Install software components in the .slcp
-    - **[Third Party Hardware Drivers] → [Services] → [LIN bus slave]**
-    - **[Services] → [IO Stream] → [IO Stream: USART]** → default instance name: vcom
-    - **[Platform] → [Driver] → [LED] → [Simple LED]** component with the default instance name: **led0** and **led1**.
-    - **[Services] → [Interrupt Manager] → [Interrupt Manager]** → enable: "Interrupt Manager Configuration"
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
+
+   - **[Third Party Hardware Drivers] → [Services] → [LIN bus slave]**
+   - **[Services] → [IO Stream] → [IO Stream: USART]** → default instance name: vcom
+   - **[Platform] → [Driver] → [LED] → [Simple LED]** component with the default instance name: **led0** and **led1**.
+   - **[Services] → [Interrupt Manager] → [Interrupt Manager]** → enable: "Interrupt Manager Configuration"
 
 4. Add preprocessor to project build option: SL_LIN_SLAVE1 for slave node 1 and SL_LIN_SLAVE2 for slave node 2
 
@@ -135,16 +146,18 @@ For the testing environment:
 #### Pin assignments ####
 
 Required pins:
+
 | Pin | Name | Description |
 | --- | --- | --- |
 | PB02 | LIN_TX | TX pin of the LIN bus (available as EXP_15) |
 | PB03 | LIN_RX | RX pin of the LIN bus (available as EXP_16) |
 
 Supported roles and recommended locations:
+
 | Pin | Name | Role | Description |
 | --- | --- | --- | --- |
 | PA05 | CHECKSUM_ERR | Testing | Indicates a checksum error detection to the master |
-| PA06 | CONFLICT_ERR | Testing | Indicates a conflict detection to the master
+| PA06 | CONFLICT_ERR | Testing | Indicates a conflict detection to the master |
 | PA07 | GENERIC_ERR | Testing | Indicates a generic error detection (framing) to the master |
 | PA05 | UART_ACT | Performance measurement | Toggled when entering/exiting the UART IRQ handler |
 | PA06 | DMA_ACT | Performance measurement | Toggled when entering/exiting a DMA callback |
@@ -205,18 +218,18 @@ The master device has the following pin configuration:
 | Pin | Name | Description |
 | --- | --- | --- |
 | PB02 | LIN_TX | TX pin of the LIN bus |
-| PB03 | LIN_RX | RX pin of the LIN bus
-| PA05 | SLAVE1_GENERIC | Detect/count generic errors on the slave1 device
-| PA06 | SLAVE2_GENERIC | Detect/count generic errors on the slave2 device
-| PC00 | SLAVE2_CHECKSUM | Detect/count checksum errors on the slave2 device
-| PC01 | SLAVE1_CHECKSUM | Detect/count checksum errors on the slave1 device
-| PC02 | SLAVE2_CONFLICT | Detect/count conflict errors on the slave2 device
-| PC03 | SLAVE1_CONFLICT | Detect/count conflict errors on the slave1 device
-| PD02 | USART0_TX | TX pin of the serial console
-| PD03 | USART0_RX | RX pin of the serial console
+| PB03 | LIN_RX | RX pin of the LIN bus |
+| PA05 | SLAVE1_GENERIC | Detect/count generic errors on the slave1 device |
+| PA06 | SLAVE2_GENERIC | Detect/count generic errors on the slave2 device |
+| PC00 | SLAVE2_CHECKSUM | Detect/count checksum errors on the slave2 device |
+| PC01 | SLAVE1_CHECKSUM | Detect/count checksum errors on the slave1 device |
+| PC02 | SLAVE2_CONFLICT | Detect/count conflict errors on the slave2 device |
+| PC03 | SLAVE1_CONFLICT | Detect/count conflict errors on the slave1 device |
+| PD02 | USART0_TX | TX pin of the serial console |
+| PD03 | USART0_RX | RX pin of the serial console |
 
 The LIN_TX and LIN_RX pins shall be connected together on every device, connected to the single-wire bus, and at least pulled up by a 5-10K resistor to 3.3V.
-The SLAVE1_* and SLAVE2_* pins shall be connected to the appropriate pins on the given devices.
+The SLAVE1_*, and SLAVE2_* pins shall be connected to the appropriate pins on the given devices.
 Make sure that a GND connection as also provided between the boards.
 As the VCOM TX and RX pins had to be used for different purposes due to the limitations of pin assignments and GPIO routing, the serial console of the master device is only available on the PD02 and PD03 pins, and an external USB-to-serial converter is required to access the console.
 The devices have the following IDs configured:
@@ -249,7 +262,7 @@ A conflict is detected on a device when it tries to drive the bus to the dominan
 - Test case 11 writes to endpoint 35 with a damaged checksum, expecting the slave devices to detect the errors.
 - Test case 12 writes to endpoint 36, which is a writable endpoint on the slave1 device, but readable on the slave2 device, causing a conflict on the bus. Either the master or the slave device shall detect a conflict, but not both, and the sum of conflicts detected should be equal to the number of frames transmitted
 
-![log](images/log.png)
+![log](image/log.png)
 
 ## Report Bugs & Get Support ##
 

@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -58,8 +58,10 @@ static uint8_t dcmotor3_direction = 1;
  ******************************************************************************/
 void app_init(void)
 {
-#if (defined(SLI_SI917))
+#if defined(SIWG917M111MGTBA)
   app_pwm_instance = &sl_pwm_channel_0_config;
+#elif defined(SIWG917Y111MGABA)
+  app_pwm_instance = &sl_pwm_channel_3_config;
 #else
   app_pwm_instance = &sl_pwm_mikroe;
 #endif

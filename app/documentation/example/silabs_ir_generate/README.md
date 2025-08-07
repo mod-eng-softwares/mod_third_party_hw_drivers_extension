@@ -4,6 +4,16 @@
 
 This project shows the implementation of IR generator driver using WSTK kit. IR Generator is widely used in remote controls, used in controlling home appliances such as TV remotes, air conditioners...
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
 - 1x [EFR32xG21 Wireless Gecko Starter Kit](https://www.silabs.com/development-tools/wireless/efr32xg21-wireless-starter-kit?tab=overview)
@@ -27,6 +37,7 @@ The table below shows the connection between the Board and the IR LED. You can r
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -38,7 +49,8 @@ You can either create a project based on an example project or start with an emp
 1. From the Launcher Home, add the BRD4180A to MyProducts, click on it, and click on the **EXAMPLE PROJECTS & DEMOS** tab. Find the example project with the filter "ir generate"
 
 2. Click **Create** button on the **Third Party Hardware Drivers - IR Generate (Silabs)** example. Example project creation dialog pops up -> click Create and Finish and Project should be generated.
-![Create_example](image/create_example.png)
+
+   ![Create_example](image/create_example.png)
 
 3. Build and flash this example to the board.
 
@@ -48,19 +60,13 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file app/example/silabs_ir_generate/app.c (overwriting existing file), into the project root folder.
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
-
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-        - **[Services] → [IO Stream] → [IO Stream: USART]** → default instance name: vcom
-        - **[Application] → [Utility] → [Log]**
-        - **[Platform] → [Board Control]** -> Enable Virtual COM UART
-        - **[Third Party Hardware Drivers] → [Miscellaneous] → [IR Generator (Silabs)]** → use default configuration:
-        ![config](image/default_config.png)
+   - **[Services] → [IO Stream] → [IO Stream: USART]** → default instance name: vcom
+   - **[Application] → [Utility] → [Log]**
+   - **[Platform] → [Board Control]** -> Enable Virtual COM UART
+   - **[Third Party Hardware Drivers] → [Miscellaneous] → [IR Generator (Silabs)]** → use default configuration:
+   ![config](image/default_config.png)
 
 4. Build and flash this example to the board.
 
@@ -71,12 +77,12 @@ You can either create a project based on an example project or start with an emp
 Based on the operation, the keypad driver API can be broken into 2 categories:
 
 - Initialization.
-    - ir_generate_init() function initialize the keypad with the callback.
-    - code_t ir_code, set the IR protocol, currently supporting NEC and SONY type.
-    - ir_callback_t cb, is called if one frame stream is sent.
+  - `ir_generate_init()`: initialize the keypad with the callback.
+  - `code_t ir_code`: set the IR protocol, currently supporting NEC and SONY type.
+  - `ir_callback_t cb`: callback is called if one frame stream is sent.
 - Running the IR generates
-    - ir_generate_stream() function configures the data that desire to send and start, repeat flag use in NEC IR protocol.
-    - ir_generate_stop() function can stop the IR generate.
+  - `ir_generate_stream()`: configures the data that desire to send and start, repeat flag use in NEC IR protocol.
+  - `ir_generate_stop()`: stop the IR generate.
 
 ## How It Works ##
 

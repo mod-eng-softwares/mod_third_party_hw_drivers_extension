@@ -20,7 +20,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ""
@@ -28,18 +27,17 @@ include:
       - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: device_init
+  - id: clock_manager
   - id: iostream_eusart
     instance:
       - vcom
-  - id: simple_button
-    instance:
-      - btn0
   - id: spidrv
     instance:
       - mikroe
   - id: app_assert
+  - id: sleeptimer
   - id: app_log
   - id: uwb_dwm1000
     from: third_party_hw_drivers
@@ -50,7 +48,7 @@ configuration:
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 define:
   - name: DEBUG_EFM

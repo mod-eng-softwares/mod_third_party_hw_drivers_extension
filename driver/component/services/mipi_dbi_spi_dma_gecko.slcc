@@ -25,6 +25,5 @@ include:
       - path: mipi_dbi_spi.h
 source:
   - path: public/silabs/services_mipi_dbi/src/mipi_dbi_spi_dma_gecko.c
-
 define:
   - name: MIPI_DBI_SPIDRV

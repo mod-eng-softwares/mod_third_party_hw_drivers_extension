@@ -8,39 +8,75 @@ The Mikroe Fingerprint 2 Click board is a fingerprint sensor module that allows 
 
 The board also includes some features such as the ability to store and match up to 24 fingerprints. It also includes two onboard LEDs to indicate the status of the sensor. This Click board can be used in various projects like security systems, attendance systems, access control etc and is a cost-effective solution for adding fingerprint recognition to your project.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+  - [Driver Layer Diagram](#driver-layer-diagram)
+  - [Testing](#testing)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
+
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
+
 - 1x [Fingerprint 2 Click board](https://www.mikroe.com/fingerprint-2-click) based on A-172-MRQ
 
 ## Hardware Connection ##
 
-- If the EFR32xG24 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the Fingerprint 2 Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the Fingerprint 2 board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The Fingerprint 2 Click board supports MikroBus, so it can connect easily to the Explorer Kit via MikroBus header. Assure that the 45-degree corner of Click board matches the 45-degree white line of the Explorer Kit.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the image below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-  ![board](image/hardware_connection.png)
+The tables below provide an overview of the pin connections.
 
-- If the Wi-Fi Development Kit is used:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | Fingerprint 2 click |
-  | ----------------- | -------------- | ------------ | ----------- |
-  | UART1_RX_PIN      | GPIO_6 [P19]   | GPIO_6       | TX          |
-  | UART1_TX_PIN      | GPIO_7 [P20]   | GPIO_7       | RX          |
-  | RESET             | GPIO_46 [P24]  | GPIO_10      | RST         |
-  | Compare indicator | GPIO_47 [P26]  | GPIO_11      | LD1         |
-  | Compare indicator | GPIO_48 [P28]  | GPIO_12      | LD2         |
-  | General Purpose   | GPIO_49 [P30]  | GPIO_29      | GP1         |
-  | General Purpose   | GPIO_50 [P32]  | GPIO_30      | GP2         |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | Fingerprint 2 Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| UART Receive  | PB2 | PB2 | PD5 | PB2 | ↔ | TX  |
+| UART Transmit | PB1 | PB1 | PD4 | PB1 | ↔ | RX  |
+| RESET         | PC6 | PC6 | PC8 | PC6 | ↔ | RST |
+| Compare indicator 1 | PB0 | PB0 | PB0 | PB0 | ↔ | LD1 |
+| Compare indicator 2 | PB3 | PB3 | PB1 | PB3 | ↔ | LD2 |
+| General Purpose 1   | PC3 | PC3 | PC0 | PC3 | ↔ | GP1 |
+| General Purpose 2   | PB4 | PB4 | PA0 | PB4 | ↔ | GP2 |
+
+**Silicon Labs Wi-Fi Development Kit:**
+
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | Fingerprint 2 Click |
+| --- | --- | --- | --- | --- | --- |
+| UART Receive  | GPIO_29 [P33] | GPIO_29 [EXP11] | ULP_GPIO_6 | ↔ | TX  |
+| UART Transmit | GPIO_30 [P35] | GPIO_30 [EXP13] | ULP_GPIO_7 | ↔ | RX  |
+| Reset         | GPIO_46 [P24] | GPIO_10 [EXP23] | GPIO_30    | ↔ | RST |
+| Compare indicator 1 | GPIO_47 [P26] | GPIO_11 [EXP22] | GPIO_29    | ↔ | LD1 |
+| Compare indicator 2 | GPIO_48 [P28] | GPIO_12 [EXP25] | UULP_VBAT_GPIO_2 | ↔ | LD2 |
+| General Purpose 1   | GPIO_49 [P30] | GPIO_6 [EXP21]  | GPIO_28    | ↔ | GP1 |
+| General Purpose 2   | GPIO_50 [P32] | GPIO_7 [EXP24]  | GPIO_12    | ↔ | GP2 |
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -63,28 +99,20 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the file `app/example/mikroe_fingerprint2_a172mrq/app.c` into the project root folder (overwriting existing file).
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [Timers] → [Sleep Timer]
+     - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: **vcom**
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **mikroe** → Set "Receive buffer size" to 800
+     - [Third Party Hardware Drivers] → [Human Machine Interface] → [A-172-MRQ - Fingerprint 2 Click (Mikroe)] → use default configuration
+     - [Application] → [Utility] → [Assert]
+     - [Application] → [Utility] → [Log]
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the EFR32xG24 Explorer Kit is used:**
-
-        - [Services] → [Timers] → [Sleep Timer]
-        - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: **vcom**
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: **mikroe** → Set "Receive buffer size" to 800
-        - [Third Party Hardware Drivers] → [Human Machine Interface] → [A-172-MRQ - Fingerprint 2 Click (Mikroe)] → use default configuration
-        - [Application] → [Utility] → [Assert]
-        - [Application] → [Utility] → [Log]
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
-        - [Third Party Hardware Drivers] → [Sensors] → [MM5D91-00 - Radar Click (Mikroe)] → use default configuration
-        - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [UART] → disable "UART1 DMA"
+   - **If the Wi-Fi Development Kit is used:**
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Service] → [Sleep Timer for Si91x]
+     - [Third Party Hardware Drivers] → [Sensors] → [MM5D91-00 - Radar Click (Mikroe)] → use default configuration
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [USART] → disable "USART0 DMA". Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
 
 4. Build and flash this example to the board.
 
@@ -98,7 +126,7 @@ You can either create a project based on an example project or start with an emp
 
 The example compares a fingerprint on input to the registered fingerprint and shows a message on the console screen on which input fingerprint is identified or on which input fingerprint is not identified.
 
-You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like TeraTerm to receive the data from the USB. A screenshot of the console output is shown in the figure below.
+You can launch Console that's integrated into Simplicity Studio or use a third-party terminal tool like Tera Term to receive the data from the USB. A screenshot of the console output is shown in the figure below.
 
 ![logging_screen](image/log.png)
 

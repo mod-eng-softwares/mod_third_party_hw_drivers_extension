@@ -56,8 +56,8 @@
 #define UULP_VBAT                            5
 #endif
 
-#define INT_NO                               0 // available interrupt number
-#define INT_CH                               1 // GPIO Pin interrupt
+#define AVL_INTR_NO                          0 // available interrupt number
+#define PIN_INTR_NO                          1 // GPIO Pin interrupt
 
 static uint64_t sparkfun_last_rainfall_millis = 0;
 static uint32_t sparkfun_rainfall_count = 0;
@@ -70,6 +70,7 @@ static void sparkfun_weatherstation_rainfall_sensor_callback(uint8_t intNo);
 void sparkfun_weatherstation_rainfall_init(void)
 {
   sparkfun_rainfall_count = 0;
+  int32_t int_no;
 
 #if (defined(SLI_SI917))
   sl_si91x_gpio_pin_config_t sparkfun_rainfall_cfg = {
@@ -82,12 +83,17 @@ void sparkfun_weatherstation_rainfall_init(void)
     .direction = GPIO_INPUT
   };
 
+  if (SPARKFUN_WEATHER_STATION_RAINFALL_INT_PORT == UULP_VBAT) {
+    int_no = SPARKFUN_WEATHER_STATION_RAINFALL_INT_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_set_configuration(sparkfun_rainfall_cfg);
   sl_gpio_driver_configure_interrupt(&sparkfun_rainfall_cfg.port_pin,
-                                     INT_CH,
+                                     int_no,
                                      SL_GPIO_INTERRUPT_RISING_EDGE,
                                      (void *)&sparkfun_weatherstation_rainfall_sensor_callback,
-                                     INT_NO);
+                                     AVL_INTR_NO);
 
 #else
   GPIO_PinModeSet(SPARKFUN_WEATHER_STATION_RAINFALL_INT_PORT,

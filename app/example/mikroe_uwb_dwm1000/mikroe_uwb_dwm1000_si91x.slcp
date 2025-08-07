@@ -20,7 +20,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ""
@@ -28,27 +27,27 @@ include:
       - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
-    from: wiseconnect3_sdk
-  - id: sl_si91x_button_917
-    instance: [btn0]
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: app_assert
+  - id: sleeptimer
   - id: uwb_dwm1000
     from: third_party_hw_drivers
 
 configuration:
-  - name: SL_BUTTON_CONFIG_BTN0_INTR
-    value: FALL_EDGE_INTERRUPT
+  - name: SL_GSPI_MASTER_CS0__PORT
+    value: HP
+  - name: SL_GSPI_MASTER_CS0__PIN
+    value: 49
 
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/mikroe_uwb_dwm1000/README.md

@@ -4,7 +4,7 @@
  * @version 0.0.1
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -40,6 +40,9 @@
 #include <stdlib.h>
 #include "w5x00_platform.h"
 #include "drv_digital_out.h"
+#ifndef SLI_SI917
+#include "spidrv.h"
+#endif
 
 typedef struct {
   spi_master_t spi;
@@ -79,8 +82,14 @@ void w5x00_bus_init(mikroe_spi_handle_t handle)
                                        W5500_RESET_PIN);
   digital_out_init(&w5x00.rst_pin, reset);
 
+#ifdef SLI_SI917
   pin_name_t cs = hal_gpio_pin_name(MIKROE_W5500_CS_PORT,
                                     MIKROE_W5500_CS_PIN);
+#else
+  const SPIDRV_Handle_t ptr = (SPIDRV_Handle_t)handle;
+  pin_name_t cs = hal_gpio_pin_name(ptr->initData.portCs, ptr->initData.pinCs);
+#endif
+
   digital_out_init(&w5x00.cs_pin, cs);
   digital_out_high(&w5x00.cs_pin);
 }

@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,10 +23,10 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
   - id: adc_instance
     instance: [channel_1]
@@ -36,11 +35,22 @@ component:
   - id: mikroe_stretch
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_ADC_CH1_P_PORT
+    value: HP
+    condition: [brd2708a]
+  - name: SL_ADC_CH1_P_PIN
+    value: 29
+    condition: [brd2708a]
+  - name: SL_ADC_CH1_P_LOC
+    value: 8
+    condition: [brd2708a]
+
 sdk_extension:
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
 
 readme:
   - path: ../../documentation/example/mikroe_stretch/README.md

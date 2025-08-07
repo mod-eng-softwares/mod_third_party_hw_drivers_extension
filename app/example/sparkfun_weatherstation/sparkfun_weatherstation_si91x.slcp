@@ -16,7 +16,6 @@ filter:
 
 source:
   - path: app.c
-  - path: main.c
 
 include:
   - path: ''
@@ -24,13 +23,12 @@ include:
     - path: app.h
 
 component:
-  - id: sl_system
-  - id: sleeptimer_si91x
-    from: wiseconnect3_sdk
+  - id: sl_main
   - id: syscalls
     from: wiseconnect3_sdk
-  - id: si917_memory_default_config
+  - id: si91x_memory_default_config
     from: wiseconnect3_sdk
+  - id: sleeptimer
   - instance: [channel_1]
     from: wiseconnect3_sdk
     id: adc_instance
@@ -41,11 +39,22 @@ component:
   - id: sparkfun_weather_station_wind_speed
     from: third_party_hw_drivers
 
+configuration:
+  - name: SL_ADC_CH1_P_PORT
+    value: HP
+    condition: [brd2708a]
+  - name: SL_ADC_CH1_P_PIN
+    value: 29
+    condition: [brd2708a]
+  - name: SL_ADC_CH1_P_LOC
+    value: 8
+    condition: [brd2708a]
+
 sdk_extension:
   - id: third_party_hw_drivers
-    version: 4.3.0
+    version: 4.4.0
   - id: wiseconnect3_sdk
-    version: 3.4.2
+    version: 3.5.0
 
 readme:
   - path: ../../documentation/example/sparkfun_weatherstation/README.md

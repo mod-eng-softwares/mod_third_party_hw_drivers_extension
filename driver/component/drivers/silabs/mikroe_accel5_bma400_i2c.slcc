@@ -19,6 +19,9 @@ template_contribution:
   - name: component_catalog
     value: mikroe_accel5_bma400_i2c
 config_file:
+  - path: public/silabs/accel5_bma400/config/brd2708a/mikroe_bma400_i2c_config.h
+    file_id: driver_config_bma400_i2c
+    condition: [brd2708a]
   - path: public/silabs/accel5_bma400/config/brd2703a/mikroe_bma400_i2c_config.h
     file_id: driver_config_bma400_i2c
     condition: [brd2703a]
@@ -39,7 +42,7 @@ config_file:
     condition: [brd4338a]
   - path: public/silabs/accel5_bma400/config/other/mikroe_bma400_i2c_config.h
     file_id: driver_config_bma400_i2c
-    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a]
+    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a, brd2708a]
 include:
   - path: public/silabs/accel5_bma400/inc
     file_list:

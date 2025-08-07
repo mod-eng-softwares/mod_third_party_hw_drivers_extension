@@ -57,6 +57,7 @@ static spi_master_t *_owner = NULL;
 static sl_gspi_handle_t gspi_driver_handle = NULL;
 static uint32_t last_spi_speed_used;
 static spi_master_mode_t last_spi_mode_used;
+static slave_select_mode_typedef_t cs_mode = SL_GSPI_MASTER_HW_OUTPUT;
 
 static spi_master_chip_select_polarity_t spi_master_chip_select_polarity =
   SPI_MASTER_CHIP_SELECT_DEFAULT_POLARITY;
@@ -108,18 +109,18 @@ err_t spi_master_open(spi_master_t *obj, spi_master_config_t *config)
     return SPI_MASTER_ERROR;
   }
 
+  // Validation for executing the API only once
+  status = sl_si91x_gspi_set_slave_number(GSPI_SLAVE_0);
+  if (status != SL_STATUS_OK) {
+    return SPI_MASTER_ERROR;
+  }
+
   if (spi_master_set_configuration(obj) != SPI_MASTER_SUCCESS) {
     return SPI_MASTER_ERROR;
   }
   // Register user callback function
   status = sl_si91x_gspi_register_event_callback(gspi_driver_handle,
                                                  callback_event);
-  if (status != SL_STATUS_OK) {
-    return SPI_MASTER_ERROR;
-  }
-
-  // Validation for executing the API only once
-  status = sl_si91x_gspi_set_slave_number(GSPI_SLAVE_0);
   if (status != SL_STATUS_OK) {
     return SPI_MASTER_ERROR;
   }
@@ -201,6 +202,24 @@ err_t spi_master_set_mode(spi_master_t *obj, spi_master_mode_t mode)
   obj->config.mode = mode;
 
   return spi_master_set_configuration(obj);
+}
+
+/***************************************************************************//**
+ * Set SPI Master chip select mode.
+ * This API should be called before the API sensor_init()
+ ******************************************************************************/
+err_t spi_master_set_cs_mode(spi_master_cs_mode_t cs)
+{
+  if (cs >= SPI_MASTER_CS_MODE_LAST) {
+    return SPI_MASTER_ERROR;
+  }
+
+  if (cs == SPI_MASTER_CS_MODE_SW) {
+    cs_mode = SL_GSPI_MASTER_SW;
+  } else {
+    cs_mode = SL_GSPI_MASTER_HW_OUTPUT;
+  }
+  return SPI_MASTER_SUCCESS;
 }
 
 /***************************************************************************//**
@@ -387,7 +406,7 @@ static err_t spi_master_set_configuration(spi_master_t *obj)
   sl_gspi_control_config_t gspi_config = {
     .bit_width = GSPI_BIT_WIDTH,
     .bitrate = obj->config.speed,
-    .slave_select_mode = SL_GSPI_MASTER_HW_OUTPUT,
+    .slave_select_mode = cs_mode,
     .swap_read = GSPI_SWAP_READ_DATA,
     .swap_write = GSPI_SWAP_WRITE_DATA
   };

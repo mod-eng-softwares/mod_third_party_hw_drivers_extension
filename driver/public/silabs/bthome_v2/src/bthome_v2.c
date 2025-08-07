@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -42,6 +42,13 @@
 #include "bthome_v2.h"
 #include "mbedtls/ccm.h"
 
+/**
+ * @brief BThome V2 key
+ */
+typedef struct {
+  unsigned char data[BIND_KEY_LEN]; /**< BThome V2 key */
+} bthome_v2_key_t;
+
 // -----------------------------------------------------------------------------
 //                          Static Variables Declarations
 // -----------------------------------------------------------------------------
@@ -56,8 +63,6 @@ static uint8_t last_object_id;
 
 // The CCM context for encrypt
 static mbedtls_ccm_context encrypt_ctx;
-// Store key used for encrypt
-static unsigned char bind_key[BIND_KEY_LEN];
 
 static uint32_t encrypt_count;
 
@@ -90,6 +95,7 @@ sl_status_t bthome_v2_init(uint8_t *device_name,
 {
   sl_status_t sc = SL_STATUS_OK;
   char octet[2];
+  bthome_v2_key_t bind_key;
 
   if (device_name != NULL) {
     dev_name = device_name;
@@ -101,7 +107,7 @@ sl_status_t bthome_v2_init(uint8_t *device_name,
       // Parse key to 128 bit length format
       for (uint8_t i = 0; i < BIND_KEY_LEN; i++) {
         memcpy(octet, (uint8_t *)&key[2 * i], 2);
-        bind_key[i] = (uint8_t)strtol(octet, NULL, 16);
+        bind_key.data[i] = (uint8_t)strtol(octet, NULL, BIND_KEY_LEN);
       }
 
       if (encryption) {
@@ -112,7 +118,7 @@ sl_status_t bthome_v2_init(uint8_t *device_name,
         mbedtls_ccm_init(&encrypt_ctx);
         sc = mbedtls_ccm_setkey(&encrypt_ctx,
                                 MBEDTLS_CIPHER_ID_AES,
-                                bind_key,
+                                bind_key.data,
                                 BIND_KEY_LEN * 8);
         if (sc != SL_STATUS_OK) {
           return sc;

@@ -7,10 +7,8 @@ category: Services|mikroSDK 2.0 SDK - Peripheral Drivers
 quality: evaluation
 root_path: driver
 requires:
-  - name: emlib_adc
-    condition: [device_series_1]
   - name: emlib_iadc
-    condition: [device_series_2]
+    condition: [device_efx]
   - name: sl_adc
     condition: [device_si91x]
 provides:

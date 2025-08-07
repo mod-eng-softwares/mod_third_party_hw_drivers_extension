@@ -52,12 +52,6 @@ sl_status_t mikroe_pl_n823_01_init(mikroe_i2c_handle_t instance)
   pir_cfg_setup(&pir_cfg);
   pir_ctx.i2c.handle = instance;
 
-#if defined(PL_N823_01_ANALOG_OUTPUT_PORT) \
-  && defined(PL_N823_01_ANALOG_OUTPUT_PIN)
-  pir_cfg.an = hal_gpio_pin_name(PL_N823_01_ANALOG_OUTPUT_PORT,
-                                 PL_N823_01_ANALOG_OUTPUT_PIN);
-#endif
-
 #if (MIKROE_PL_N823_01_I2C_UC == 1)
   pir_cfg.i2c_speed = MIKROE_PL_N823_01_I2C_SPEED_MODE;
 #endif

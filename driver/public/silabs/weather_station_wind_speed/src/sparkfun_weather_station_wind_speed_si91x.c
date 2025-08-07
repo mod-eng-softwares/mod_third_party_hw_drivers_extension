@@ -50,8 +50,8 @@
 #define UULP_VBAT                            5
 #endif
 
-#define INT_NO                               0 // available interrupt number
-#define INT_CH                               0 // GPIO Pin interrupt
+#define AVL_INTR_NO                          0 // available interrupt number
+#define PIN_INTR_NO                          0 // GPIO Pin interrupt
 #define FILTER_MS                            8
 
 static sl_si91x_gpio_pin_config_t sparkfun_windspeed_cfg = {
@@ -81,12 +81,19 @@ static void gpio_int_callback(uint32_t intNo);
  *****************************************************************************/
 void sparkfun_weatherstation_windspeed_init(void)
 {
+  int32_t int_no;
+
+  if (SPARKFUN_WEATHER_STATION_WIND_SPEED_PORT == UULP_VBAT) {
+    int_no = SPARKFUN_WEATHER_STATION_WIND_SPEED_PIN;
+  } else {
+    int_no = PIN_INTR_NO;
+  }
   sl_gpio_set_configuration(sparkfun_windspeed_cfg);
   sl_gpio_driver_configure_interrupt(&sparkfun_windspeed_cfg.port_pin,
-                                     INT_CH,
+                                     int_no,
                                      SL_GPIO_INTERRUPT_FALLING_EDGE,
                                      (void *)&gpio_int_callback,
-                                     INT_NO);
+                                     AVL_INTR_NO);
 
   sl_sleeptimer_start_periodic_timer_ms(&measurement_timer_handle,
                                         SPARKFUN_WINDSPEED_CHECK_PERIOD_MS,

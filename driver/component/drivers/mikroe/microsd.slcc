@@ -10,6 +10,9 @@ requires:
   - name: status
   - name: fatfs_sdc_spi_platform
 config_file:
+  - path: public/mikroe/microsd/config/brd2708a/mikroe_microsd_config.h
+    file_id: driver_config_microsd
+    condition: [brd2708a]
   - path: public/mikroe/microsd/config/brd2703a/mikroe_microsd_config.h
     file_id: driver_config_microsd
     condition: [brd2703a]
@@ -30,7 +33,7 @@ config_file:
     condition: [brd4338a]
   - path: public/mikroe/microsd/config/other/mikroe_microsd_config.h
     file_id: driver_config_microsd
-    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a]
+    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd4338a, brd2710a, brd2708a]
 template_contribution:
   - name: component_catalog
     value: fatfs_storage_device_sdcard

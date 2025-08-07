@@ -44,8 +44,7 @@
 // -----------------------------------------------------------------------------
 #include <stdio.h>
 #include <stdbool.h>
-#include "sl_si91x_peripheral_gpio.h"
-#include "gpio_helper_si91x.h"
+#include "sl_si91x_driver_gpio.h"
 #include "sl_si91x_gspi.h"
 #include "sl_status.h"
 #include "sl_component_catalog.h"
@@ -65,11 +64,8 @@ struct mipi_dbi_gspi_gpio {
 struct mipi_dbi_gspi_config {
   const sl_gspi_clock_config_t *clock_config;
   const sl_gspi_control_config_t *control_config;
-  struct mipi_dbi_gspi_gpio clk;
-  struct mipi_dbi_gspi_gpio tx;
-  struct mipi_dbi_gspi_gpio rx;
-  struct mipi_dbi_gspi_gpio cs;
-  struct mipi_dbi_gspi_gpio dc;
+  sl_gpio_t cs;
+  sl_gpio_t dc;
 };
 
 #define SI91X_INTF_PLL_CLK            180000000 // Intf pll clock frequency
@@ -84,11 +80,8 @@ struct mipi_dbi_gspi_config {
                                       bit_rate,                     \
                                       spi_clock_mode,               \
                                       spi_slave_select_mode,        \
-                                      clk_port, clk_pin, clk_mode,  \
-                                      tx_port, tx_pin, tx_mode,     \
-                                      rx_port, rx_pin, rx_mode,     \
-                                      cs_port, cs_pin, cs_mode,     \
-                                      dc_port, dc_pin, dc_mode)     \
+                                      cs_port, cs_pin,              \
+                                      dc_port, dc_pin)              \
   static const sl_gspi_clock_config_t name ## _clock_config = {     \
     .soc_pll_mm_count_value = SI91X_SOC_PLL_MM_COUNT_LIMIT,         \
     .intf_pll_500_control_value = SI91X_INTF_PLL_500_CTRL_VALUE,    \
@@ -109,11 +102,8 @@ struct mipi_dbi_gspi_config {
   const struct mipi_dbi_gspi_config name = {                        \
     .clock_config = &name ## _clock_config,                         \
     .control_config = &name ## _control_config,                     \
-    .clk = { .port = clk_port, .pin = clk_pin, .mode = clk_mode },  \
-    .tx = { .port = tx_port, .pin = tx_pin, .mode = tx_mode },      \
-    .rx = { .port = rx_port, .pin = rx_pin, .mode = rx_mode },      \
-    .cs = { .port = cs_port, .pin = cs_pin, .mode = cs_mode },      \
-    .dc = { .port = dc_port, .pin = dc_pin, .mode = dc_mode },      \
+    .cs = { .port = cs_port, .pin = cs_pin },                       \
+    .dc = { .port = dc_port, .pin = dc_pin },                       \
   }
 
 #ifdef __cplusplus

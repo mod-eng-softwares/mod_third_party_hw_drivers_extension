@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -47,8 +47,9 @@
 #define app_printf(...) app_log(__VA_ARGS__)
 #endif
 
+// The lowest frequency that can be set for Si91x PWM is 3kHz.
+static const uint16_t FREQUENCY = 5000;
 static const float DUTY_CYCLE_STEP = 0.1;
-static const uint16_t FREQUENCY = 1000;
 static const uint16_t TIMER_PERIOD = 2000;
 
 static sl_sleeptimer_timer_handle_t app_timer_handle;
@@ -61,8 +62,10 @@ static void app_timer_callback(sl_sleeptimer_timer_handle_t *handle,
 
 void app_init(void)
 {
-#if (defined(SLI_SI917))
+#if defined(SIWG917M111MGTBA)
   app_pwm_instance = &sl_pwm_channel_0_config;
+#elif defined(SIWG917Y111MGABA)
+  app_pwm_instance = &sl_pwm_channel_3_config;
 #else
   app_pwm_instance = &sl_pwm_mikroe;
 #endif

@@ -15,7 +15,7 @@ void led0_switch(lv_event_t *e)
 {
   (void) e;
   // Your code here
-  if (led0_status) {
+  if (!lv_obj_has_state(ui_led0Switch, LV_STATE_CHECKED)) {
     led0_status = false;
     sl_si91x_rgb_led_off(led_led0.blue);
     sl_si91x_rgb_led_off(led_led0.green);
@@ -38,7 +38,7 @@ void led1_switch(lv_event_t *e)
 {
   (void) e;
   // Your code here
-  if (led1_status) {
+  if (!lv_obj_has_state(ui_led1Switch, LV_STATE_CHECKED)) {
     led1_status = false;
     sl_si91x_rgb_led_off(led_led0.red);
     sl_si91x_rgb_led_off(led_led0.green);

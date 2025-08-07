@@ -6,48 +6,87 @@ This project shows the implementation of an LTE IoT 2 Click driver using Quectel
 
 LTE IoT 2 Click is a Click board™ that allows connection to the LTE networks, featuring Quectel BG96 LTE module, which offers two LTE technologies aimed at Machine to Machine communication (M2M) and the Internet of Things (IoT). This module is an embedded IoT communication solution that supports the LTE Cat M1 and NB1 technologies, offering an alternative to similar Low Power Wide Area Network (LPWAN) solutions, such as the ones provided by Sigfox and LoRa. The LTE CAT1 and NB1 technologies are designed with specific requirements of the IoT network in mind. LTE IoT 2 click also offers various other features, allowing simple and reliable connection to these new 3GPP IoT technologies.
 
+## Table Of Contents ##
+
+- [Required Hardware](#required-hardware)
+- [Hardware Connection](#hardware-connection)
+- [Setup](#setup)
+  - [Create a project based on an example project](#create-a-project-based-on-an-example-project)
+  - [Start with an empty example project](#start-with-an-empty-example-project)
+- [How It Works](#how-it-works)
+  - [BG96 - LTE IoT 2 Click general high-level functions](#bg96---lte-iot-2-click-general-high-level-functions)
+  - [BG96 - LTE IoT 2 Click functional high-level functions](#bg96---lte-iot-2-click-functional-high-level-functions)
+- [Driver Layer Overview](#driver-layer-overview)
+- [Driver Extension Guide](#driver-extension-guide)
+  - [Adding New AT Command](#adding-new-at-command)
+  - [Creating New High Level Function](#creating-new-high-level-function)
+  - [Creating New CLI Command](#creating-new-cli-command)
+  - [Testing](#testing)
+    - [Using the general functions](#using-the-general-functions)
+    - [Using the GPS functions](#using-the-gps-functions)
+    - [Using the TCP functions](#using-the-tcp-functions)
+- [Resources](#resources)
+- [Report Bugs & Get Support](#report-bugs--get-support)
+
 ## Required Hardware ##
 
-- 1x [XG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit) EFR32xG24 Explorer Kit
+- 1x [Silicon Labs BLE Explorer Kit](https://www.silabs.com/development-tools/wireless/bluetooth) based on the EFR32 SoC, such as:
+  - [BGM220-EK4314A](https://www.silabs.com/development-tools/wireless/bluetooth/bgm220-explorer-kit)
+  - [BG22-EK4108A](https://www.silabs.com/development-tools/wireless/bluetooth/bg22-explorer-kit?tab=overview)
+  - [xG24-EK2703A](https://www.silabs.com/development-tools/wireless/efr32xg24-explorer-kit?tab=overview)
+  - [xG22-EK2710A](https://www.silabs.com/development-tools/wireless/efr32xg22e-explorer-kit?tab=overview)
 
-- Or 1x [Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917 (e.g. [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit) or [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board))
+  *or*
+
+  1x [Silicon Labs Wi-Fi Development Kit](https://www.silabs.com/development-tools/wireless/wi-fi) based on SiWG917, such as:
+  - [SIWX917-DK2605A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-dk2605a-wifi-6-bluetooth-le-soc-dev-kit)
+  - [SIWX917-RB4338A](https://www.silabs.com/development-tools/wireless/wi-fi/siwx917-rb4338a-wifi-6-bluetooth-le-soc-radio-board) + [Si-MB4002A](https://www.silabs.com/development-tools/wireless/wireless-pro-kit-mainboard?tab=overview)
+  - [SiW917Y-EK2708A](https://www.silabs.com/development-tools/wireless/wi-fi/siw917y-ek2708a-explorer-kit?tab=overview)
 
 - 1x [LTE IoT 2 Click board](https://www.mikroe.com/lte-iot-2-click) based on Quectel BG96 LTE module which running on the firmware version: **BG96MAR02A07M1G**
-
 - 1x [Hologram IoT sim card](https://www.hologram.io/products/global-iot-sim-card/)
-
 - 1x [GSM/GPRS Antenna](https://www.mikroe.com/gsm-gprs-right-angle-rubber)
-
 - 1x [Active GPS Antenna](https://www.mikroe.com/active-gps)
 
 ## Hardware Connection ##
 
-- If the EFR32xG24 Explorer Kit is used:
+The Silicon Labs Explorer Kit boards feature a mikroBUS™ socket, allowing the LTE IoT 2 Click board to connect easily via the mikroBUS header. Ensure that the 45-degree corner of the LTE IoT 2 board aligns with the 45-degree white line on the Explorer Kit. The hardware connection is illustrated in the image below.
 
-  The LTE IoT 2 Click board supports MikroBus, so it can connect easily to the Explorer Kit via MikroBus header. Assure that the 45-degree corner of Click board matches the 45-degree white line of the Explorer Kit.
+![board](image/hardware_connection.png)
 
-  The hardware connection is shown in the images below:
+For the Silicon Labs boards that do not have a mikroBUS™ socket, consider using the Wire Jumpers.
 
-    ![board_1](image/hardware_connection_1.png "BRD2703A xG24 Explorer Kit Board and LTE IoT 2 Click Board")
+The tables below provide an overview of the pin connections.
 
-- If the Wi-Fi Development Kit is used:
+**Silicon Labs BLE Explorer Kit:**
 
-  | Description  | BRD4338A + BRD4002A | BRD2605A     | LTE IOT 2 Click |
-  | ----------------- | -------------- | ------------ | --------------- |
-  | UART1_RX_PIN      | GPIO_6 [P19]   | GPIO_6       | TX              |
-  | UART1_TX_PIN      | GPIO_7 [P20]   | GPIO_7       | RX              |
-  | Module Power-Up   | GPIO_47 [P26]  | GPIO_11      | PWK             |
-  | Module status     | GPIO_46 [P24]  | GPIO_10      | STA             |
+| Description | BRD4314A | BRD4108A | BRD2703A | BRD2710A | ↔ | LTE IoT 2 Click |
+| --- | --- | --- | --- | --- | --- | --- |
+| UART Receive  | PB2 | PB2 | PD5 | PB2 | ↔ | TX  |
+| UART Transmit | PB1 | PB1 | PD4 | PB1 | ↔ | RX  |
+| Module Power-Up | PC6 | PC6 | PC8 | PC6 | ↔ | PWK |
+| Module status   | PB0 | PB0 | PB0 | PB0 | ↔ | STA |
 
-- Insert the SIM into the LTE IoT 2 Click. Ensure that the SIM is inserted properly.
+**Silicon Labs Wi-Fi Development Kit:**
 
-- You need to attach the GSM and GPS antenna to the proper connectors (CN1 is the GSM one, and CN2 is the GPS antenna). Place the GNSS antenna to be able detect GPS satellites. GSM service is also required in the area.
+| Description | BRD4338A + BRD4002A | BRD2605A | BRD2708A | ↔ | LTE IoT 2 Click |
+| --- | --- | --- | --- | --- | --- |
+| UART Receive  | GPIO_29 [P33] | GPIO_29 [EXP11] | ULP_GPIO_6 | ↔ | TX  |
+| UART Transmit | GPIO_30 [P35] | GPIO_30 [EXP13] | ULP_GPIO_7 | ↔ | RX  |
+| Module Power-Up | GPIO_47 [P26] | GPIO_11 [EXP22] | GPIO_30  | ↔ | PWK |
+| Module status   | GPIO_46 [P24] | GPIO_10 [EXP23] | GPIO_29  | ↔ | STA |
+
+> [!IMPORTANT]
+>
+> - Insert the SIM into the LTE IoT 2 Click. Ensure that the SIM is inserted properly.
+> - You need to attach the GSM and GPS antenna to the proper connectors (CN1 is the GSM one, and CN2 is the GPS antenna). Place the GNSS antenna to be able detect GPS satellites. GSM service is also required in the area.
 
 ## Setup ##
 
 You can either create a project based on an example project or start with an empty example project.
 
 > [!IMPORTANT]
+>
 > - Make sure that the [Third Party Hardware Drivers](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension) extension is installed as part of the SiSDK. If not, follow [this documentation](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/blob/master/README.md#how-to-add-to-simplicity-studio-ide).
 > - **Third Party Hardware Drivers** extension must be enabled for the project to install the required components from this extension.
 
@@ -60,19 +99,19 @@ You can either create a project based on an example project or start with an emp
 
 2. Click **Create** button on the **Third Party Hardware Drivers - BG96 - LTE IoT 2 CLick (Mikroe)** example. Example project creation dialog pops up -> click Create and Finish and Project should be generated.
 
-    ![Create_example](image/create_example.png)
+   ![Create_example](image/create_example.png)
 
 3. From the project root folder, open file **app_iostream_cli.c** (if using EFR32xG24 Explorer Kit) or **app_iostream_cli_si91x.c** (if using Wi-Fi Development Kit). Replace " *** " by the receiver's phone number.
 
-    ![config_sms_phone_number](image/config_sms_phone_number.png)
+   ![config_sms_phone_number](image/config_sms_phone_number.png)
 
-    If you want to send pdu message replace the " *** " by the service center phone number and the receiver's phone number respectively.
+   If you want to send pdu message replace the " *** " by the service center phone number and the receiver's phone number respectively.
 
-    ![config_pdu_phone_number](image/config_pdu_phone_number.png)
+   ![config_pdu_phone_number](image/config_pdu_phone_number.png)
 
-    If you want to send data via TCP connection, replace the DEVICE_KEY with your Hologram token found here: <https://support.hologram.io/hc/en-us/articles/360035212714>
+   If you want to send data via TCP connection, replace the DEVICE_KEY with your Hologram token found here: <https://support.hologram.io/hc/en-us/articles/360035212714>
 
-    ![device key](image/device_key.png)
+   ![device key](image/device_key.png)
 
 4. Build and flash this example to the board.
 
@@ -82,35 +121,24 @@ You can either create a project based on an example project or start with an emp
 
 2. Copy the following files into the project root folder (overwriting the existing file):
 
-    - `app/example/mikroe_lte_iot2_bg96/app.c`
-    - `app/example/mikroe_lte_iot2_bg96/app_iostream_cli.h`
-    - `app/example/mikroe_lte_iot2_bg96/app_iostream_cli.c` if using EFR32xG24 Explorer Kit
-    - `app/example/mikroe_lte_iot2_bg96/app_iostream_cli_si91x.c` if using Wi-Fi Development Kit
+   - `app/example/mikroe_lte_iot2_bg96/app.c`
+   - `app/example/mikroe_lte_iot2_bg96/app_iostream_cli.h`
+   - `app/example/mikroe_lte_iot2_bg96/app_iostream_cli.c` if using EFR32xG24 Explorer Kit
+   - `app/example/mikroe_lte_iot2_bg96/app_iostream_cli_si91x.c` if using Wi-Fi Development Kit
 
-3. Install the software components:
+3. Open the .slcp file. Select the **SOFTWARE COMPONENTS** tab and install the following components:
 
-    - Open the .slcp file in the project.
+   - **If the BLE Explorer Kit is used:**
+     - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
+     - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: mikroe → Set the "Receive buffer size" to 256
+     - [Application] → [Utility] → [Log]
+     - [Third-Party Hardware Drivers] → [Sensors] → [BG96 - LTE IoT 2 Click (Mikroe)]
+     - [Platform] → [Utilities] → [Circular Queue] → set Max Queue Length to 20
 
-    - Select the SOFTWARE COMPONENTS tab.
-
-    - Install the following components:
-
-      **If the EFR32xG24 Explorer Kit is used:**
-
-        - [Services] → [IO Stream] → [IO Stream: EUSART] → default instance name: vcom
-        - [Services] → [IO Stream] → [IO Stream: USART] → default instance name: mikroe → Set the "Receive buffer size" to 256
-        - [Application] → [Utility] → [Log]
-        - [Third-Party Hardware Drivers] → [Sensors] → [BG96 - LTE IoT 2 Click (Mikroe)]
-        - [Platform] → [Utilities] → [Circular Queue] → set Max Queue Length to 20
-
-      **If the Wi-Fi Development Kit is used:**
-
-        - [Third-Party Hardware Drivers] → [Sensors] → [BG96 - LTE IoT 2 Click (Mikroe)]
-        - [WiSeConnect 3 SDK v3.3.3] → [Device] → [Si91x] → [MCU] → [Peripheral] → [UART] → turn off DMA configuration as below:
-
-            ![uart_config](image/config_uart_si91x.png)
-
-        - [Platform] → [Utilities] → [Circular Queue] → set Max Queue Length to 20
+   - **If the Wi-Fi Development Kit is used:**
+     - [Third-Party Hardware Drivers] → [Sensors] → [BG96 - LTE IoT 2 Click (Mikroe)]
+     - [WiSeConnect 3 SDK] → [Device] → [Si91x] → [MCU] → [Peripheral] → [USART] → disable "USART0 DMA". Select the corresponding pins according to the table provided in [Hardware Connection](#hardware-connection)
+     - [Platform] → [Utilities] → [Circular Queue] → set Max Queue Length to 20
 
 4. Configure receiver's phone number, refers to step 3 in [Create a project based on an example project](#create-a-project-based-on-an-example-project).
 

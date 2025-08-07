@@ -52,7 +52,7 @@
 #endif
 
 #if (defined(SLI_SI917))
-#define USART_INSTANCE_USED            UART_1
+#define USART_INSTANCE_USED            USART_0
 static usart_peripheral_t uart_instance = USART_INSTANCE_USED;
 #endif
 

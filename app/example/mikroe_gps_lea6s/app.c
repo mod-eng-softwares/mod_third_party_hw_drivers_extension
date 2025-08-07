@@ -46,7 +46,7 @@
 #include "rsi_debug.h"
 
 #define app_printf(...)                DEBUGOUT(__VA_ARGS__)
-#define USART_INSTANCE_USED            UART_1
+#define USART_INSTANCE_USED            USART_0
 
 static usart_peripheral_t uart_instance = USART_INSTANCE_USED;
 #else

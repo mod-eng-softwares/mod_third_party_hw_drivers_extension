@@ -6,15 +6,12 @@ description: >
 category: Services|NFC
 quality: evaluation
 root_path: driver
-
 provides:
   - name: nfc_tag
     allow_multiple: false
-
 template_contribution:
   - name: component_catalog
     value: nfc_tag
-
 include:
   - path: public/silabs/services_nfc/tag/inc
     file_list:

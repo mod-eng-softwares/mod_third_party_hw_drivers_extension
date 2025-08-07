@@ -3,7 +3,7 @@
  * @brief Top level application functions
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -37,6 +37,7 @@
  ******************************************************************************/
 
 #include <string.h>
+#include "sl_string.h"
 #include "app_assert.h"
 #include "sl_sleeptimer.h"
 #include "adafruit_is31fl3741.h"
@@ -137,7 +138,7 @@ static void app_task(void)
 {
   char *ptr = str;
   static int16_t cursor_x = 0;
-  int length = (int)strlen(str) * 6 - 1;
+  int length = sl_strlen(str) * 6 - 1;
   int i = 0;
 
   glib_set_cursor(&glib_context, cursor_x, 1);

@@ -4,7 +4,7 @@
  * @version 1.0.0
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -46,7 +46,7 @@
 /***************************************************************************//**
  * Find object index by MAC.
  ******************************************************************************/
-int bthome_v2_server_nvm3_find_index(uint8_t *mac)
+int bthome_v2_server_nvm3_find_index(bthome_v2_server_addr_t *mac)
 {
   bthome_v2_server_data_t tmp;
   int index;
@@ -68,7 +68,7 @@ int bthome_v2_server_nvm3_find_index(uint8_t *mac)
   while (index < MAX_ENCRYPT_DEVICE) {
     bthome_v2_server_nvm3_read(index, tmp.data);
 
-    if (memcmp(tmp.bthome_nvm3.mac, mac, 6) == 0) {
+    if (memcmp(tmp.bthome_nvm3.mac.data, mac->data, 6) == 0) {
       return index;
     }
     index++;
@@ -80,7 +80,8 @@ int bthome_v2_server_nvm3_find_index(uint8_t *mac)
 /***************************************************************************//**
  * Save device encrypt key with MAC address.
  ******************************************************************************/
-sl_status_t bthome_v2_server_nvm3_save_device_key(uint8_t *mac, uint8_t *key)
+sl_status_t bthome_v2_server_nvm3_save_device_key(bthome_v2_server_addr_t *mac,
+                                                  bthome_v2_server_key_t *key)
 {
   sl_status_t sc;
   bthome_v2_server_data_t tmp;
@@ -98,8 +99,8 @@ sl_status_t bthome_v2_server_nvm3_save_device_key(uint8_t *mac, uint8_t *key)
     }
   }
 
-  memcpy(tmp.bthome_nvm3.mac, mac, 6);
-  memcpy(tmp.bthome_nvm3.key, key, 16);
+  memcpy(tmp.bthome_nvm3.mac.data, mac->data, 6);
+  memcpy(tmp.bthome_nvm3.key.data, key->data, 16);
   sc = bthome_v2_server_nvm3_write(index, tmp.data);
 
   return sc;
@@ -108,7 +109,8 @@ sl_status_t bthome_v2_server_nvm3_save_device_key(uint8_t *mac, uint8_t *key)
 /***************************************************************************//**
  * Find device encrypt key by MAC address.
  ******************************************************************************/
-sl_status_t bthome_v2_server_nvm3_find_device_key(uint8_t *mac, uint8_t *key)
+sl_status_t bthome_v2_server_nvm3_find_device_key(bthome_v2_server_addr_t *mac,
+                                                  bthome_v2_server_key_t *key)
 {
   sl_status_t sc;
   bthome_v2_server_data_t tmp;
@@ -128,7 +130,7 @@ sl_status_t bthome_v2_server_nvm3_find_device_key(uint8_t *mac, uint8_t *key)
     return sc;
   }
 
-  memcpy(key, tmp.bthome_nvm3.key, 16);
+  memcpy(key->data, tmp.bthome_nvm3.key.data, 16);
 
   return SL_STATUS_OK;
 }
@@ -136,7 +138,8 @@ sl_status_t bthome_v2_server_nvm3_find_device_key(uint8_t *mac, uint8_t *key)
 /***************************************************************************//**
  * Remove device encrypt key by MAC address.
  ******************************************************************************/
-sl_status_t bthome_v2_server_nvm3_remove_device_key(uint8_t *mac)
+sl_status_t bthome_v2_server_nvm3_remove_device_key(
+  bthome_v2_server_addr_t *mac)
 {
   sl_status_t sc;
   int index;

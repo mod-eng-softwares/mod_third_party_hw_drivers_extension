@@ -44,6 +44,8 @@
 extern "C" {
 #endif
 
+#define INTR_NUMBER_CFG                         PIN_INTR_0
+
 // <<< sl:start pin_tool >>>
 
 // <gpio optional=true> MAX30101_INT
