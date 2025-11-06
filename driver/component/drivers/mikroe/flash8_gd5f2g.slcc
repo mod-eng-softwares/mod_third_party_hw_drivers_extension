@@ -1,0 +1,52 @@
+id: mikroe_flash8_gd5f2g
+package: third_party_hw_drivers
+label: GD5F2G - Flash 8 Click (Mikroe)
+description: >
+  Driver for the 2Gb SLC NAND Flash in Flash 8 Click board.
+quality: evaluation
+ui_hints:
+  visibility: basic
+category: Storage
+root_path: driver
+requires:
+  - name: nand_spi
+provides:
+  - name: mikroe_flash8_gd5f2g
+    allow_multiple: false
+template_contribution:
+  - name: component_catalog
+    value: mikroe_flash8_gd5f2g
+config_file:
+  - path: public/mikroe/flash8_gd5f2g/config/brd2703a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd2703a]
+  - path: public/mikroe/flash8_gd5f2g/config/brd2710a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd2710a]
+  - path: public/mikroe/flash8_gd5f2g/config/brd4108a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd4108a]
+  - path: public/mikroe/flash8_gd5f2g/config/brd4314a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd4314a]
+  - path: public/mikroe/flash8_gd5f2g/config/brd2605a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd2605a]
+  - path: public/mikroe/flash8_gd5f2g/config/brd4338a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd4338a]
+  - path: public/mikroe/flash8_gd5f2g/config/brd2708a/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    condition: [brd2708a]
+  - path: public/mikroe/flash8_gd5f2g/config/other/mikroe_gd5f2g_config.h
+    file_id: mikroe_gd5f2g_config
+    unless: [brd4314a, brd4108a, brd2703a, brd2605a, brd2708a, brd4338a, brd2710a]
+include:
+  - path: inc
+    file_list:
+      - path: third_party_hw_drivers_helpers.h
+  - path: public/mikroe/flash8_gd5f2g/inc
+    file_list:
+      - path: mikroe_gd5f2g.h
+source:
+  - path: public/mikroe/flash8_gd5f2g/src/mikroe_gd5f2g.c

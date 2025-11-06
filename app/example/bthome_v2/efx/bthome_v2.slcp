@@ -1,0 +1,67 @@
+project_name: bthome_v2
+label: Third Party Hardware Drivers - BTHome v2
+description: |
+  This example project shows an example using BTHome V2 format to send BLE advertisement packets.
+category: Example|Platform
+quality: experimental
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [32-bit MCU]
+  - name: Project Difficulty
+    value: [Beginner]
+
+source:
+  - path: app.c
+
+include:
+  - path: ''
+    file_list:
+    - path: app.h
+
+component:
+  - id: sl_main
+  - id: device_init
+  - id: clock_manager
+  - id: bluetooth_stack
+  - id: bluetooth_feature_legacy_advertiser
+  - id: bluetooth_feature_sm
+  - id: bluetooth_feature_system
+  - id: iostream_usart
+    instance: [vcom]
+  - id: simple_button
+    instance: [btn0]
+  - id: app_log
+  - id: services_bthome_v2
+    from: third_party_hw_drivers
+
+define:
+  - name: DEBUG_EFM
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 4.4.1
+
+readme:
+  - path: ../../../documentation/example/bthome_v2/README.md
+
+other_file:
+  - path: ../../../documentation/example/bthome_v2/image/app1.png
+    directory: "image"
+  - path: ../../../documentation/example/bthome_v2/image/app2.png
+    directory: "image"
+  - path: ../../../documentation/example/bthome_v2/image/connection.png
+    directory: "image"
+  - path: ../../../documentation/example/bthome_v2/image/create_project.png
+    directory: "image"
+  - path: ../../../documentation/example/bthome_v2/image/logo.png
+    directory: "image"
+  - path: ../../../documentation/example/bthome_v2/image/overview.png
+    directory: "image"
+
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: true

@@ -1,0 +1,31 @@
+id: services_modbus_usart_si91x
+package: third_party_hw_drivers
+label: Modbus (USART)
+description: >
+  A Modbus ASCII/RTU and Modbus TCP implementation as defined in the Modbus over serial line specification 1.0.
+category: Services
+quality: evaluation
+root_path: driver
+requires:
+  - name: services_modbus_core
+  - name: sl_usart
+config_file:
+  - path: thirdparty/freemodbus/include/mbconfig.h
+  - path: public/silabs/services_modbus/config/si91x/mb_port_config.h
+    file_id: modbus_config
+template_contribution:
+  - name: component_catalog
+    value: services_modbus
+provides:
+  - name: services_modbus
+    allow_multiple: false
+define:
+  - name: MODBUS_USART_MODULE
+include:
+  - path: public/silabs/services_modbus/inc
+    file_list:
+      - path: port.h
+source:
+  - path: public/silabs/services_modbus/src/portevent.c
+  - path: public/silabs/services_modbus/src/portserial_si91x.c
+  - path: public/silabs/services_modbus/src/porttimer_si91x.c

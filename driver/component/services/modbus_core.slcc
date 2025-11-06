@@ -1,0 +1,52 @@
+id: services_modbus_core
+package: third_party_hw_drivers
+label: Modbus Core Protocol Stack
+description: >
+  A Modbus ASCII/RTU and Modbus TCP implementation as defined in the Modbus over serial line specification 1.0.
+category: Services
+quality: evaluation
+metadata:
+  sbom:
+    license: BSD
+root_path: driver
+ui_hints:
+  visibility: never
+template_contribution:
+  - name: component_catalog
+    value: services_modbus_core
+provides:
+  - name: services_modbus_core
+    allow_multiple: false
+include:
+  - path: thirdparty/freemodbus/include
+    file_list:
+      - path: mb.h
+      - path: mbframe.h
+      - path: mbfunc.h
+      - path: mbport.h
+      - path: mbproto.h
+      - path: mbutils.h
+  - path: thirdparty/freemodbus/ascii
+    file_list:
+      - path: mbascii.h
+  - path: thirdparty/freemodbus/rtu
+    file_list:
+      - path: mbcrc.h
+      - path: mbrtu.h
+  - path: thirdparty/freemodbus/tcp
+    file_list:
+      - path: mbtcp.h
+source:
+  - path: thirdparty/freemodbus/mb.c
+  - path: thirdparty/freemodbus/functions/mbfunccoils.c
+  - path: thirdparty/freemodbus/functions/mbfuncdiag.c
+  - path: thirdparty/freemodbus/functions/mbfuncdisc.c
+  - path: thirdparty/freemodbus/functions/mbfuncfile.c
+  - path: thirdparty/freemodbus/functions/mbfuncholding.c
+  - path: thirdparty/freemodbus/functions/mbfuncinput.c
+  - path: thirdparty/freemodbus/functions/mbfuncother.c
+  - path: thirdparty/freemodbus/functions/mbutils.c
+  - path: thirdparty/freemodbus/ascii/mbascii.c
+  - path: thirdparty/freemodbus/rtu/mbcrc.c
+  - path: thirdparty/freemodbus/rtu/mbrtu.c
+  - path: thirdparty/freemodbus/tcp/mbtcp.c

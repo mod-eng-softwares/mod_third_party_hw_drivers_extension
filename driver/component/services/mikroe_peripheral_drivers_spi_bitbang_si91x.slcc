@@ -1,0 +1,31 @@
+id: services_mikroe_peripheral_drivers_spi_bitbang_si91x
+package: third_party_hw_drivers
+label: SPI - Bitbang driver for Si91x Soc
+description: >
+  Interface provider for mikroSDK 2.0 SDK SPI peripheral integration.
+category: Services|mikroSDK 2.0 SDK - Peripheral Drivers
+quality: evaluation
+root_path: driver/peripheral_drivers/mikroe
+config_file:
+  - path: config/si91x/bitbang/brd2708a/spi_bitbang_si91x_config.h
+    file_id: spi_bitbang_si91x_config
+    condition: [brd2708a]
+  - path: config/si91x/bitbang/other/spi_bitbang_si91x_config.h
+    file_id: spi_bitbang_si91x_config
+    unless: [brd2708a]
+requires:
+  - name: sl_gpio
+  - name: mikroe_peripheral_driver_digital_io
+provides:
+  - name: peripheral_driver_spi
+    allow_multiple: false
+template_contribution:
+  - name: component_catalog
+    value: services_mikroe_peripheral_drivers_spi_bitbang_si91x
+include:
+  - path: inc
+    file_list:
+      - path: drv_spi_master.h
+source:
+  - path: src/drv_spi_device_bitbang_si91x.c
+  - path: src/spi_master.c

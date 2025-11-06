@@ -1,8 +1,8 @@
 # Third Party Hardware Drivers #
 
-[![Version Badge](https://img.shields.io/badge/v4.4.0-green)](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/releases)
-[![SiSDK Badge](https://img.shields.io/badge/SiSDK-v2025.6.0-green)](https://github.com/SiliconLabs/simplicity_sdk/releases)
-[![WSDK Badge](https://img.shields.io/badge/WSDK-v3.5.0-green)](https://github.com/SiliconLabs/wiseconnect/releases)
+[![Version Badge](https://img.shields.io/badge/v4.4.1-green)](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/releases)
+[![SiSDK Badge](https://img.shields.io/badge/SiSDK-v2025.6.2-green)](https://github.com/SiliconLabs/simplicity_sdk/releases)
+[![WSDK Badge](https://img.shields.io/badge/WSDK-v3.5.2-green)](https://github.com/SiliconLabs/wiseconnect/releases)
 ![License badge](https://img.shields.io/badge/License-Zlib-green)
 
 This repo contains example drivers developed by Silicon Labs engineers and are provided as [an SDK extension](https://docs.silabs.com/simplicity-studio-5-users-guide/latest/ss-5-users-guide-getting-started/install-sdk-extensions). These drivers interface with different types of external hardware and are tested against a specific device listed in the driver name. These drivers are intended to be fully compatible with Silicon Labs' wireless stacks. All drivers provide a minimal Simplicity Studio project for testing and to show an example usage of the driver. The driver source is provided for modification and extension as needed. All drivers in this repository are considered to be EVALUATION QUALITY which implies that the code provided in the repos is subjected to limited testing and is provided provided as-is. It is not suitable for production environments.
@@ -140,6 +140,10 @@ A full list of all examples and drivers in this repository is defined below:
 | 109 | DRV8245P - DC Motor 29 Click (Mikroe) | [Example](./app/example/mikroe_dcmotor29_drv8245p) | [Documentation](./app/documentation/example/mikroe_dcmotor29_drv8245p) |
 | 110 | WS2812 - Addressable LED (Adafruit) | [Example](./app/example/adafruit_addressable_led_ws2812) | [Documentation](./app/documentation/example/adafruit_addressable_led_ws2812) |
 | 111 | VEML6035 - Ambient 11 Click (Mikroe) | [Example](./app/example/mikroe_ambient11_veml6035) | [Documentation](./app/documentation/example/mikroe_ambient11_veml6035) |
+| 112 | Modbus - RTU | [Example](./app/example/modbus_rtu) | [Documentation](./app/documentation/example/modbus_rtu) |
+| 113 | GD5F2G - Flash 8 Click (Mikroe) | [Example](./‎app/example/mikroe_flash8_gd5f2g) | [Documentation](‎./app/documentation/example/mikroe_flash8_gd5f2g) |
+| 114 | RM126X - LoRa AT command driver | [Example](./‎app/example/ezurio_lora_rm126x) | [Documentation](‎./app/documentation/example/ezurio_lora_rm126x) |
+
 
 ## Drivers ##
 
@@ -899,8 +903,16 @@ A full list of all examples and drivers in this repository is defined below:
                 </tr>
         <tr></tr>
         <tr>
+                    <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;Modbus</td>
+                    <td>
+                        <a href="./driver/public/silabs/services_modbus">Driver</a>
+                        </td>
+                </tr>
+        <tr></tr>
+        <tr>
                     <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;MIPI Display Bus Interface (SPI - 4Wire)</td>
                     <td>
+                        <a href="./driver/public/silabs/services_mipi_dbi">Driver</a>
                         </td>
                 </tr>
         <tr></tr>
@@ -1000,6 +1012,13 @@ A full list of all examples and drivers in this repository is defined below:
                         </td>
                 </tr>
         <tr></tr>
+                <tr>
+                    <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;GD5F2G - Flash 8 Click (Mikroe)</td>
+                    <td>
+                        <a href="‎./driver/public/mikroe/flash8_gd5f2g">Driver</a>
+                        </td>
+                </tr>
+        <tr></tr>
         <tr>
                 <td colspan="3" align="left"><b>Wireless Connectivity</b></td>
             </tr>
@@ -1061,6 +1080,13 @@ A full list of all examples and drivers in this repository is defined below:
                 </tr>
         <tr></tr>
         <tr>
+                    <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;RM126x - LoRa (Ezurio)</td>
+                    <td>
+                        <a href="./driver/public/silabs/ezurio_lora_rm126x">Driver</a>
+                        </td>
+                </tr>
+        <tr></tr>
+        <tr>
                     <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;RA-08 - LR 9 Click (Mikroe)</td>
                     <td>
                         <a href="./driver/public/mikroe/lr9_ra_08">Driver</a>
@@ -1074,8 +1100,8 @@ A full list of all examples and drivers in this repository is defined below:
 - Desired Silicon Labs Starter Kit
 - Driver specific test hardware
 - Simplicity Studio v5.11.0.0 or newer
-- Simplicity SDK 2025.6.0
-- WiSeConnect SDK 3.5.0
+- Simplicity SDK 2025.6.2
+- WiSeConnect SDK 3.5.2
 
 ## How to add to Simplicity Studio IDE ##
 

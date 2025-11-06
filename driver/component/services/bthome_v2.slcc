@@ -9,9 +9,21 @@ root_path: driver
 requires:
   - name: status
   - name: bluetooth_stack
+    condition: [device_efx]
   - name: bluetooth_feature_legacy_advertiser
+    condition: [device_efx]
   - name: bluetooth_feature_sm
+    condition: [device_efx]
   - name: bluetooth_feature_system
+    condition: [device_efx]
+  - name: ble
+    condition: [device_si91x]
+  - name: basic_credential_manager
+    condition: [device_si91x]
+  - name: freertos_heap_4
+    condition: [device_si91x]
+  - name: trustzone_unaware
+    condition: [device_si91x]
   - name: mbedtls_ccm
   - name: sl_string
 template_contribution:
@@ -20,9 +32,18 @@ template_contribution:
 provides:
   - name: services_bthome_v2
     allow_multiple: false
+config_file:
+  - path: public/silabs/bthome_v2/config/ble_config.h
+    file_id: ble_config
+    condition: [device_si91x]
 include:
   - path: public/silabs/bthome_v2/inc
     file_list:
       - path: bthome_v2.h
+      - path: ble.h
 source:
   - path: public/silabs/bthome_v2/src/bthome_v2.c
+  - path: public/silabs/bthome_v2/src/ble_efx.c
+    condition: [device_efx]
+  - path: public/silabs/bthome_v2/src/ble_si91x.c
+    condition: [device_si91x]

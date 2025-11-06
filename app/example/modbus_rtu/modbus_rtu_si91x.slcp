@@ -1,0 +1,56 @@
+project_name: modbus_rtu
+label: Third Party Hardware Drivers - Modbus - RTU
+description: |
+  This example project demonstrates Modbus RTU communication for serial data exchange
+  between client and server devices using the ULP UART module.
+category: Example|Platform
+quality: evaluation
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [32-bit MCU]
+  - name: Project Difficulty
+    value: [Beginner]
+
+source:
+  - path: app.c
+
+include:
+  - path: ''
+    file_list:
+    - path: app.h
+
+component:
+  - id: sl_main
+  - id: syscalls
+    from: wiseconnect3_sdk
+  - id: si91x_memory_default_config
+    from: wiseconnect3_sdk
+  - id: services_modbus_ulp_uart_si91x
+    from: third_party_hw_drivers
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 4.4.1
+  - id: wiseconnect3_sdk
+    version: 3.5.2
+
+readme:
+  - path: ../../documentation/example/modbus_rtu/README.md
+
+other_file:
+  - path: simple_async_client.py
+  - path: ../../documentation/example/modbus_rtu/image/create_example.png
+    directory: image
+  - path: ../../documentation/example/modbus_rtu/image/connection.png
+    directory: image
+
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: true
+
+post_build:
+  path: ../../../utilities/postbuild_profile/wiseconnect_soc.slpb

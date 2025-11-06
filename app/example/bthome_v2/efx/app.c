@@ -1,5 +1,5 @@
 /***************************************************************************//**
- * @file
+ * @file  app.c
  * @brief Core application logic.
  *******************************************************************************
  * # License
@@ -42,7 +42,7 @@
 
 #include "sl_simple_button_instances.h"
 
-static uint8_t name[] = "BGM220P";
+static uint8_t name[] = "EFx";
 static uint8_t key[] = "231d39c1d7cc1ab1aee224cd096db932";
 
 /**************************************************************************//**
@@ -76,8 +76,6 @@ void app_process_action(void)
  *****************************************************************************/
 void sl_bt_on_event(sl_bt_msg_t *evt)
 {
-  bthome_v2_bt_on_event(evt);
-
   switch (SL_BT_MSG_ID(evt->header)) {
     case sl_bt_evt_system_boot_id:
       bthome_v2_init(name, true, key, false);

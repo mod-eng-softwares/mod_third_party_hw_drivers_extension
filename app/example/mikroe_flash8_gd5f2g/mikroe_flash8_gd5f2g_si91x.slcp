@@ -1,0 +1,67 @@
+project_name: mikroe_flash8_gd5f2g
+package: platform
+label: Third Party Hardware Drivers - GD5F2G - Flash 8 Click (Mikroe)
+description: |
+  This example project shows an example for Flash 8 Click board driver integration using SPI communication.
+category: Example|Platform
+quality: evaluation
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [32-bit MCU]
+  - name: Project Difficulty
+    value: [Beginner]
+
+source:
+  - path: app.c
+  - path: spi_nand_example_si91x.c
+
+include:
+  - path: ''
+    file_list:
+    - path: app.h
+    - path: spi_nand_example.h
+
+component:
+  - id: sl_main
+  - id: app_assert
+  - id: syscalls
+    from: wiseconnect3_sdk
+  - id: si91x_memory_default_config
+    from: wiseconnect3_sdk
+  - id: sl_gspi
+    from: wiseconnect3_sdk
+  - id: sleeptimer
+  - id: services_mikroe_peripheral_drivers_spi_bitbang_si91x
+    from: third_party_hw_drivers
+  - id: mikroe_flash8_gd5f2g
+    from: third_party_hw_drivers
+
+define:
+  - name: DEBUG_EFM
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 4.4.1
+  - id: wiseconnect3_sdk
+    version: 3.5.2
+
+readme:
+  - path: ../../documentation/example/mikroe_flash8_gd5f2g/README.md
+
+other_file:
+  - path: ../../documentation/example/mikroe_flash8_gd5f2g/image/hardware_connection.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_flash8_gd5f2g/image/create_example.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_flash8_gd5f2g/image/memory_map.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_flash8_gd5f2g/image/result.png
+    directory: "image"
+
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: true

@@ -59,18 +59,30 @@ To test this application, you can either create a project based on an example pr
 
 ### Start with an empty example project ###
 
-1. Create a **Bluetooth - SoC Empty** project for your hardware using Simplicity Studio 5.
+- **If the BLE Explorer Kit is used:**
 
-2. Copy the file `app/example/bthome_v2/app.c` into the project root folder (overwriting the existing file).
+  1. Create a **Bluetooth - SoC Empty** project for your hardware using Simplicity Studio 5.
 
-3. Open the `.slcp` file, go to the **SOFTWARE COMPONENTS** tab and install the following components:
+  2. Copy the file `app/example/bthome_v2/efx/app.c` into the project root folder (overwriting the existing file).
 
-   - [Platform] → [Driver] → [Button] → [Simple Button] → default instance name: btn0
-   - [Third-Party Hardware Drivers] → [Services] → [BTHome v2]
+  3. Open the `.slcp` file, go to the **SOFTWARE COMPONENTS** tab and install the following components:
 
-   **Unistall the following components:**
-   - [Bluetooth] → [Application] → [Firmware Update] → [In-Place OTA DFU]
-   - [Platform] → [Bootloader] → [Utils] → [Bootloader Application Interface]
+    - [Platform] → [Driver] → [Button] → [Simple Button] → default instance name: btn0
+    - [Third-Party Hardware Drivers] → [Services] → [BTHome v2]
+
+    **Unistall the following components:**
+    - [Bluetooth] → [Application] → [Firmware Update] → [In-Place OTA DFU]
+    - [Platform] → [Bootloader] → [Utils] → [Bootloader Application Interface]
+
+- **If the Wi-Fi Development Kit is used:**
+
+  1. Create a **SL Si91x - Empty C Project SoC** project for your hardware using Simplicity Studio 5.
+
+  2. Copy the file `app/example/bthome_v2/si91x/app.c` into the project root folder (overwriting the existing file).
+
+  3. Open the `.slcp` file, go to the **SOFTWARE COMPONENTS** tab and install the following components:
+
+    - [Third-Party Hardware Drivers] → [Services] → [BTHome v2]
 
 4. Build and flash the project to your device.
 

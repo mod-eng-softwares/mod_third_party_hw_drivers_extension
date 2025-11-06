@@ -1,0 +1,35 @@
+id: ezurio_lora_rm126x
+package: third_party_hw_drivers
+label: RM126x - LoRa (Ezurio)
+description: >
+  Driver for the RM126x Ezurio LoRa module
+category: Wireless Connectivity
+quality: evaluation
+ui_hints:
+  visibility: basic
+root_path: driver
+
+requires:
+  - name: iostream_transport
+  - name: sleeptimer 
+
+config_file:
+  - path: public/silabs/ezurio_lora_rm126x/config/brd4186c/lora_rm126x_config.h
+    file_id: lora_rm126x_config
+    condition: [brd4186c]
+  - path: public/silabs/ezurio_lora_rm126x/config/other/lora_rm126x_config.h
+    file_id: lora_rm126x_config
+    unless: [brd4186c]
+
+provides:
+  - name: ezurio_lora
+    allow_multiple: false
+template_contribution:
+  - name: component_catalog
+    value: ezurio_lora
+include:
+  - path: public/silabs/ezurio_lora_rm126x/inc
+    file_list:
+      - path: lora_rm126x.h
+source:
+  - path: public/silabs/ezurio_lora_rm126x/src/lora_rm126x.c

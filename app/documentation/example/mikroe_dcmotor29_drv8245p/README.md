@@ -64,9 +64,9 @@ The tables below provide an overview of the pin connections.
 | --- | --- | --- | --- | --- |
 | I2C_SDA | ULP_GPIO_6 [EXP_16] | ULP_GPIO_6 [P16] | ↔ | SDA |
 | I2C_SCL | ULP_GPIO_7 [EXP_15] | ULP_GPIO_7 [P15] | ↔ | SCL |
-| RTE_GSPI_MASTER_CLK_PIN  | GPIO_25 [P25] | GPIO_25 [P3] | ↔ | SCK |
-| RTE_GSPI_MASTER_MISO_PIN | GPIO_26 [P27] | GPIO_26 [P5] | ↔ | SDO |
-| RTE_GSPI_MASTER_MOSI_PIN | GPIO_27 [P29] | GPIO_27 [P7] | ↔ | SDI |
+| SSI_MASTER_CLK_PIN  | GPIO_25 [P25] | GPIO_25 [P3] | ↔ | SCK |
+| SSI_MASTER_MOSI_PIN | GPIO_26 [P27] | GPIO_26 [P5] | ↔ | SDI |
+| SSI_MASTER_MISO_PIN | GPIO_27 [P29] | GPIO_27 [P7] | ↔ | SDO |
 | CS                       | GPIO_49 [P30] | GPIO_6 [P21] | ↔ | CS  |
 | Load Analog Feedback     | ULP_GPIO_1 [P16] | ULP_GPIO_1 [P4] | ↔ | IP  |
 | Reset / ID SEL           | GPIO_46 [P24]    | GPIO_10 [P23]   | ↔ | RST |

@@ -1,0 +1,50 @@
+id: services_modbus
+package: third_party_hw_drivers
+label: Modbus
+description: >
+  A Modbus ASCII/RTU and Modbus TCP implementation as defined in the Modbus over serial line specification 1.0.
+category: Services
+quality: evaluation
+root_path: driver
+requires:
+  - name: services_modbus_core
+  - name: emlib_timer
+    condition:
+      - device_efx
+  - name: emlib_usart
+    condition:
+      - device_efx
+  - name: emlib_gpio
+    condition:
+      - device_efx
+  - name: sl_usart
+    condition:
+      - device_si91x
+config_file:
+  - path: thirdparty/freemodbus/include/mbconfig.h
+  - path: public/silabs/services_modbus/config/efx/mb_port_config.h
+    file_id: modbus_config
+    condition: [device_efx]
+  - path: public/silabs/services_modbus/config/si91x/mb_port_config.h
+    file_id: modbus_config
+    condition: [device_si91x]
+template_contribution:
+  - name: component_catalog
+    value: services_modbus
+provides:
+  - name: services_modbus
+    allow_multiple: false
+include:
+  - path: public/silabs/services_modbus/inc
+    file_list:
+      - path: port.h
+source:
+  - path: public/silabs/services_modbus/src/portevent.c
+  - path: public/silabs/services_modbus/src/portserial_efx.c
+    condition: [device_efx]
+  - path: public/silabs/services_modbus/src/porttimer_efx.c
+    condition: [device_efx]
+  - path: public/silabs/services_modbus/src/portserial_si91x.c
+    condition: [device_si91x]
+  - path: public/silabs/services_modbus/src/porttimer_si91x.c
+    condition: [device_si91x]

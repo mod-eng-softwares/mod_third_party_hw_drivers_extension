@@ -56,9 +56,9 @@ The tables below provide an overview of the pin connections.
 
 | Description | BRD4338A + BRD4002A | BRD2605A | ↔ | Thunder Click |
 | --- | --- | --- | --- | --- |
-| RTE_GSPI_MASTER_CLK_PIN  | GPIO_25 [P25] | GPIO_25 [P3] | ↔ | SCK |
-| RTE_GSPI_MASTER_MISO_PIN | GPIO_26 [P27] | GPIO_26 [P5] | ↔ | SDO |
-| RTE_GSPI_MASTER_MOSI_PIN | GPIO_27 [P29] | GPIO_27 [P7] | ↔ | SDI |
+| SSI_MASTER_CLK_PIN  | GPIO_25 [P25] | GPIO_25 [P3] | ↔ | SCK |
+| SSI_MASTER_MOSI_PIN | GPIO_26 [P27] | GPIO_26 [P5] | ↔ | SDI |
+| SSI_MASTER_MISO_PIN | GPIO_27 [P29] | GPIO_27 [P7] | ↔ | SDO |
 | CS                       | GPIO_47 [P26] | GPIO_11 [P22] | ↔ | CS  |
 | Interrupt                | GPIO_46 [P24] | GPIO_10 [P23] | ↔ | INT |
 

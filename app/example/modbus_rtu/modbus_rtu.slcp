@@ -1,0 +1,47 @@
+project_name: modbus_rtu
+label: Third Party Hardware Drivers - Modbus - RTU
+description: |
+  This example project demonstrates Modbus RTU communication for serial data exchange
+  between client and server devices using Silicon Labs platform.
+category: Example|Platform
+quality: evaluation
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [32-bit MCU]
+  - name: Project Difficulty
+    value: [Beginner]
+
+source:
+  - path: app.c
+
+include:
+  - path: ''
+    file_list:
+    - path: app.h
+
+component:
+  - id: sl_main
+  - id: device_init
+  - id: clock_manager
+  - id: services_modbus
+    from: third_party_hw_drivers
+
+define:
+  - name: DEBUG_EFM
+
+readme:
+  - path: ../../documentation/example/modbus_rtu/README.md
+
+other_file:
+  - path: simple_async_client.py
+  - path: ../../documentation/example/modbus_rtu/image/create_example.png
+    directory: image
+  - path: ../../documentation/example/modbus_rtu/image/connection.png
+    directory: image
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 4.4.1

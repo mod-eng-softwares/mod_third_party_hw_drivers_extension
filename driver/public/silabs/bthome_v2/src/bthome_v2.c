@@ -1,5 +1,5 @@
 /***************************************************************************//**
- * @file bthome_v2.h
+ * @file bthome_v2.c
  * @brief BTHome v2.
  * @version 1.0.0
  *******************************************************************************
@@ -37,9 +37,10 @@
  *
  ******************************************************************************/
 #include <stdlib.h>
+#include <string.h>
 #include <sl_string.h>
-#include "sl_bt_api.h"
 #include "bthome_v2.h"
+#include "ble.h"
 #include "mbedtls/ccm.h"
 
 /**
@@ -58,16 +59,12 @@ static uint8_t *dev_name;
 static bool b_encrypt_enable;
 static bool b_trigger_device;
 static bool b_sort_enable;
-
 static uint8_t last_object_id;
 
 // The CCM context for encrypt
 static mbedtls_ccm_context encrypt_ctx;
 
 static uint32_t encrypt_count;
-
-// The advertising set handle allocated from Bluetooth stack.
-static uint8_t advertising_set_handle = 0xff;
 static bool is_advertising = false;
 
 // -----------------------------------------------------------------------------
@@ -106,7 +103,7 @@ sl_status_t bthome_v2_init(uint8_t *device_name,
     if (!sl_str_is_empty((const char *)key)) {
       // Parse key to 128 bit length format
       for (uint8_t i = 0; i < BIND_KEY_LEN; i++) {
-        memcpy(octet, (uint8_t *)&key[2 * i], 2);
+        memcpy(octet, (const uint8_t *)&key[2 * i], 2);
         bind_key.data[i] = (uint8_t)strtol(octet, NULL, BIND_KEY_LEN);
       }
 
@@ -132,7 +129,7 @@ sl_status_t bthome_v2_init(uint8_t *device_name,
   b_trigger_device = trigger_based_device;
   bthome_v2_reset_measurement();
 
-  return sc;
+  return ble_init();
 }
 
 /***************************************************************************//**
@@ -155,8 +152,7 @@ sl_status_t bthome_v2_set_device_name(uint8_t *device_name)
  ******************************************************************************/
 void bthome_v2_build_packet(void)
 {
-  bd_addr address;
-  uint8_t address_type;
+  uint8_t address[6];
   // dev_name length
   uint8_t dn_length;
   uint8_t dn_flag = COMPLETE_NAME;
@@ -230,16 +226,16 @@ void bthome_v2_build_packet(void)
       service_data[service_count++] = ENCRYPT;
     }
 
-    // Extract unique ID from BT Address.
-    sl_bt_system_get_identity_address(&address, &address_type);
+    // Bluetooth address in reverse byte order.
+    ble_get_address(address);
 
     // MAC
-    nonce[0] = address.addr[5];
-    nonce[1] = address.addr[4];
-    nonce[2] = address.addr[3];
-    nonce[3] = address.addr[2];
-    nonce[4] = address.addr[1];
-    nonce[5] = address.addr[0];
+    nonce[0] = address[5];
+    nonce[1] = address[4];
+    nonce[2] = address[3];
+    nonce[3] = address[2];
+    nonce[4] = address[1];
+    nonce[5] = address[0];
     // UUID
     nonce[6] = UUID1;
     nonce[7] = UUID2;
@@ -299,10 +295,7 @@ void bthome_v2_build_packet(void)
     payload_data[payload_count++] = service_data[i];
   }
   // Add to advertise packet
-  sl_bt_legacy_advertiser_set_data(advertising_set_handle,
-                                   sl_bt_advertiser_advertising_data_packet,
-                                   sizeof(payload_data),
-                                   payload_data);
+  ble_advertise_set_data(payload_data, sizeof(payload_data));
 }
 
 /***************************************************************************//**
@@ -430,15 +423,8 @@ void bthome_v2_add_measurement_float(uint8_t sensor_id, float value)
  ******************************************************************************/
 sl_status_t bthome_v2_start(void)
 {
-  sl_status_t sc = SL_STATUS_OK;
-
-  if (!is_advertising) {
-    // Start advertising
-    sc = sl_bt_legacy_advertiser_start(advertising_set_handle,
-                                       sl_bt_legacy_advertiser_non_connectable);
-    is_advertising = true;
-  }
-  return sc;
+  is_advertising = true;
+  return ble_advertise_start();
 }
 
 /***************************************************************************//**
@@ -446,13 +432,8 @@ sl_status_t bthome_v2_start(void)
  ******************************************************************************/
 sl_status_t bthome_v2_stop(void)
 {
-  sl_status_t sc;
-
-  // Start advertising
-  sc = sl_bt_advertiser_stop(advertising_set_handle);
   is_advertising = false;
-
-  return sc;
+  return ble_advertise_stop();
 }
 
 /***************************************************************************//**
@@ -461,51 +442,6 @@ sl_status_t bthome_v2_stop(void)
 bool bthome_v2_is_advertising()
 {
   return is_advertising;
-}
-
-/***************************************************************************//**
- *  Bluetooth stack event handler.
- ******************************************************************************/
-void bthome_v2_bt_on_event(sl_bt_msg_t *evt)
-{
-  switch (SL_BT_MSG_ID(evt->header))
-  {
-    // -------------------------------
-    // This event indicates the device has started and the radio is ready.
-    // Do not call any stack command before receiving this boot event!
-    case sl_bt_evt_system_boot_id:
-      // Check if advertising set is invalid
-      if (advertising_set_handle == 0xff) {
-        sl_bt_advertiser_create_set(&advertising_set_handle);
-
-        // Set advertising interval to 100ms.
-        sl_bt_advertiser_set_timing(
-          advertising_set_handle,
-          160, // min. adv. interval (milliseconds * 1.6)
-          160, // max. adv. interval (milliseconds * 1.6)
-          0,   // adv. duration
-          0);  // max. num. adv. events
-      }
-      break;
-
-    // -------------------------------
-    // This event indicates that a new connection was opened.
-    case sl_bt_evt_connection_opened_id:
-      if (bthome_v2_is_advertising()) {
-        bthome_v2_stop();
-      }
-      break;
-
-    // -------------------------------
-    // This event indicates that a connection was closed.
-    case sl_bt_evt_connection_closed_id:
-      if (!bthome_v2_is_advertising()) {
-        sl_bt_legacy_advertiser_generate_data(advertising_set_handle,
-                                              sl_bt_advertiser_general_discoverable);
-        bthome_v2_start();
-      }
-      break;
-  }
 }
 
 // -----------------------------------------------------------------------------

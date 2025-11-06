@@ -1,0 +1,25 @@
+id: nand_spi
+package: third_party_hw_drivers
+label: NAND flash driver - SPI
+description: >
+  NAND flash driver - SPI.
+category: Services
+quality: evaluation
+#ui_hints:
+#  visibility: never
+root_path: driver
+requires:
+  - name: status
+  - name: sleeptimer
+  - name: peripheral_driver_spi
+provides:
+  - name: nand_spi
+template_contribution:
+  - name: component_catalog
+    value: nand_spi
+include:
+  - path: public/silabs/nand_spi/inc
+    file_list:
+      - path: nand_spi.h
+source:
+  - path: public/silabs/nand_spi/src/nand_spi.c

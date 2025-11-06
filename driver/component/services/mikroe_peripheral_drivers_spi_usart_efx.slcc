@@ -1,0 +1,40 @@
+id: services_mikroe_peripheral_drivers_spi_usart_efx
+package: third_party_hw_drivers
+label: SPI USART driver for Gecko Soc
+description: >
+  Interface provider for mikroSDK 2.0 SDK SPI peripheral integration.
+category: Services|mikroSDK 2.0 SDK - Peripheral Drivers
+quality: evaluation
+root_path: driver/peripheral_drivers/mikroe
+config_file:
+  - path: config/efx/usart/brd2703a/spi_usart_efx_config.h
+    file_id: spi_usart_efx_config
+    condition: [brd2703a]
+  - path: config/efx/usart/brd2710a/spi_usart_efx_config.h
+    file_id: spi_usart_efx_config
+    condition: [brd2710a]
+  - path: config/efx/usart/brd4108a/spi_usart_efx_config.h
+    file_id: spi_usart_efx_config
+    condition: [brd4108a]
+  - path: config/efx/usart/brd4314a/spi_usart_efx_config.h
+    file_id: spi_usart_efx_config
+    condition: [brd4314a]
+  - path: config/efx/usart/other/spi_usart_efx_config.h
+    file_id: spi_usart_efx_config
+    unless: [brd4314a, brd4108a, brd2703a, brd2710a]
+requires:
+  - name: emlib_usart
+  - name: mikroe_peripheral_driver_digital_io
+provides:
+  - name: peripheral_driver_spi
+    allow_multiple: false
+template_contribution:
+  - name: component_catalog
+    value: services_mikroe_peripheral_drivers_spi_usart_efx
+include:
+  - path: inc
+    file_list:
+      - path: drv_spi_master.h
+source:
+  - path: src/drv_spi_device_usart_efx.c
+  - path: src/spi_master.c

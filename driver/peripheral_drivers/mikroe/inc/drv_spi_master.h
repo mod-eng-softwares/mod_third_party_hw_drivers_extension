@@ -49,7 +49,7 @@ extern "C" {
 #include <string.h>
 #include "drv_name.h"
 
-typedef const void *mikroe_spi_handle_t; ///< Created SPI handle type
+typedef void *mikroe_spi_handle_t; ///< Created SPI handle type
 
 typedef enum {
   SPI_MASTER_SUCCESS = 0, SPI_MASTER_ERROR = (-1)
@@ -80,17 +80,65 @@ typedef enum {
 
 typedef struct {
   uint8_t default_write_data;
+  pin_name_t cs;
   pin_name_t sck;
   pin_name_t miso;
   pin_name_t mosi;
   uint32_t speed;
+  spi_master_cs_mode_t cs_mode;
   spi_master_mode_t mode;
+  void *spi_instance;
 } spi_master_config_t;
 
 typedef struct {
   mikroe_spi_handle_t handle;
   spi_master_config_t config;
 } spi_master_t;
+
+/**
+ * @brief SPI buffer structure
+ *
+ * A SPI buffer describes either a real data buffer or an indication of NOP
+ * For a NOP indicator:
+ *   If buffer is used for TX, only 0's will be sent for the length on the bus
+ *   If buffer is used for RX, that length of data received by bus will be ignored/skipped
+ */
+struct spi_buf {
+  /** Valid pointer to a data buffer, or NULL for NOP indication */
+  void *buf;
+  /** Length of the buffer @a buf in bytes, or length of NOP */
+  size_t len;
+};
+
+/**
+ * @brief SPI scatter-gather buffer array structure
+ *
+ * A spi_buf_set is a flexible description of a whole single SPI bus transfer.
+ *
+ * Since the set is an array of pointers to buffers, it means that pieces of a spi transfer
+ * definition can be re-used across different transfers, without having to redefine or allocate
+ * new memory for them each time.
+ * This accomplishes what is called "scatter-gather" buffer management at the driver level with
+ * user-provided buffers.
+ */
+struct spi_buf_set {
+  /** Pointer to an array of spi_buf, or NULL */
+  const struct spi_buf *buffers;
+  /** Number of buffers in the array pointed to: by @a buffers */
+  size_t count;
+};
+
+err_t spi_device_open(spi_master_t *obj, spi_master_config_t *config);
+err_t spi_device_set_speed(spi_master_t *obj, uint32_t speed);
+void spi_device_set_chip_select_polarity(
+  spi_master_chip_select_polarity_t polarity);
+void spi_device_select_device(pin_name_t chip_select);
+void spi_device_deselect_device(pin_name_t chip_select);
+err_t spi_device_cs_control(spi_master_t *obj, bool on);
+err_t spi_device_configure(spi_master_t *obj);
+err_t spi_device_transceive(spi_master_t *obj,
+                            const struct spi_buf *tx_buffers,
+                            const struct spi_buf *rx_buffers);
 
 void spi_master_configure_default(spi_master_config_t *config);
 err_t spi_master_open(spi_master_t *obj, spi_master_config_t *config);
@@ -106,6 +154,9 @@ err_t spi_master_set_cs_mode(spi_master_cs_mode_t cs);
 err_t spi_master_write(spi_master_t *obj,
                        uint8_t *write_data_buffer,
                        size_t write_data_length);
+err_t spi_master_transceive(spi_master_t *obj,
+                            const struct spi_buf_set *tx_bufs,
+                            const struct spi_buf_set *rx_bufs);
 err_t spi_master_read(spi_master_t *obj,
                       uint8_t *read_data_buffer,
                       size_t read_data_length);

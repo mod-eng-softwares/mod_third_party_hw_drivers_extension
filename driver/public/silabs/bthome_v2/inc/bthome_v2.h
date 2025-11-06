@@ -308,14 +308,4 @@ sl_status_t bthome_v2_stop(void);
  ******************************************************************************/
 bool bthome_v2_is_advertising();
 
-/***************************************************************************//**
- * @brief
- *    Bluetooth stack event handler.
- *    This function shall be called from the
- *    void sl_bt_on_event(sl_bt_msg_t *evt) function to handle BLE events.
- *
- * @param[in] evt Event coming from the Bluetooth stack.
- ******************************************************************************/
-void bthome_v2_bt_on_event(sl_bt_msg_t *evt);
-
 #endif /* BTHOME_V2_H_ */
