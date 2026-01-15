@@ -1,5 +1,14 @@
 # AC Current Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Circuit%20Breakers-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Circuit%20Breakers)
+[![Type badge](https://img.shields.io/badge/EV%20Charging%20Stations-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=EV%20Charging%20Stations)
+![Type badge](https://img.shields.io/badge/Electric%20Submetering-salmon)
+[![Type badge](https://img.shields.io/badge/Factory%20Automation-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Factory%20Automation)
+[![Type badge](https://img.shields.io/badge/Process%20Automation-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Process%20Automation)
+[![Type badge](https://img.shields.io/badge/Sensors-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Sensors)
+[![Type badge](https://img.shields.io/badge/Smart%20Metering-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Smart%20Metering)
+[![Type badge](https://img.shields.io/badge/Smart%20Polar%20PV%20Systems-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Smart%20Polar%20PV%20Systems)
+
 ## Summary ##
 
 This project aims to show the hardware driver that is used to interface with the AC Current driver with the Silicon Labs Platform.

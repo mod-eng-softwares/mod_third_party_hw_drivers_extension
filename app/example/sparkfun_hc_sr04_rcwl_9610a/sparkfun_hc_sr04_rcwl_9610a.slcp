@@ -1,0 +1,65 @@
+project_name: sparkfun_hc_sr04_rcwl_9610a
+package: platform
+label: Third Party Hardware Drivers - HC-SR04 (RCWL-9610A design)
+description: |
+  This example project shows an example for HC-SR04 (RCWL-9610A design) driver integration.
+category: Example|Platform
+quality: evaluation
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [32-bit MCU]
+  - name: Project Difficulty
+    value: [Beginner]
+
+source:
+  - path: app.c
+
+include:
+  - path: ''
+    file_list:
+    - path: app.h
+
+component:
+  - id: sl_main
+  - id: device_init
+  - id: clock_manager
+  - id: iostream_eusart
+    instance: [vcom]
+  - id: iostream_usart
+    instance: [mikroe]
+  - id: app_log
+  - id: sleeptimer
+  - id: i2cspm
+    instance: [mikroe]
+  - id: simple_button
+    instance: [btn0]
+  - id: sparkfun_hc_sr04_rcwl_9610a
+    from: third_party_hw_drivers
+
+toolchain_settings:
+  - option: gcc_linker_option
+    value: "-u _printf_float"
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 4.4.1
+
+define:
+  - name: DEBUG_EFM
+
+other_file:
+  - path: ../../documentation/example/sparkfun_hc_sr04_rcwl_9610a/image/result.png
+    directory: "image"
+  - path: ../../documentation/example/sparkfun_hc_sr04_rcwl_9610a/image/create_proj.png
+    directory: "image"
+
+readme:
+  - path: ../../documentation/example/sparkfun_hc_sr04_rcwl_9610a/README.md
+
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: true

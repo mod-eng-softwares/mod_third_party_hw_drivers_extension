@@ -1,5 +1,8 @@
 # W5500 - ETH WIZ Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/IoT%20Gateways-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=IoT%20Gateways)
+[![Type badge](https://img.shields.io/badge/WiFi%20Access%20Points-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Wi--Fi%20Access%20Points)
+
 ## Summary ##
 
 This project aims to implement a hardware driver for the W5500 ethernet controller that is integrated on the ETH Wiz click board. The W5500 chip is a Hardwired TCP/IP embedded Ethernet controller that enables easier internet connection for embedded systems using SPI (Serial Peripheral Interface).

@@ -1,5 +1,7 @@
 # RA-08 - LR 9 Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/IoT%20Gateways-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=IoT%20Gateways)
+
 ## Summary ##
 
 This example project shows an example of Mikroe LR 9 Click board driver integration with the Silicon Labs Platform.

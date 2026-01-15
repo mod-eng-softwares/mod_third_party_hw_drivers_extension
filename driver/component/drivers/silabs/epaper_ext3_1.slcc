@@ -9,10 +9,7 @@ ui_hints:
   visibility: basic
 root_path: driver
 requires:
-  - name: spidrv_core
-    condition:
-      - device_efx # Enable for gecko device
-  - name: udelay
+  - name: emlib_usart
     condition:
       - device_efx # Enable for gecko device
   - name: mikroe_peripheral_driver_digital_io
@@ -29,6 +26,7 @@ requires:
     condition:
       - device_si91x
   - name: sleeptimer
+  - name: udelay
 config_file:
   - path: public/silabs/epaper_ext3_1/config/brd2703a/epaper_display_config.h
     file_id: epaper_display_config
@@ -51,9 +49,12 @@ config_file:
   - path: public/silabs/epaper_ext3_1/config/brd4338a/epaper_display_config.h
     file_id: epaper_display_config
     condition: [brd4338a]
+  - path: public/silabs/epaper_ext3_1/config/brd2704a/epaper_display_config.h
+    file_id: epaper_display_config
+    condition: [brd2704a]
   - path: public/silabs/epaper_ext3_1/config/other/epaper_display_config.h
     file_id: epaper_display_config
-    unless: [brd4314a, brd2703a, brd2605a, brd4338a, brd4108a, brd2710a, brd2708a]
+    unless: [brd4314a, brd2703a, brd2605a, brd4338a, brd4108a, brd2710a, brd2708a, brd2704a]
 template_contribution:
   - name: component_catalog
     value: epaper_ext3_1
@@ -65,11 +66,10 @@ include:
       - path: epaper_display.h
       - path: oled_display.h
 source:
-  - path: public/silabs/epaper_ext3_1/src/epaper_display_gecko.c
+  - path: public/silabs/epaper_ext3_1/src/epaper_display_efx.c
     condition:
       - device_efx # Enable for gecko device
   - path: public/silabs/epaper_ext3_1/src/epaper_display_si91x.c
     condition:
       - device_si91x
-  - path: public/silabs/epaper_ext3_1/src/epaper_display.c
   - path: public/silabs/epaper_ext3_1/src/oled_display.c

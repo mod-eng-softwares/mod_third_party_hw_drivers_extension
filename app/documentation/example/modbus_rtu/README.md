@@ -73,7 +73,7 @@ You can either create a project from an existing example or start with an empty 
      - [Third Party Hardware Drivers] → [Services] → [Modbus] → use the default configuration
 
    - **If the Wi-Fi Development Kit is used:**
-     - [Third Party Hardware Drivers] → [Services] → [Modbus (ULP UART)] → use the default configuration
+     - [Third Party Hardware Drivers] → [Services] → [Modbus: Si91x ULP UART] → use the default configuration
 
 4. Build and flash this example to the board.
 

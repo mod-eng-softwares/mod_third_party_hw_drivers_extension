@@ -1,5 +1,7 @@
 # SCD41 & SPS30 - HVAC Click Bundle (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Smart%20HVAC-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Smart%20HVAC)
+
 ## Summary ##
 
 This project aims to show the hardware driver that is used to interface with the HVAC Bunble Click including SCD41 carbon dioxide sensor and SPS30 optical particle sensor using Silicon Labs platform.

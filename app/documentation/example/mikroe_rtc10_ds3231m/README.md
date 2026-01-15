@@ -1,5 +1,7 @@
 # DS3231M - RTC 10 Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Appliances-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Appliances)
+
 ## Summary ##
 
 This example project shows an example of Mikroe RTC 10 Click board driver integration with the Silicon Labs Platform.

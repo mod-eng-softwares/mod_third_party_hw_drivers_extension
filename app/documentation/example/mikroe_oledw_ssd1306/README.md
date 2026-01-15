@@ -1,5 +1,7 @@
 # SSD1306 - Mikroe OLEDW Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Human%20Machine%20Interface-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Human%20Machine%20Interface)
+
 ## Summary ##
 
 This project shows the driver implementation of a SPI OLED using the SSD1306 IC with Silicon Labs Platform.

@@ -1,5 +1,12 @@
 # E-Paper EXT3-1 #
 
+[![Type badge](https://img.shields.io/badge/Battery%20Powered%20Tools-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Battery%20Powered%20Tools)
+[![Type badge](https://img.shields.io/badge/Electronic%20Shelf%20Labels-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Electronic%20Shelf%20Labels)
+[![Type badge](https://img.shields.io/badge/Human%20Machine%20Interface-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Human%20Machine%20Interface)
+[![Type badge](https://img.shields.io/badge/Industrial%20Wearables-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Industrial%20Wearables)
+[![Type badge](https://img.shields.io/badge/Portable%20Medical%20Devices-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Portable%20Medical%20Devices)
+[![Type badge](https://img.shields.io/badge/Smart%20Wearable%20Devices-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Smart%20Wearable%20Devices)
+
 ## Summary ##
 
 Electronic paper (E-Paper) or intelligent paper, is a display device that reflects ambient light, mimicking the appearance of ordinary ink on paper. EPD Extension Kit Generation 3 (EXT3 Kit) is a new extension board that connects to E-Paper Display (EPD).

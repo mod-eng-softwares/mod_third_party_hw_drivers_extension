@@ -1,5 +1,7 @@
 # HXD8357D - TFT LCD with Touchscreen (Adafruit) #
 
+[![Type badge](https://img.shields.io/badge/Human%20Machine%20Interface-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Human%20Machine%20Interface)
+
 ## Summary ##
 
 This project aims to demonstrate how to integrate the HXD8357D TFT Display into your application using the HXD8357D TFT driver.

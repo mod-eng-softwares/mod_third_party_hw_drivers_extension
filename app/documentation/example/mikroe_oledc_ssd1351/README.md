@@ -1,5 +1,7 @@
 # SSD1351 - OLED C Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Human%20Machine%20Interface-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Human%20Machine%20Interface)
+
 ## Summary ##
 
 This project shows the driver implementation of an SPI OLED using the SSD1351 IC with Silicon Labs Platform.

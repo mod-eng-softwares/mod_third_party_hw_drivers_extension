@@ -1,0 +1,24 @@
+id: sparkfun_hc_sr04_rcwl_9610a
+package: third_party_hw_drivers
+label: HC-SR04 (RCWL-9610A design) - Ultrasonic Distance Measurement Sensor (SparkFun)
+description: >
+  Driver for the HC-SR04 (RCWL-9610A design) Ultrasonic Distance Measurement Sensor.
+category: Sensors
+quality: evaluation
+root_path: driver
+requires:
+  - name: status
+  - name: mikroe_peripheral_driver_i2c
+  - name: mikroe_peripheral_driver_uart
+template_contribution:
+  - name: component_catalog
+    value: sparkfun_hc_sr04_rcwl_9610a
+provides:
+  - name: sparkfun_hc_sr04_rcwl_9610a
+    allow_multiple: false
+include:
+  - path: public/silabs/hc_sr04_rcwl_9610a/inc
+    file_list:
+      - path: sparkfun_hc_sr04_rcwl_9610a.h
+source:
+  - path: public/silabs/hc_sr04_rcwl_9610a/src/sparkfun_hc_sr04_rcwl_9610a.c

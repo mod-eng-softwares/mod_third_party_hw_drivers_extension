@@ -1,5 +1,10 @@
 # BG96 - LTE IoT 2 Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Connected%20Outdoor-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Connected%20Outdoor)
+[![Type badge](https://img.shields.io/badge/IoT%20Gateways-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=IoT%20Gateways)
+[![Type badge](https://img.shields.io/badge/Smart%20Agriculture-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Smart%20Agriculture)
+[![Type badge](https://img.shields.io/badge/WiFi%20Access%20Points-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Wi--Fi%20Access%20Points)
+
 ## Summary ##
 
 This project shows the implementation of an LTE IoT 2 Click driver using Quectel BG96 LTE module from Mikroe Integrated with Silicon Labs platform based on UART communication.

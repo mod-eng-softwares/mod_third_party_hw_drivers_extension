@@ -1,5 +1,7 @@
 # BME280 & CCS811 - Environmental Sensor Combo Breakout #
 
+[![Type badge](https://img.shields.io/badge/Connected%20Outdoor-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Connected%20Outdoor)
+
 ## Summary ##
 
 This example project shows an example for environmental parameter collection with Sparkfun BME280 - CCS811 Environmental Sensor Combo Breakout Board driver integration with the Silicon Labs Platform.

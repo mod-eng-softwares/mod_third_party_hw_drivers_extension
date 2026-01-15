@@ -45,3 +45,8 @@ other_file:
 sdk_extension:
   - id: third_party_hw_drivers
     version: 4.4.1
+
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: true

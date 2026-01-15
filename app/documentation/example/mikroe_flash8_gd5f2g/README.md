@@ -1,5 +1,7 @@
 # GD5F2G - Flash 8 Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Appliances-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Appliances)
+
 ## Summary ##
 
 This project aims to implement a hardware driver interacting with the Mikroe Flash 8 Click board.

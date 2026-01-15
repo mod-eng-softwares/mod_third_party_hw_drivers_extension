@@ -51,43 +51,11 @@ extern "C" {
 
 // A CMSIS annotation block starts with the following line:
 // <<< Use Configuration Wizard in Context Menu >>>
-// <h> SPIDRV settings
+// <h> SPI setting
 
 // <o SPI_EPD_BITRATE> SPI bitrate
-// <i> Default: 1000000
+// <i> Default: 8000000
 #define SPI_EPD_BITRATE           8000000
-
-// <o SPI_EPD_FRAME_LENGTH> SPI frame length <4-16>
-// <i> Default: 8
-#define SPI_EPD_FRAME_LENGTH      8
-
-// <o SPI_EPD_TYPE> SPI mode
-// <spidrvMaster=> Master
-// <spidrvSlave=> Slave
-#define SPI_EPD_TYPE              spidrvMaster
-
-// <o SPI_EPD_BIT_ORDER> Bit order on the SPI bus
-// <spidrvBitOrderLsbFirst=> LSB transmitted first
-// <spidrvBitOrderMsbFirst=> MSB transmitted first
-#define SPI_EPD_BIT_ORDER         spidrvBitOrderMsbFirst
-
-// <o SPI_EPD_CLOCK_MODE> SPI clock mode
-// <spidrvClockMode0=> SPI mode 0: CLKPOL=0, CLKPHA=0
-// <spidrvClockMode1=> SPI mode 1: CLKPOL=0, CLKPHA=1
-// <spidrvClockMode2=> SPI mode 2: CLKPOL=1, CLKPHA=0
-// <spidrvClockMode3=> SPI mode 3: CLKPOL=1, CLKPHA=1
-#define SPI_EPD_CLOCK_MODE        spidrvClockMode0
-
-// <o SPI_EPD_CS_CONTROL> SPI master chip select (CS) control scheme.
-// <spidrvCsControlAuto=> CS controlled by the SPI driver
-// <spidrvCsControlApplication=> CS controlled by the application
-#define SPI_EPD_CS_CONTROL        spidrvCsControlAuto
-
-// <o SPI_EPD_SLAVE_START_MODE> SPI slave transfer start scheme
-// <spidrvSlaveStartImmediate=> Transfer starts immediately
-// <spidrvSlaveStartDelayed=> Transfer starts when the bus is idle
-// <i> Only applies if instance type is spidrvSlave
-#define SPI_EPD_SLAVE_START_MODE  spidrvSlaveStartImmediate
 // </h>
 // The block ends with the following line or at the end of the file:
 // <<< end of configuration section >>>

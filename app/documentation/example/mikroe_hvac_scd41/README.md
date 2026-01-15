@@ -1,5 +1,7 @@
 # SCD41 - HVAC Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Smart%20HVAC-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Smart%20HVAC)
+
 ## Summary ##
 
 This project shows the driver implementing a carbon dioxide sensor using the SCD41 with the Silicon Labs Platform.

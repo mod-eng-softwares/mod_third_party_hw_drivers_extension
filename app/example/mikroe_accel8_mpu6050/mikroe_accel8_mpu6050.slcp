@@ -1,0 +1,62 @@
+project_name: mikroe_accel8_mpu6050
+label: Third Party Hardware Drivers - MPU6050 - Accel 8 Click (Mikroe)
+package: platform
+description: |
+  This example project shows an example for Mikroe Accel 8 Click driver integration.
+category: Example|Platform
+quality: evaluation
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [32-bit MCU]
+  - name: Project Difficulty
+    value: [Beginner]
+
+source:
+  - path: app.c
+
+include:
+  - path: ''
+    file_list:
+    - path: app.h
+
+component:
+  - id: sl_main
+  - id: device_init
+  - id: clock_manager
+  - id: i2cspm
+    instance: [mikroe]
+  - id: iostream_eusart
+    instance: [vcom]
+  - id: app_log
+  - id: accel8_mpu6050
+    from: third_party_hw_drivers
+
+define:
+  - name: DEBUG_EFM
+
+sdk_extension:
+  - id: third_party_hw_drivers
+    version: 4.4.1
+
+toolchain_settings:
+  - option: gcc_linker_option
+    value: "-u _printf_float"
+
+readme:
+  - path: ../../documentation/example/mikroe_accel8_mpu6050/README.md
+
+other_file:
+  - path: ../../documentation/example/mikroe_accel8_mpu6050/image/hardware_connection.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_accel8_mpu6050/image/create_example.png
+    directory: "image"
+  - path: ../../documentation/example/mikroe_accel8_mpu6050/image/log.png
+    directory: "image"
+
+ui_hints:
+  highlight:
+    - path: README.md
+      focus: true

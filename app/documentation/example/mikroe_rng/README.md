@@ -1,5 +1,7 @@
 # RNG Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Entertainment%20Devices-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Entertainment%20Devices)
+
 ## Summary ##
 
 This project shows the driver implementation of a random number generator (RNG) using the ADS1115 - 16 bit sigma-delta ADC IC with the Silicon Labs Platform.

@@ -1,5 +1,7 @@
 # HXD8357D - TFT LCD with Touchscreen (Adafruit) with LVGL #
 
+[![Type badge](https://img.shields.io/badge/Human%20Machine%20Interface-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Human%20Machine%20Interface)
+
 ## Summary ##
 
 This example shows an example for integrating the HXD8357D display with the [LVGL library](https://lvgl.io/).

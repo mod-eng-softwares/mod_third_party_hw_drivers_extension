@@ -1,0 +1,47 @@
+id: accel8_mpu6050
+package: third_party_hw_drivers
+label: MPU6050 - Accel 8 Click (Mikroe)
+description: >
+  Driver for the Accel 8 Click board.
+category: Sensors
+quality: evaluation
+ui_hints:
+  visibility: basic
+root_path: driver
+requires:
+  - name: status
+  - name: sleeptimer
+  - name: mikroe_peripheral_driver_digital_io
+  - name: mikroe_peripheral_driver_i2c
+config_file:
+  - path: public/mikroe/accel8_mpu6050/config/brd2703a/mikroe_mpu6050_config.h
+    file_id: driver_config_accel8
+    condition: [brd2703a]
+  - path: public/mikroe/accel8_mpu6050/config/brd4108a/mikroe_mpu6050_config.h
+    file_id: driver_config_accel8
+    condition: [brd4108a]
+  - path: public/mikroe/accel8_mpu6050/config/brd4314a/mikroe_mpu6050_config.h
+    file_id: driver_config_accel8
+    condition: [brd4314a]
+  - path: public/mikroe/accel8_mpu6050/config/other/mikroe_mpu6050_config.h
+    file_id: driver_config_accel8
+    unless: [brd4314a, brd4108a, brd2703a]
+template_contribution:
+  - name: component_catalog
+    value: accel8_mpu6050
+provides:
+  - name: accel8_mpu6050
+    allow_multiple: false
+include:
+  - path: inc
+    file_list:
+      - path: third_party_hw_drivers_helpers.h
+  - path: thirdparty/mikrosdk_click_v2/clicks/accel8/lib/include
+    file_list:
+      - path: accel8.h
+  - path: public/mikroe/accel8_mpu6050/inc
+    file_list:
+      - path: mikroe_mpu6050.h
+source:
+  - path: thirdparty/mikrosdk_click_v2/clicks/accel8/lib/src/accel8.c
+  - path: public/mikroe/accel8_mpu6050/src/mikroe_mpu6050.c

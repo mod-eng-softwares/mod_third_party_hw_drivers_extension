@@ -40,9 +40,12 @@ config_file:
   - path: public/silabs/fuel_gauge_max17048/config/brd2708a/maxim_max17048_config.h
     file_id: maxim_max17048_config
     condition: [brd2708a]
+  - path: public/silabs/fuel_gauge_max17048/config/brd2704a/maxim_max17048_config.h
+    file_id: maxim_max17048_config
+    condition: [brd2704a]
   - path: public/silabs/fuel_gauge_max17048/config/other/maxim_max17048_config.h
     file_id: maxim_max17048_config
-    unless: [brd4181b, brd4180a, brd2605a, brd4338a, brd2708a]
+    unless: [brd4181b, brd4180a, brd2605a, brd4338a, brd2708a, brd2704a]
   - override:
       component: i2cspm
       file_id: i2cspm_config
@@ -55,6 +58,12 @@ config_file:
       instance: fuel_gauge
     path: public/silabs/fuel_gauge_max17048/config/brd4181b/sl_i2cspm_fuel_gauge_config.h
     condition: [brd4181b]
+  - override:
+      component: i2cspm
+      file_id: i2cspm_config
+      instance: fuel_gauge
+    path: public/silabs/fuel_gauge_max17048/config/brd2704a/sl_i2cspm_fuel_gauge_config.h
+    condition: [brd2704a]
 provides:
   - name: maxim_fuel_gauge_max17048
 template_contribution:

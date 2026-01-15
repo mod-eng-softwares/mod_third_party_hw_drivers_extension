@@ -1,6 +1,6 @@
 # Third Party Hardware Drivers #
 
-[![Version Badge](https://img.shields.io/badge/v4.4.1-green)](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/releases)
+[![Version Badge](https://img.shields.io/badge/v4.5.0-green)](https://github.com/SiliconLabsSoftware/third_party_hw_drivers_extension/releases)
 [![SiSDK Badge](https://img.shields.io/badge/SiSDK-v2025.6.2-green)](https://github.com/SiliconLabs/simplicity_sdk/releases)
 [![WSDK Badge](https://img.shields.io/badge/WSDK-v3.5.2-green)](https://github.com/SiliconLabs/wiseconnect/releases)
 ![License badge](https://img.shields.io/badge/License-Zlib-green)
@@ -141,9 +141,10 @@ A full list of all examples and drivers in this repository is defined below:
 | 110 | WS2812 - Addressable LED (Adafruit) | [Example](./app/example/adafruit_addressable_led_ws2812) | [Documentation](./app/documentation/example/adafruit_addressable_led_ws2812) |
 | 111 | VEML6035 - Ambient 11 Click (Mikroe) | [Example](./app/example/mikroe_ambient11_veml6035) | [Documentation](./app/documentation/example/mikroe_ambient11_veml6035) |
 | 112 | Modbus - RTU | [Example](./app/example/modbus_rtu) | [Documentation](./app/documentation/example/modbus_rtu) |
-| 113 | GD5F2G - Flash 8 Click (Mikroe) | [Example](./‎app/example/mikroe_flash8_gd5f2g) | [Documentation](‎./app/documentation/example/mikroe_flash8_gd5f2g) |
-| 114 | RM126X - LoRa AT command driver | [Example](./‎app/example/ezurio_lora_rm126x) | [Documentation](‎./app/documentation/example/ezurio_lora_rm126x) |
-
+| 113 | GD5F2G - Flash 8 Click (Mikroe) | [Example](./app/example/mikroe_flash8_gd5f2g) | [Documentation](./app/documentation/example/mikroe_flash8_gd5f2g) |
+| 114 | RM126X - LoRa AT command driver | [Example](./app/example/ezurio_lora_rm126x) | [Documentation](./app/documentation/example/ezurio_lora_rm126x) |
+| 115 | HC-SR04 (RCWL-9610A) - Ultrasonic Distance Sensor (Sparkfun) | [Example](./app/example/sparkfun_hc_sr04_rcwl_9610a) | [Documentation](./app/documentation/example/sparkfun_hc_sr04_rcwl_9610a) |
+| 116 | MPU6050 - Accel 8 Click (Mikroe) | [Example](./app/example/mikroe_accel8_mpu6050) | [Documentation](./app/documentation/example/mikroe_accel8_mpu6050) |
 
 ## Drivers ##
 
@@ -840,7 +841,21 @@ A full list of all examples and drivers in this repository is defined below:
                     <td>
                         <a href="./driver/public/mikroe/ambient11_veml6035">Driver</a>
                         </td>
-                </tr>
+                        </tr>
+        <tr></tr>
+                <tr>
+                    <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;HC-SR04 (RCWL-9610A) - Ultrasonic Distance Sensor (Sparkfun)</td>
+                    <td>
+                        <a href="./driver/public/silabs/hc_sr04_rcwl_9610a">Driver</a>
+                        </td>
+                        </tr>
+        <tr></tr>
+                <tr>
+                    <td colspan="2" align="left">&nbsp;&nbsp;&nbsp;&nbsp;MPU6050 - Accel 8 Click (Mikroe)</td>
+                    <td>
+                        <a href="./driver/public/mikroe/accel8_mpu6050">Driver</a>
+                        </td>
+                        </tr>
         <tr></tr>
         <tr>
                 <td colspan="3" align="left"><b>Services</b></td>

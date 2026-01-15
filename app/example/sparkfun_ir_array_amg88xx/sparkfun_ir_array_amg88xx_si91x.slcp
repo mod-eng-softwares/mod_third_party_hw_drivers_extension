@@ -87,8 +87,6 @@ other_file:
     directory: image
   - path: ../../documentation/example/sparkfun_ir_array_amg88xx/image/IR_array_struct.png
     directory: image
-  - path: ../../documentation/example/sparkfun_ir_array_amg88xx/image/dev_kit.jpg
-    directory: image
   - path: ../../documentation/example/sparkfun_ir_array_amg88xx/image/thermal_image.png
     directory: image
   - path: ../../documentation/example/sparkfun_ir_array_amg88xx/temperatue_array_visualiser.py

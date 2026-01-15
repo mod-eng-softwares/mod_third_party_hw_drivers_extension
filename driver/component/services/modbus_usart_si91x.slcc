@@ -1,6 +1,6 @@
 id: services_modbus_usart_si91x
 package: third_party_hw_drivers
-label: Modbus (USART)
+label: "Modbus: Si91x USART"
 description: >
   A Modbus ASCII/RTU and Modbus TCP implementation as defined in the Modbus over serial line specification 1.0.
 category: Services

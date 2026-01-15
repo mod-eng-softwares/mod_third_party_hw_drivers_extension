@@ -1,5 +1,7 @@
 # SSD1306 - Mikroe OLEDW Click (Mikroe) with GLIB #
 
+[![Type badge](https://img.shields.io/badge/Human%20Machine%20Interface-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Human%20Machine%20Interface)
+
 ## Summary ##
 
 This project shows the driver implementation of the OLED driver, using Graphics Library (GLIB) with Silicon Labs Platform.

@@ -49,83 +49,38 @@
 extern "C" {
 #endif
 
-struct epd_driver;
-
-// E-Paper Display (EPD)
-struct epd {
-  const struct epd_driver *drv;
-};
-
-struct epd_driver {
-  void (*set_reset_pin)(bool active);
-  bool (*get_busy_pin)(void);
-  void (*sspi_init)(void);
-  void (*spi_init)(void);
-  void (*delay_10us)(uint32_t idelay);
-  sl_status_t (*sspi_command_read)(struct epd *epd,
-                                   uint8_t *cmds, size_t num_cmds,
-                                   uint8_t *response, size_t len);
-  sl_status_t (*spi_command_write)(struct epd *epd,
-                                   uint8_t cmd,
-                                   const uint8_t *data, size_t len);
-};
+/// @name Update mode
+#define UPDATE_NONE   0x00 ///< No update
+#define UPDATE_NORMAL 0x01 ///< Normal  , default
+#define UPDATE_FAST   0x02 ///< Fast update
 
 /***************************************************************************//**
  * @brief  EPD Initialization function.
  ******************************************************************************/
 void epd_init(void);
 
-void epd_driver_init(struct epd *epd);
-
-// -----------------------------------------------------------------------------
-//                       COG related Function
-// -----------------------------------------------------------------------------
+/***************************************************************************//**
+ * @brief
+ *    EPD Update Display function.
+ *
+ * @param[in] next_frame: data is the new image data that you want to display
+ * @param[in] previous_frame: The data definition of DRAM2 is different between
+ *   "Normal update" and "Fast update"
+ *       1. Normal update: previousFrame image is dummy data
+ *       2. Fast update: previousFrame image is the OLD image data
+ * @param[in] frame_size: Size of frame to update
+ ******************************************************************************/
+void epd_update_display(uint8_t *next_frame,
+                        uint8_t *previous_frame,
+                        uint32_t frame_size);
 
 /***************************************************************************//**
  * @brief
- *    COG Initialization function.
+ *    EPD Update mode function.
  *
- * @param[in] image1 first image data frame
- * @param[in] image2 second image data frame
+ * @param[in] mode update mode UPDATE_NORMAL or UPDATE_FAST
  ******************************************************************************/
-void cog_initial(uint8_t *image1, uint8_t *image2);
-
-/***************************************************************************//**
- * @brief  Power on COG driver.
- ******************************************************************************/
-void cog_power_on(void);
-
-/***************************************************************************//**
- * @brief  COG shutdown.
- ******************************************************************************/
-void cog_power_off(void);
-
-/***************************************************************************//**
- * @brief  Read OTP data.
- ******************************************************************************/
-void cog_get_data_otp(void);
-
-/***************************************************************************//**
- * @brief  DC-DC soft-start command.
- ******************************************************************************/
-void cog_soft_start(void);
-
-/***************************************************************************//**
- * @brief
- *    Initialization function.
- *
- * @param[in] dram1 data is the new image data that you want to display
- * @param[in] dram2 The data definition of DRAM2 is different between
- *                  "Normal update" and "Fast update"
- *           1. Normal update: DRAM2 image is dummy data
- *           2. Fast update: DRAM2 image is the OLD image data
- ******************************************************************************/
-void cog_send_image(uint8_t *dram1, uint8_t *dram2);
-
-/***************************************************************************//**
- * @brief  Send updating command.
- ******************************************************************************/
-void cog_display_refresh(void);
+void epd_set_update_mode(uint8_t mode);
 
 #ifdef __cplusplus
 }

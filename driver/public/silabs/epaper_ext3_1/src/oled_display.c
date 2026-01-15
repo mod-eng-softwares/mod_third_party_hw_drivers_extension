@@ -38,9 +38,9 @@
 #include "epaper_display_config.h"
 #include "epaper_display.h"
 
-/* This oled_frame_buffer is large enough to store one full frame. */
-static uint8_t oled_frame_buffer[(EPD_VERTICAL * EPD_HORIZONTAL) / 8];
-const uint8_t buffer0[(EPD_VERTICAL * EPD_HORIZONTAL) / 8] = {};
+/* This next_frame_buffer is large enough to store one full frame. */
+static uint8_t next_frame_buffer[(EPD_VERTICAL * EPD_HORIZONTAL) / 8];
+static uint8_t previous_frame_buffer[(EPD_VERTICAL * EPD_HORIZONTAL) / 8];
 
 static sl_status_t driver_init(void);
 static sl_status_t draw_pixel(int16_t x, int16_t y, uint16_t color);
@@ -67,9 +67,9 @@ static const oled_display_driver_api_t sl_memlcd_driver_api =
   .stop_scroll = NULL,
 };
 
-/** Flag to monitor is this driver has been initialized. The
- *   oled_display_instance
- *  is only valid after initialized=true. */
+/** Flag to monitor is this driver has been initialized.
+ *  The oled_display_instance is only valid after initialized=true.
+ */
 static bool initialized = false;
 
 sl_status_t oled_display_init(void)
@@ -85,31 +85,41 @@ static sl_status_t draw_pixel(int16_t x, int16_t y, uint16_t color)
 {
   uint16_t i = x / 8 + y * EPD_VERTICAL / 8;
   if (color) {
-    oled_frame_buffer[i] |= 1 << (7 - (x % 8));
+    next_frame_buffer[i] |= 1 << (7 - (x % 8));
   } else {
-    oled_frame_buffer[i] &= ~(1 << (7 - (x % 8)));
+    next_frame_buffer[i] &= ~(1 << (7 - (x % 8)));
   }
   return SL_STATUS_OK;
 }
 
 static uint16_t get_raw_pixel(int16_t x, int16_t y)
 {
-  return (oled_frame_buffer[x / 8 + y * EPD_VERTICAL / 8]
+  return (next_frame_buffer[x / 8 + y * EPD_VERTICAL / 8]
           & (1 << (x % 8))) == 0 ? 0x0000 : 0xffff;
 }
 
 static sl_status_t fill_screen(uint16_t color)
 {
   /* Fill the display with the background color of the glib_context_t  */
-  for (uint16_t i = 0; i < sizeof(oled_frame_buffer); i++) {
-    oled_frame_buffer[i] = color == 0 ? 0x00 : 0xFF;
+  for (uint16_t i = 0; i < sizeof(next_frame_buffer); i++) {
+    next_frame_buffer[i] = color == 0 ? 0x00 : 0xFF;
   }
+  return SL_STATUS_OK;
+}
+
+static sl_status_t driver_init(void)
+{
+  epd_init();
+  memset(previous_frame_buffer, 0x00, sizeof(previous_frame_buffer));
   return SL_STATUS_OK;
 }
 
 static sl_status_t update_display(void)
 {
-  cog_initial(oled_frame_buffer, (uint8_t *)buffer0);
+  epd_update_display(next_frame_buffer,
+                     (uint8_t *)previous_frame_buffer,
+                     sizeof(next_frame_buffer));
+  memcpy(previous_frame_buffer, next_frame_buffer, sizeof(next_frame_buffer));
   return SL_STATUS_OK;
 }
 
@@ -120,10 +130,4 @@ const oled_display_t *oled_display_get(void)
   } else {
     return NULL;
   }
-}
-
-static sl_status_t driver_init(void)
-{
-  epd_init();
-  return SL_STATUS_OK;
 }

@@ -42,13 +42,19 @@
 #include "em_usart.h"
 
 #define USART_CONCAT2(x, y)                      x ## y
-#define USART_CONCAT_DEV(periph_nbr)             USART_CONCAT2(USART, periph_nbr)
-#define USART_CONCAT_CLK(periph_nbr)             USART_CONCAT2(cmuClock_USART, periph_nbr)
+#define USART_CONCAT_DEV(periph_nbr) \
+  USART_CONCAT2(USART, periph_nbr)
+#define USART_CONCAT_CLK(periph_nbr) \
+  USART_CONCAT2(cmuClock_USART, periph_nbr)
 #define USART_CONCAT3(x, y, z)                   x ## y ## z
-#define USART_CONCAT_TX_IRQ_NUMBER(periph_nbr)   USART_CONCAT3(USART, periph_nbr, _TX_IRQn)
-#define USART_CONCAT_RX_IRQ_NUMBER(periph_nbr)   USART_CONCAT3(USART, periph_nbr, _RX_IRQn)
-#define USART_CONCAT_TX_IRQ_HANDLER(periph_nbr)  USART_CONCAT3(USART, periph_nbr, _TX_IRQHandler)
-#define USART_CONCAT_RX_IRQ_HANDLER(periph_nbr)  USART_CONCAT3(USART, periph_nbr, _RX_IRQHandler)
+#define USART_CONCAT_TX_IRQ_NUMBER(periph_nbr) \
+  USART_CONCAT3(USART, periph_nbr, _TX_IRQn)
+#define USART_CONCAT_RX_IRQ_NUMBER(periph_nbr) \
+  USART_CONCAT3(USART, periph_nbr, _RX_IRQn)
+#define USART_CONCAT_TX_IRQ_HANDLER(periph_nbr) \
+  USART_CONCAT3(USART, periph_nbr, _TX_IRQHandler)
+#define USART_CONCAT_RX_IRQ_HANDLER(periph_nbr) \
+  USART_CONCAT3(USART, periph_nbr, _RX_IRQHandler)
 
 #define USART_DEV            USART_CONCAT_DEV(MBUSART_USART_NO)
 #define USART_CLK            USART_CONCAT_CLK(MBUSART_USART_NO)
@@ -127,7 +133,11 @@ static USART_Stopbits_TypeDef stop_bits_mapping(UCHAR stopbits)
   return usartStopbits1;
 }
 
-BOOL xMBPortSerialInit( UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity eParity, UCHAR ucStopBits)
+BOOL xMBPortSerialInit(UCHAR ucPORT,
+                       ULONG ulBaudRate,
+                       UCHAR ucDataBits,
+                       eMBParity eParity,
+                       UCHAR ucStopBits)
 {
   (void)ucPORT;
   // Default asynchronous initializer (115.2 Kbps, 8N1, no flow control)
@@ -149,12 +159,15 @@ BOOL xMBPortSerialInit( UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBPar
   init.enable = usartDisable;
 
   // Enable RX and TX signals now that they have been routed
-  GPIO->USARTROUTE[0].ROUTEEN = GPIO_USART_ROUTEEN_RXPEN | GPIO_USART_ROUTEEN_TXPEN;
+  GPIO->USARTROUTE[MBUSART_USART_NO].ROUTEEN = GPIO_USART_ROUTEEN_RXPEN
+                                               | GPIO_USART_ROUTEEN_TXPEN;
   // Route USARTx TX and RX to the board controller TX and RX pins
-  GPIO->USARTROUTE[0].TXROUTE = (MBUSART_TX_PORT << _GPIO_USART_TXROUTE_PORT_SHIFT)
-                                | (MBUSART_TX_PIN << _GPIO_USART_TXROUTE_PIN_SHIFT);
-  GPIO->USARTROUTE[0].RXROUTE = (MBUSART_RX_PORT << _GPIO_USART_RXROUTE_PORT_SHIFT)
-                                | (MBUSART_RX_PIN << _GPIO_USART_RXROUTE_PIN_SHIFT);
+  GPIO->USARTROUTE[MBUSART_USART_NO].TXROUTE =
+    (MBUSART_TX_PORT << _GPIO_USART_TXROUTE_PORT_SHIFT)
+    | (MBUSART_TX_PIN << _GPIO_USART_TXROUTE_PIN_SHIFT);
+  GPIO->USARTROUTE[MBUSART_USART_NO].RXROUTE =
+    (MBUSART_RX_PORT << _GPIO_USART_RXROUTE_PORT_SHIFT)
+    | (MBUSART_RX_PIN << _GPIO_USART_RXROUTE_PIN_SHIFT);
 
   // Configure USART for basic async operation
   USART_InitAsync(USART_DEV, &init);
@@ -219,4 +232,3 @@ void USART_TX_IRQHandler(void)
 }
 
 /* ----------------------- End of file --------------------------------------*/
-

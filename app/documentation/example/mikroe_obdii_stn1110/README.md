@@ -1,5 +1,8 @@
 # STN1110 - OBDII Click (Mikroe) #
 
+[![Type badge](https://img.shields.io/badge/Entertainment%20Devices-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Entertainment%20Devices)
+[![Type badge](https://img.shields.io/badge/Predictive%20Maintenance-salmon)](https://siliconlabs-massmarket.github.io/repository-catalog/#applications-list?filter=Predictive%20Maintenance)
+
 ## Summary ##
 
 This example project shows an example for Mikroe OBDII Click board driver integration with Silicon Labs Platform.
