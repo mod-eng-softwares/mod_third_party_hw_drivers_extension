@@ -71,6 +71,10 @@ static SemaphoreHandle_t Mutex[FF_VOLUMES + 1];	/* Table of mutex handle */
 #include "cmsis_os.h"
 static osMutexId Mutex[FF_VOLUMES + 1];	/* Table of mutex ID */
 
+#elif OS_TYPE == 5	/* Micrium */
+#include "os.h"
+static OS_MUTEX Mutex[FF_VOLUMES + 1]; /* Table of mutex pointer */
+
 #endif
 
 
@@ -113,6 +117,14 @@ int ff_mutex_create (	/* Returns 1:Function succeeded or 0:Could not create the 
 	Mutex[vol] = osMutexCreate(osMutex(cmsis_os_mutex));
 	return (int)(Mutex[vol] != NULL);
 
+#elif OS_TYPE == 5	/* Micrium */
+	RTOS_ERR err;
+
+	OSMutexCreate(&Mutex[vol],
+				  "ffmutex",
+				  &err);
+	return (int)(err.Code == RTOS_ERR_NONE);
+
 #endif
 }
 
@@ -144,6 +156,13 @@ void ff_mutex_delete (	/* Returns 1:Function succeeded or 0:Could not delete due
 
 #elif OS_TYPE == 4	/* CMSIS-RTOS */
 	osMutexDelete(Mutex[vol]);
+
+#elif OS_TYPE == 5	/* Micrium */
+	RTOS_ERR err;
+
+	OSMutexDel(&Mutex[vol],
+			   OS_OPT_DEL_ALWAYS,
+			   &err);
 
 #endif
 }
@@ -178,6 +197,16 @@ int ff_mutex_take (	/* Returns 1:Succeeded or 0:Timeout */
 #elif OS_TYPE == 4	/* CMSIS-RTOS */
 	return (int)(osMutexWait(Mutex[vol], FF_FS_TIMEOUT) == osOK);
 
+#elif OS_TYPE == 5	/* Micrium */
+	RTOS_ERR err;
+
+	OSMutexPend(&Mutex[vol],
+				FF_FS_TIMEOUT,
+				OS_OPT_PEND_BLOCKING,
+				DEF_NULL,
+				&err);
+	return (int)(err.Code == RTOS_ERR_NONE);
+
 #endif
 }
 
@@ -207,6 +236,13 @@ void ff_mutex_give (
 
 #elif OS_TYPE == 4	/* CMSIS-RTOS */
 	osMutexRelease(Mutex[vol]);
+
+#elif OS_TYPE == 5	/* Micrium */
+	RTOS_ERR err;
+
+	OSMutexPost(&Mutex[vol],
+				OS_OPT_POST_NONE,
+				&err);
 
 #endif
 }
