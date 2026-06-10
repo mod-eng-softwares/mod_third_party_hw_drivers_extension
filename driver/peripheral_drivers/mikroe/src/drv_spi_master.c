@@ -41,6 +41,38 @@
 #include "drv_digital_out.h"
 #include "spidrv.h"
 
+
+// 2026 06 10 LW: Checking for available software components to support non-blocking SPI
+#if defined(SL_COMPONENT_CATALOG_PRESENT)
+#include "sl_component_catalog.h"
+#endif
+
+#if defined(SL_CATALOG_KERNEL_PRESENT) && !defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT) && !defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+#error "The MicroSD driver does not support your selected RTOS. (currently only supports the MicriumOS and FreeRTOS kernels)"
+#endif
+
+#if defined(SL_CATALOG_KERNEL_PRESENT)
+#define SPI_NONBLOCK_TIMEOUT_TICKS  1000
+#endif
+
+#if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
+#include "FreeRTOS.h"
+static 
+#elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+#include "os.h"
+static OS_TCB *task_handle;
+#endif
+
+#if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
+#include "sl_power_manager.h"
+#endif
+
+#if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
+#include "SEGGER_SYSVIEW.h"
+#endif
+// -- 2026 06 10 LW
+
+
 #define SPI_GPIO_SLOW_SLEWRATE 5
 #define SPI_GPIO_FAST_SLEWRATE 7
 
@@ -54,6 +86,10 @@ static spi_master_chip_select_polarity_t spi_master_chip_select_polarity =
 static err_t spi_master_set_config(spi_master_t *obj);
 static err_t _acquire(spi_master_t *obj, bool obj_open_state);
 static void spi_master_configure_gpio_pin(digital_out_t *out, pin_name_t name);
+// 2026 06 10 LW: Added functions for non-blocking SPI transfers
+static void spidrv_wait(SPIDRV_HandleData_t *handle);
+static void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int itemsTransferred);
+// -- 2026 06 10 LW
 
 void spi_master_configure_default(spi_master_config_t *config)
 {
@@ -178,6 +214,70 @@ err_t spi_master_set_default_write_data(spi_master_t *obj,
   return SPI_MASTER_SUCCESS;
 }
 
+// 2026 06 10 LW: Added functions for non-blocking SPI transfers
+/***************************************************************************//**
+ * Wait function to call after initiating non-blocking SPI transfers.
+ ******************************************************************************/
+void spidrv_wait(SPIDRV_HandleData_t *handle)
+{
+  (void)handle;
+
+#if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
+  SEGGER_SYSVIEW_Print("S");
+#endif
+
+
+#if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
+#error "Still need to implement!!"
+  
+#elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+  RTOS_ERR err;
+
+  task_handle = OSTCBCurPtr;
+
+  OSTaskSemPend(SPI_NONBLOCK_TIMEOUT_TICKS,
+                OS_OPT_PEND_NON_BLOCKING,
+                DEF_NULL,
+                &err);
+  EFM_ASSERT(err.Code == RTOS_ERR_NONE);
+
+#else
+#error "Still need to implement!!"
+#endif
+
+}
+
+/***************************************************************************//**
+ * Callback for non-blocking SPI transfers.
+ ******************************************************************************/
+void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int itemsTransferred)
+{
+  (void)handle;
+  (void)transferStatus;
+  (void)itemsTransferred;
+
+#if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
+  SEGGER_SYSVIEW_Print("s");
+#endif
+
+
+#if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
+#error "Still need to implement!!"
+  
+#elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+  RTOS_ERR err;
+  OSTaskSemPost(task_handle,
+                OS_OPT_POST_NO_SCHED,
+                &err);
+  EFM_ASSERT(err.Code == RTOS_ERR_NONE);
+  
+#else
+#error "Still need to implement!!"
+#endif
+
+}
+// -- 2026 06 10 LW
+
 /***************************************************************************//**
  * Write byte to SPI bus.
  ******************************************************************************/
@@ -286,12 +386,22 @@ err_t spi_master_exchange(spi_master_t *obj,
     }
   }
 
-  if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle,
+  // if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle,
+  //                       write_data_buffer,
+  //                       read_data_buffer,
+  //                       exchange_data_length) != ECODE_EMDRV_SPIDRV_OK) {
+  //   return SPI_MASTER_ERROR;
+
+  if (SPIDRV_MTransfer((SPIDRV_Handle_t)obj->handle,
                         write_data_buffer,
                         read_data_buffer,
-                        exchange_data_length) != ECODE_EMDRV_SPIDRV_OK) {
+                        exchange_data_length,
+                        spidrv_callback) != ECODE_EMDRV_SPIDRV_OK) {
     return SPI_MASTER_ERROR;
   }
+
+  spidrv_wait((SPIDRV_Handle_t)obj->handle);
+
   return SPI_MASTER_SUCCESS;
 }
 
