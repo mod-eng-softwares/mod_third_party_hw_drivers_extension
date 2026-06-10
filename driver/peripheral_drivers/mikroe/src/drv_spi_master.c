@@ -236,7 +236,7 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   task_handle = OSTCBCurPtr;
 
   OSTaskSemPend(SPI_NONBLOCK_TIMEOUT_TICKS,
-                OS_OPT_PEND_NON_BLOCKING,
+                OS_OPT_PEND_BLOCKING,
                 DEF_NULL,
                 &err);
   EFM_ASSERT(err.Code == RTOS_ERR_NONE);
@@ -350,11 +350,28 @@ err_t spi_master_read(spi_master_t *obj,
     write_data_buffer[i] = _owner->config.default_write_data;
   }
 
-  if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle, write_data_buffer,
-                        read_data_buffer,
-                        read_data_length) != ECODE_EMDRV_SPIDRV_OK) {
-    return SPI_MASTER_ERROR;
+  // 2026 06 10 LW: Use non-blocking transfer for more than 1 byte
+  if(read_data_length > 1)
+  {
+    if (SPIDRV_MTransfer((SPIDRV_Handle_t)obj->handle, write_data_buffer,
+                          read_data_buffer,
+                          read_data_length,
+                          spidrv_callback) != ECODE_EMDRV_SPIDRV_OK) {
+      return SPI_MASTER_ERROR;
+    }
+
+    spidrv_wait((SPIDRV_Handle_t)obj->handle);
   }
+ else
+ {
+    if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle, write_data_buffer,
+                          read_data_buffer,
+                          read_data_length) != ECODE_EMDRV_SPIDRV_OK) {
+      return SPI_MASTER_ERROR;
+    }
+  }
+  // -- 2026 06 10 LW
+
   return SPI_MASTER_SUCCESS;
 }
 
@@ -386,21 +403,29 @@ err_t spi_master_exchange(spi_master_t *obj,
     }
   }
 
-  // if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle,
-  //                       write_data_buffer,
-  //                       read_data_buffer,
-  //                       exchange_data_length) != ECODE_EMDRV_SPIDRV_OK) {
-  //   return SPI_MASTER_ERROR;
+  // 2026 06 10 LW: Use non-blocking transfer for more than 1 byte
+  if(exchange_data_length > 1)
+  {
+    if (SPIDRV_MTransfer((SPIDRV_Handle_t)obj->handle,
+                          write_data_buffer,
+                          read_data_buffer,
+                          exchange_data_length,
+                          spidrv_callback) != ECODE_EMDRV_SPIDRV_OK) {
+      return SPI_MASTER_ERROR;
+    }
 
-  if (SPIDRV_MTransfer((SPIDRV_Handle_t)obj->handle,
-                        write_data_buffer,
-                        read_data_buffer,
-                        exchange_data_length,
-                        spidrv_callback) != ECODE_EMDRV_SPIDRV_OK) {
-    return SPI_MASTER_ERROR;
+    spidrv_wait((SPIDRV_Handle_t)obj->handle);
   }
-
-  spidrv_wait((SPIDRV_Handle_t)obj->handle);
+  else
+  {
+    if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle,
+                          write_data_buffer,
+                          read_data_buffer,
+                          exchange_data_length) != ECODE_EMDRV_SPIDRV_OK) {
+      return SPI_MASTER_ERROR;
+    }
+  }
+  // -- 2026 06 10 LW
 
   return SPI_MASTER_SUCCESS;
 }
