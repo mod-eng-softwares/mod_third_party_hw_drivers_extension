@@ -305,10 +305,26 @@ err_t spi_master_write(spi_master_t *obj,
     }
   }
 
-  if (SPIDRV_MTransmitB((SPIDRV_Handle_t)obj->handle, write_data_buffer,
-                        write_data_length) != ECODE_EMDRV_SPIDRV_OK) {
-    return SPI_MASTER_ERROR;
+  // 2026 06 10 LW: Use non-blocking transfer for more than 1 byte
+  if(write_data_length > 1)
+  {
+    if (SPIDRV_MTransmit((SPIDRV_Handle_t)obj->handle, write_data_buffer,
+                          write_data_length,
+                          spidrv_callback) != ECODE_EMDRV_SPIDRV_OK) {
+      return SPI_MASTER_ERROR;
+    }
+
+    spidrv_wait((SPIDRV_Handle_t)obj->handle);
   }
+  else
+  {
+    if (SPIDRV_MTransmitB((SPIDRV_Handle_t)obj->handle, write_data_buffer,
+                          write_data_length) != ECODE_EMDRV_SPIDRV_OK) {
+      return SPI_MASTER_ERROR;
+    }
+  }
+  // -- 2026 06 10 LW
+
   return SPI_MASTER_SUCCESS;
 }
 
