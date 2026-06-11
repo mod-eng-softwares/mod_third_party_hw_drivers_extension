@@ -70,6 +70,13 @@ static OS_TCB *task_handle;
 #if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
 #include "SEGGER_SYSVIEW.h"
 #endif
+
+#if defined(SL_CATALOG_MOD_SD_PRESENT)
+#include "mod_sd_config.h"
+#define SPI_NON_BLOCKING_MODE   MOD_SD_NON_BLOCKING_ENABLE
+#else
+#define SPI_NON_BLOCKING_MODE   0
+#endif
 // -- 2026 06 10 LW
 
 
@@ -223,7 +230,7 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   (void)handle;
 
 #if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
-  SEGGER_SYSVIEW_Print("S");
+  // SEGGER_SYSVIEW_Print("S");
 #endif
 
 
@@ -257,7 +264,7 @@ void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int it
   (void)itemsTransferred;
 
 #if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
-  SEGGER_SYSVIEW_Print("s");
+  // SEGGER_SYSVIEW_Print("s");
 #endif
 
 
@@ -306,7 +313,7 @@ err_t spi_master_write(spi_master_t *obj,
   }
 
   // 2026 06 10 LW: Use non-blocking transfer for more than 1 byte
-  if(write_data_length > 1)
+  if(SPI_NON_BLOCKING_MODE && (write_data_length > 1))
   {
     if (SPIDRV_MTransmit((SPIDRV_Handle_t)obj->handle, write_data_buffer,
                           write_data_length,
@@ -367,7 +374,7 @@ err_t spi_master_read(spi_master_t *obj,
   }
 
   // 2026 06 10 LW: Use non-blocking transfer for more than 1 byte
-  if(read_data_length > 1)
+  if(SPI_NON_BLOCKING_MODE && (read_data_length > 1))
   {
     if (SPIDRV_MTransfer((SPIDRV_Handle_t)obj->handle, write_data_buffer,
                           read_data_buffer,
@@ -420,7 +427,7 @@ err_t spi_master_exchange(spi_master_t *obj,
   }
 
   // 2026 06 10 LW: Use non-blocking transfer for more than 1 byte
-  if(exchange_data_length > 1)
+  if(SPI_NON_BLOCKING_MODE && (exchange_data_length > 1))
   {
     if (SPIDRV_MTransfer((SPIDRV_Handle_t)obj->handle,
                           write_data_buffer,
