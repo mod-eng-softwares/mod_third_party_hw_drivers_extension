@@ -337,45 +337,50 @@ DSTATUS sd_card_disk_initialize(void)
   }
 
   ty = 0;
-  if (send_cmd(CMD0, 0) == 1) {       // Put the card SPI mode
-    sd_card_timer_1 = 100;           // Initialization timeout = 1 sec
-    if (send_cmd(CMD8, 0x1aa) == 1) { // Is the card SDv2?
-      for (n = 0; n < 4; n++) {
-        // Get 32 bit return value of R7 resp
-        sdc_xchg_spi(&sd_card.spi, 0xff, &ocr[n]);
-      }
 
-      // Is the card supports vcc of 2.7-3.6V?
-      if ((ocr[2] == 0x01) && (ocr[3] == 0xaa)) {
-        // Wait for end of initialization with ACMD41(HCS)
-        while (sd_card_timer_1 && send_cmd(ACMD41, 1UL << 30)) {
+  // 2026 06 11 LW: Try sending CMD0 several times before giving up
+  for(n = 100; n; n--) {
+    if (send_cmd(CMD0, 0) == 1) {       // Put the card SPI mode
+      sd_card_timer_1 = 100;           // Initialization timeout = 1 sec
+      if (send_cmd(CMD8, 0x1aa) == 1) { // Is the card SDv2?
+        for (n = 0; n < 4; n++) {
+          // Get 32 bit return value of R7 resp
+          sdc_xchg_spi(&sd_card.spi, 0xff, &ocr[n]);
         }
 
-        // Check CCS bit in the OCR
-        if (sd_card_timer_1 && (send_cmd(CMD58, 0) == 0)) {
-          for (n = 0; n < 4; n++) {
-            sdc_xchg_spi(&sd_card.spi, 0xff, &ocr[n]);
+        // Is the card supports vcc of 2.7-3.6V?
+        if ((ocr[2] == 0x01) && (ocr[3] == 0xaa)) {
+          // Wait for end of initialization with ACMD41(HCS)
+          while (sd_card_timer_1 && send_cmd(ACMD41, 1UL << 30)) {
           }
-          ty = (ocr[0] & 0x40) ? CT_SDC2 | CT_BLOCK : CT_SDC2;  // Card id SDv2
+
+          // Check CCS bit in the OCR
+          if (sd_card_timer_1 && (send_cmd(CMD58, 0) == 0)) {
+            for (n = 0; n < 4; n++) {
+              sdc_xchg_spi(&sd_card.spi, 0xff, &ocr[n]);
+            }
+            ty = (ocr[0] & 0x40) ? CT_SDC2 | CT_BLOCK : CT_SDC2;  // Card id SDv2
+          }
+        }
+      } else {  // Not SDv2 card
+        if (send_cmd(ACMD41, 0) <= 1) {   // SDv1 or MMC?
+          ty = CT_SDC1;
+          cmd = ACMD41;     // SDv1 (ACMD41(0))
+        } else {
+          ty = CT_MMC3;
+          cmd = CMD1;       // MMCv3 (CMD1(0))
+        }
+
+        // Wait for end of initialization
+        while (sd_card_timer_1 && send_cmd(cmd, 0)) {
+        }
+
+        // Set block length: 512
+        if ((!sd_card_timer_1) || (send_cmd(CMD16, 512) != 0)) {
+          ty = 0;
         }
       }
-    } else {  // Not SDv2 card
-      if (send_cmd(ACMD41, 0) <= 1) {   // SDv1 or MMC?
-        ty = CT_SDC1;
-        cmd = ACMD41;     // SDv1 (ACMD41(0))
-      } else {
-        ty = CT_MMC3;
-        cmd = CMD1;       // MMCv3 (CMD1(0))
-      }
-
-      // Wait for end of initialization
-      while (sd_card_timer_1 && send_cmd(cmd, 0)) {
-      }
-
-      // Set block length: 512
-      if ((!sd_card_timer_1) || (send_cmd(CMD16, 512) != 0)) {
-        ty = 0;
-      }
+      break;
     }
   }
   sd_card_type = ty;   // Card type
