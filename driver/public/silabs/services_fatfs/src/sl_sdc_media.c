@@ -181,6 +181,11 @@ dresult_t disk_ioctl(BYTE pdrv, BYTE cmd, void *buff)
 #if !FF_FS_NORTC && !FF_FS_READONLY
 DWORD get_fattime(void)
 {
+
+#if defined(SL_SLEEPTIMER_WALLCLOCK_CONFIG) && SL_SLEEPTIMER_WALLCLOCK_CONFIG != 1
+#error "SL_SLEEPTIMER_WALLCLOCK_CONFIG must be set to 1 for FatFS get_fattime to work!)"
+#endif
+
   static sl_sleeptimer_date_t date_time;
 
   // Get local time
