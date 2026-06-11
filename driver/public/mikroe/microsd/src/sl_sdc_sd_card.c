@@ -315,8 +315,6 @@ static BYTE send_cmd(BYTE cmd, DWORD arg)
     sdc_xchg_spi(&sd_card.spi, 0xff, &data);
   } while ((data & 0x80) && --n);
 
-  // TODO: Remove this debugging NOP
-  __NOP();
   return data;     // Return with the response value
 }
 
