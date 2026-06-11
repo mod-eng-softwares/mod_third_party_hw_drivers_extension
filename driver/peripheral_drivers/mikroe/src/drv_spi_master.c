@@ -59,7 +59,9 @@
 
 #if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
 #include "FreeRTOS.h"
-static 
+#include "task.h"
+#define SPI_FREERTOS_WAIT_NOTIF 0x1
+static TaskHandle_t task_handle;
 #elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
 #include "os.h"
 static OS_TCB *task_handle;
@@ -237,11 +239,17 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
 
 
 #if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
-#error "Still need to implement!!"
-  
+  BaseType_t ret;
+  task_handle = xTaskGetCurrentTaskHandle();
+
+  ret = xTaskNotifyWait(0,
+                        SPI_FREERTOS_WAIT_NOTIF,
+                        NULL,
+                        SPI_NONBLOCK_TIMEOUT_TICKS);
+  EFM_ASSERT(ret == pdTRUE);
+
 #elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
   RTOS_ERR err;
-
   task_handle = OSTCBCurPtr;
 
   OSTaskSemPend(SPI_NONBLOCK_TIMEOUT_TICKS,
@@ -271,7 +279,10 @@ void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int it
 
 
 #if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
-#error "Still need to implement!!"
+  xTaskNotifyFromISR(task_handle,
+                     SPI_FREERTOS_WAIT_NOTIF,
+                     eSetBits,
+                     NULL);
   
 #elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
   RTOS_ERR err;
