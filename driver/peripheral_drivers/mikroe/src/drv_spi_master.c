@@ -47,12 +47,14 @@
 #include "sl_component_catalog.h"
 #endif
 
-#if defined(SL_CATALOG_KERNEL_PRESENT) && !defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT) && !defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+#if defined(SL_CATALOG_KERNEL_PRESENT)
+#define SPI_NONBLOCK_TIMEOUT_TICKS  1000
+#if !defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT) && !defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
 #error "The MicroSD driver does not support your selected RTOS. (currently only supports the MicriumOS and FreeRTOS kernels)"
+#endif
 #endif
 
 #if defined(SL_CATALOG_KERNEL_PRESENT)
-#define SPI_NONBLOCK_TIMEOUT_TICKS  1000
 #endif
 
 #if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
