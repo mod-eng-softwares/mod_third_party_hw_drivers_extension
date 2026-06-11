@@ -240,8 +240,8 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   // SEGGER_SYSVIEW_Print("S");
 #endif
 
-
 #if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
+  // FreeRTOS: Make the current task wait for a notification before continuing (& allow other tasks to run)
   BaseType_t ret;
   task_handle = xTaskGetCurrentTaskHandle();
 
@@ -252,6 +252,7 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   EFM_ASSERT(ret == pdTRUE);
 
 #elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+  // Micrium: Make the current task wait for its task semaphore to post before continuing (& allow other tasks to run)
   RTOS_ERR err;
   task_handle = OSTCBCurPtr;
 
@@ -262,12 +263,14 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   EFM_ASSERT(err.Code == RTOS_ERR_NONE);
 
 #else
-
+  // Baremetal: Wait for the nbt_done flag to raise
   while(!nbt_done)
   {
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
+    // Put the system to sleep if possible.
     sl_power_manager_sleep();
 #else
+    // Otherwise, just spin-wait.
     __NOP();
 #endif
   }
@@ -292,12 +295,14 @@ void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int it
 
 
 #if defined(SL_CATALOG_FREERTOS_KERNEL_PRESENT)
+  // FreeRTOS: Notify the waiting task that it may resume
   xTaskNotifyFromISR(task_handle,
                      SPI_FREERTOS_WAIT_NOTIF,
                      eSetBits,
                      NULL);
   
 #elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
+  // Micrium: Post the task semaphore for the waiting task
   RTOS_ERR err;
   OSTaskSemPost(task_handle,
                 OS_OPT_POST_NO_SCHED,
@@ -305,9 +310,8 @@ void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int it
   EFM_ASSERT(err.Code == RTOS_ERR_NONE);
   
 #else
-
+  // Baremetal: Raise the nbt_done flag
   nbt_done = true;
-
 #endif
 
 }
