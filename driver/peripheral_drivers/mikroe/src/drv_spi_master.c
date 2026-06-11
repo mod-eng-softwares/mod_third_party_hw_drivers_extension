@@ -65,6 +65,8 @@ static TaskHandle_t task_handle;
 #elif defined(SL_CATALOG_MICRIUMOS_KERNEL_PRESENT)
 #include "os.h"
 static OS_TCB *task_handle;
+#else
+static volatile bool nbt_done = false;
 #endif
 
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
@@ -226,6 +228,7 @@ err_t spi_master_set_default_write_data(spi_master_t *obj,
 }
 
 // 2026 06 10 LW: Added functions for non-blocking SPI transfers
+#if SPI_NON_BLOCKING_MODE == 1
 /***************************************************************************//**
  * Wait function to call after initiating non-blocking SPI transfers.
  ******************************************************************************/
@@ -259,7 +262,17 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   EFM_ASSERT(err.Code == RTOS_ERR_NONE);
 
 #else
-#error "Still need to implement!!"
+
+  while(!nbt_done)
+  {
+#if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
+    sl_power_manager_sleep();
+#else
+    __NOP();
+#endif
+  }
+  nbt_done = false;
+
 #endif
 
 }
@@ -292,10 +305,13 @@ void spidrv_callback(SPIDRV_HandleData_t *handle, Ecode_t transferStatus, int it
   EFM_ASSERT(err.Code == RTOS_ERR_NONE);
   
 #else
-#error "Still need to implement!!"
+
+  nbt_done = true;
+
 #endif
 
 }
+#endif  // SPI_NON_BLOCKING_MODE == 1
 // -- 2026 06 10 LW
 
 /***************************************************************************//**
