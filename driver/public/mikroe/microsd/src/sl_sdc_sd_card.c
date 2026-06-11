@@ -37,6 +37,15 @@
 #include "sl_sdc_sd_card.h"
 #include "mikroe_microsd_config.h"
 
+#if defined(SL_COMPONENT_CATALOG_PRESENT)
+#include "sl_component_catalog.h"
+#endif
+
+#if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
+#include "SEGGER_SYSVIEW.h"
+#endif
+
+
 typedef struct {
   spi_master_t spi;
   digital_in_t cd_pin;
@@ -306,6 +315,8 @@ static BYTE send_cmd(BYTE cmd, DWORD arg)
     sdc_xchg_spi(&sd_card.spi, 0xff, &data);
   } while ((data & 0x80) && --n);
 
+  // TODO: Remove this debugging NOP
+  __NOP();
   return data;     // Return with the response value
 }
 
@@ -704,6 +715,11 @@ static void disk_timerproc_timer_callback(sl_sleeptimer_timer_handle_t *handle,
 {
   (void)handle;
   (void)data;
+
+#if defined(SL_CATALOG_SYSTEMVIEW_TRACE_PRESENT)
+  SEGGER_SYSVIEW_Print("T");
+#endif
+
 
   disk_timerproc();
 }
