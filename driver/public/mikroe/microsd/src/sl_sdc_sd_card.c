@@ -108,6 +108,11 @@ static sd_card_t sd_card;
 static sl_sleeptimer_timer_handle_t disk_timerproc_timer_handle;
 static void disk_timerproc_timer_callback(sl_sleeptimer_timer_handle_t *handle,
                                           void *data);
+// 2026 06 11 LW: Switching over to non-periodic timer for sleep efficiency
+static sl_sleeptimer_timer_handle_t oneshot_timer_handle;
+static bool oneshot_running = false;
+static void start_timers();
+// -- 2026 06 11 LW
 
 static bool wait_ready(UINT wt);
 static void deselect (void);
@@ -133,11 +138,17 @@ static bool wait_ready(UINT wt)
 {
   BYTE data;
 
-  sd_card_timer_2 = wt / 10;
+  sl_sleeptimer_restart_timer_ms(&oneshot_timer_handle,
+                                 wt,
+                                 NULL,
+                                 NULL,
+                                 0,
+                                 0);
+
   do {
     sdc_xchg_spi(&sd_card.spi, 0xff, &data);
-    // This loop takes a time. Insert rot_rdq() here for multitask envilonment.
-  } while (data != 0xff && sd_card_timer_2);  // Wait for card goes ready or
+    sl_sleeptimer_is_timer_running(&oneshot_timer_handle, &oneshot_running);
+  } while (data != 0xff && oneshot_running);  // Wait for card goes ready or
                                               //   timeout
 
   return (data == 0xff) ? 1 : 0;
@@ -195,10 +206,17 @@ static bool rcvr_datablock(BYTE *buff, UINT btr)
 {
   BYTE token;
 
-  sd_card_timer_1 = 10;
+  sl_sleeptimer_restart_timer_ms(&oneshot_timer_handle,
+                                 100,
+                                 NULL,
+                                 NULL,
+                                 0,
+                                 0);
+
   do { // Wait for data packet in timeout of 100ms
     sdc_xchg_spi(&sd_card.spi, 0xff, &token);
-  } while ((token == 0xff) && sd_card_timer_1);
+    sl_sleeptimer_is_timer_running(&oneshot_timer_handle, &oneshot_running);
+  } while ((token == 0xff) && oneshot_running);
 
   // If not valid data token, return with error
   if (token != 0xfe) {
@@ -325,6 +343,8 @@ DSTATUS sd_card_disk_initialize(void)
 {
   BYTE n, cmd, ty, ocr[4], data;
 
+  start_timers();
+
   for (sd_card_timer_1 = 1; sd_card_timer_1;) {  // Wait for 10ms
   }
   if (sd_card_status & STA_NODISK) {
@@ -391,6 +411,11 @@ DSTATUS sd_card_disk_initialize(void)
     sd_card_status &= ~STA_NOINIT;  // Clear STA_NOINIT flag
   } else {         // Failed
     sd_card_status = STA_NOINIT;
+  }
+
+  if(!(sd_card_status && STA_NOINIT))
+  {
+    sl_sleeptimer_stop_timer(&disk_timerproc_timer_handle);
   }
 
   return sd_card_status;
@@ -675,7 +700,6 @@ dresult_t sd_card_disk_ioctl(BYTE cmd, void *buff)
  ******************************************************************************/
 sl_status_t sd_card_spi_init(mikroe_spi_handle_t spi_handle)
 {
-  bool timer_is_running = false;
   spi_master_config_t spi_cfg;
 
   spi_master_configure_default(&spi_cfg);
@@ -694,6 +718,19 @@ sl_status_t sd_card_spi_init(mikroe_spi_handle_t spi_handle)
                                            MIKROE_MICROSD_MMC_CD_PIN));
 #endif
 
+  start_timers();
+
+  return SL_STATUS_OK;
+}
+
+// 2026 06 11 LW: Placed periodic timer init into its own function
+/***************************************************************************//**
+ * Start the periodic timer used for initialization.
+ ******************************************************************************/
+void start_timers()
+{
+  bool timer_is_running = false;
+
   // Make sure the disk_timerproc_timer_handle timer is initialized only once
   sl_sleeptimer_is_timer_running(&disk_timerproc_timer_handle,
                                  &timer_is_running);
@@ -703,12 +740,11 @@ sl_status_t sd_card_spi_init(mikroe_spi_handle_t spi_handle)
                                           10,
                                           disk_timerproc_timer_callback,
                                           (void *)NULL,
-                                          0,
+                                          1,
                                           0);
   }
-
-  return SL_STATUS_OK;
 }
+// -- 2026 06 11 LW
 
 /***************************************************************************//**
  * Sleeptimer callback function to generate card control timing.
