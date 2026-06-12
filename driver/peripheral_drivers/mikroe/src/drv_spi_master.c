@@ -266,6 +266,7 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
   // Baremetal: Wait for the nbt_done flag to raise
   while(!nbt_done)
   {
+/*
 #if defined(SL_CATALOG_POWER_MANAGER_PRESENT)
     // Put the system to sleep if possible.
     sl_power_manager_sleep();
@@ -273,6 +274,10 @@ void spidrv_wait(SPIDRV_HandleData_t *handle)
     // Otherwise, just spin-wait.
     __NOP();
 #endif
+*/
+    // Power Manager Sleep taking too long, dropping in a Wait For Interrupt for now
+    // TODO: Figure out how to properly sleep & wake up fast via Power Manager
+    __WFI();
   }
   nbt_done = false;
 
