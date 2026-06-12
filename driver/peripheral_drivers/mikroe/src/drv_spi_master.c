@@ -41,6 +41,9 @@
 #include "drv_digital_out.h"
 #include "spidrv.h"
 
+#include "sl_hal_usart.h"
+#include "sl_hal_eusart.h"
+
 
 // 2026 06 10 LW: Checking for available software components to support non-blocking SPI
 #if defined(SL_COMPONENT_CATALOG_PRESENT)
@@ -436,6 +439,24 @@ err_t spi_master_read(spi_master_t *obj,
   return SPI_MASTER_SUCCESS;
 }
 
+// 2026 06 12 LW: Added "dumb" SPI exchange function to reduce time between single transfers 
+/***************************************************************************//**
+ * "Dumb" SPI exchange function (DMA takes too long for single transfers)
+ ******************************************************************************/
+void dumb_xchg_spi(spi_master_t *spi_handle, uint8_t tx, uint8_t *rx)
+{
+  SPIDRV_Handle_t spidrv = (SPIDRV_Handle_t)spi_handle->handle;
+  if(spidrv->peripheralType == spidrvPeripheralTypeUsart)
+  {
+    *rx = sl_hal_usart_spi_transfer((USART_TypeDef*)spidrv->peripheral.usartPort, tx);
+  }
+  else
+  {
+    *rx = (uint8_t)sl_hal_eusart_spi_tx_rx((EUSART_TypeDef*)spidrv->peripheral.eusartPort, (uint16_t)tx);
+  }
+}
+// -- 2026 06 12 LW
+
 /***************************************************************************//**
  * Exchange bytes on SPI bus.
  ******************************************************************************/
@@ -479,12 +500,7 @@ err_t spi_master_exchange(spi_master_t *obj,
   }
   else
   {
-    if (SPIDRV_MTransferB((SPIDRV_Handle_t)obj->handle,
-                          write_data_buffer,
-                          read_data_buffer,
-                          exchange_data_length) != ECODE_EMDRV_SPIDRV_OK) {
-      return SPI_MASTER_ERROR;
-    }
+    dumb_xchg_spi(obj, write_data_buffer[0], read_data_buffer);
   }
   // -- 2026 06 10 LW
 

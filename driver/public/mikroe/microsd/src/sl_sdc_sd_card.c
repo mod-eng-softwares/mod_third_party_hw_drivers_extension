@@ -167,7 +167,7 @@ static void deselect(void)
 
   CS_HIGH();
   // Dummy clock (force DO hi-z for multiple slave SPI)
-  sdc_xchg_spi(&sd_card.spi, 0xff, &data);
+  // sdc_xchg_spi(&sd_card.spi, 0xff, &data);
 }
 
 /***************************************************************************//**
