@@ -104,6 +104,8 @@ static volatile DSTATUS sd_card_status = STA_NOINIT; // Disk status
 static BYTE sd_card_type; // Card type flags
 static volatile UINT sd_card_timer_1, sd_card_timer_2; // 100Hz decrement timer
 
+#define CMD_BYTES_SIZE  6
+static BYTE cmd_bytes[CMD_BYTES_SIZE];
 static sd_card_t sd_card;
 static sl_sleeptimer_timer_handle_t disk_timerproc_timer_handle;
 static void disk_timerproc_timer_callback(sl_sleeptimer_timer_handle_t *handle,
@@ -307,21 +309,24 @@ static BYTE send_cmd(BYTE cmd, DWORD arg)
     }
   }
 
-  // Send command packet
-  sdc_xchg_spi(&sd_card.spi, 0x40 | cmd, &data); // Start + Command index
-  sdc_xchg_spi(&sd_card.spi, ((BYTE)(arg >> 24)), &data); // Argument[31..24]
-  sdc_xchg_spi(&sd_card.spi, ((BYTE)(arg >> 16)), &data); // Argument[23..16]
-  sdc_xchg_spi(&sd_card.spi, ((BYTE)(arg >> 8)), &data);  // Argument[15..8]
-  sdc_xchg_spi(&sd_card.spi, (BYTE)(arg), &data);         // Argument[7..0]
-
-  n = 0x01;           // Dummy CRC + Stop
+  // 2026 06 12 LW: Refactored send_cmd to send the CMD token in one call to sdc_xmit_spi_multi()
+  // Assemble command packet
+   n = 0x01;           // Dummy CRC + Stop
   if (cmd == CMD0) {
     n = 0x95;         // Valid CRC for CMD0(0) + Stop
   }
   if (cmd == CMD8) {
     n = 0x87;         // Valid CRC for CMD8(0x1AA) + Stop
   }
-  sdc_xchg_spi(&sd_card.spi, n, &data);
+  cmd_bytes[0] = (0x40 | cmd);
+  cmd_bytes[1] = ((BYTE)(arg >> 24));
+  cmd_bytes[2] = ((BYTE)(arg >> 16));
+  cmd_bytes[3] = ((BYTE)(arg >> 8));
+  cmd_bytes[4] = ((BYTE)(arg));
+  cmd_bytes[5] = (n);
+  // Send command packet
+  sdc_xmit_spi_multi(&sd_card.spi, cmd_bytes, CMD_BYTES_SIZE);
+  // -- 2026 06 12 LW
 
   // Receive command response
   if (cmd == CMD12) {
